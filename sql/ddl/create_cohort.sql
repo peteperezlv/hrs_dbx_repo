@@ -1,7 +1,7 @@
 CREATE TABLE cohort (
     cohort_id INT PRIMARY KEY,
     cohort_name STRING,
-    cohort_description string,
+    cohort_description STRING,
     start_date DATE,
     end_date DATE,
     active BOOLEAN
