@@ -1,4 +1,6 @@
-CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.question (
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.question;
+
+CREATE TABLE dev_catalog.slv_cdm_hrs.question (
     question_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     question_name STRING,
     question_description STRING, 
