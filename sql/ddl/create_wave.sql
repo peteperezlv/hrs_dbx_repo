@@ -1,4 +1,4 @@
-CREATE TABLE wave (
+CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.wave (
     wave_id INT PRIMARY KEY,
     wave_name STRING,
     wave_description STRING, 

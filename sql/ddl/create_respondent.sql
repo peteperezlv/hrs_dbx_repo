@@ -1,4 +1,4 @@
-CREATE TABLE respondent (
+CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.respondent (
     respondent_id INT PRIMARY KEY,
     respondent_description STRING,
     gender STRING,

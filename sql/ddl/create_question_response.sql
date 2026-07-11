@@ -1,4 +1,4 @@
-CREATE TABLE question_response (
+CREATE TABLE IF NOT EXISTS  dev_catalog.slv_cdm_hrs.question_response (
     question_response_id INT PRIMARY KEY,
     question_response_description STRING,
     respondent_id INT,
