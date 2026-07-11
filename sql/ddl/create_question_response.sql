@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS  dev_catalog.slv_cdm_hrs.question_response (
     start_date DATE,
     end_date DATE,
     active BOOLEAN,
-    CONSTRAINT fk_respondent FOREIGN KEY (respondent_id) REFERENCES respondent(respondent_id),
-    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id),
-    CONSTRAINT fk_wave FOREIGN KEY (wave_id) REFERENCES wave(wave_id)
+    CONSTRAINT fk_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.respondent(respondent_id),
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES dev_catalog.slv_cdm_hrs.question(question_id),
+    CONSTRAINT fk_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.wave(wave_id)
 )
 USING DELTA
 COMMENT 'Question response tracking table';

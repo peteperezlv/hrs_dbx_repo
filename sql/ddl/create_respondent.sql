@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.respondent (
     start_date DATE,
     end_date DATE,
     active BOOLEAN,
-    CONSTRAINT fk_respondent_type FOREIGN KEY (respondent_type_id) REFERENCES respondent_type(respondent_type_id),
-    CONSTRAINT fk_cohort FOREIGN KEY (cohort_id) REFERENCES cohort(cohort_id)
+    CONSTRAINT fk_respondent_type FOREIGN KEY (respondent_type_id) REFERENCES dev_catalog.slv_cdm_hrs.respondent_type(respondent_type_id),
+    CONSTRAINT fk_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.cohort(cohort_id)
 )
 USING DELTA
 COMMENT 'Respondent tracking table';
