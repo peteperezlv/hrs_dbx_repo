@@ -1,5 +1,7 @@
-CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.respondent_type (
-    respondent_type_id INT PRIMARY KEY,
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.respondent_type;
+
+CREATE TABLE dev_catalog.slv_cdm_hrs.respondent_type (
+    respondent_type_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     respondent_type_description STRING,
     start_date DATE,
     end_date DATE,
