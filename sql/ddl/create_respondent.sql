@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.respondent (
-    respondent_id INT PRIMARY KEY,
+    respondent_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     respondent_description STRING,
     gender STRING,
     respondent_type_id INT,
