@@ -14,8 +14,8 @@ INSERT INTO dev_catalog.slv_cdm_hrs.cohort (
 SELECT DISTINCT
     CAST(HACOHORT AS INT) as hacohort_number,
     CASE 
-        WHEN CAST(HACOHORT AS INT) = 0 THEN 'HRS/AHEAD'
-        WHEN CAST(HACOHORT AS INT) = 1 THEN 'AHEAD'
+        WHEN CAST(HACOHORT AS INT) = 0 THEN '0-HRS/AHEAD'
+        WHEN CAST(HACOHORT AS INT) = 1 THEN '1-HRS/AHEAD'
         WHEN CAST(HACOHORT AS INT) = 2 THEN 'CODA'
         WHEN CAST(HACOHORT AS INT) = 3 THEN 'HRS'
         WHEN CAST(HACOHORT AS INT) = 4 THEN 'WB'
@@ -26,7 +26,7 @@ SELECT DISTINCT
     END as hacohort_label,
     CASE 
         WHEN CAST(HACOHORT AS INT) = 0 THEN 'HRS/AHEAD overlap'
-        WHEN CAST(HACOHORT AS INT) = 1 THEN 'AHEAD cohort, born before 1924, initially a separate study (The Study of Assets and Health Dynamics Among the Oldest Old). This cohort was first interviewed in 1993 and subsequently in 1995, 1998, and subsequently every two years.'
+        WHEN CAST(HACOHORT AS INT) = 1 THEN 'HRS/AHEAD overlap, born before 1924, initially a separate study (The Study of Assets and Health Dynamics Among the Oldest Old). This cohort was first interviewed in 1993 and subsequently in 1995, 1998, and subsequently every two years.'
         WHEN CAST(HACOHORT AS INT) = 2 THEN 'CODA (Children of the Depression Age).  Children of Depression (CODA) cohort, born 1924 to 1930. This cohort was first interviewed in 1998 and subsequently every two
 years.'
         WHEN CAST(HACOHORT AS INT) = 3 THEN 'Initial HRS cohort, born 1931 to 1941. This cohort was first interviewed in 1992 and subsequently every two years.'
