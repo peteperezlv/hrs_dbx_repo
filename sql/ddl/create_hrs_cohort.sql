@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.cohort;
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.hrs_cohort;
 
-CREATE TABLE dev_catalog.slv_cdm_hrs.cohort (
+CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_cohort (
     hrs_cohort_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     hacohort_number INT,
     hacohort_label STRING,

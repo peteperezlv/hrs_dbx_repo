@@ -3,7 +3,7 @@
 -- Target: dev_catalog.slv_cdm_hrs.cohort
 -- cohort_id is auto-generated (IDENTITY column)
 
-INSERT INTO dev_catalog.slv_cdm_hrs.cohort (
+INSERT INTO dev_catalog.slv_cdm_hrs.hrs_cohort (
     hacohort_number,
     hacohort_label,
     hacohort_description,
