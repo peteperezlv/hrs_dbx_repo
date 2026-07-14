@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.wave;
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.hrs_wave;
 
-CREATE TABLE IF NOT EXISTS dev_catalog.slv_cdm_hrs.wave (
-    wave_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE dev_catalog.slv_cdm_hrs.wave (
+    hrs_wave_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     wave_number INT,
     wave_year STRING,
     wave_description STRING, 
