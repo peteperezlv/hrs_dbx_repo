@@ -1,5 +1,6 @@
 -- Verify HRS Wave Reference Data
 -- Displays all records in the hrs_wave reference table
+-- coment
 
 SELECT 
     hrs_wave_id,
