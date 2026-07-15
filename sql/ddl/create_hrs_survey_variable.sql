@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.survey_variable;
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.hrs_survey_variable;
 
-CREATE TABLE dev_catalog.slv_cdm_hrs.survey_variable (
-    survey_variable_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_survey_variable (
+    hrs_survey_variable_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     rhrs_survey_section_id BIGINT,
     hrs_wave_id BIGINT,
     survey_variable_name STRING,

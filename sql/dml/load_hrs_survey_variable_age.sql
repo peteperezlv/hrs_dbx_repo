@@ -3,7 +3,7 @@
 -- survey_variable_id is auto-generated (IDENTITY column)
 -- These are age-related variables (R*AGEY_E and S*AGEY_E) from Section A
 
-INSERT INTO dev_catalog.slv_cdm_hrs.survey_variable (
+INSERT INTO dev_catalog.slv_cdm_hrs.hrs_survey_variable (
     rhrs_survey_section_id,
     hrs_wave_id,
     survey_variable_name,
