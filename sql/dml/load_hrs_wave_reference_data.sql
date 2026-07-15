@@ -26,4 +26,6 @@ VALUES
     ('13', '2016', 'Wave Number 13, Year 2016', CURRENT_DATE(), CURRENT_DATE(), true),
     ('14', '2018', 'Wave Number 14, Year 2018', CURRENT_DATE(), CURRENT_DATE(), true),
     ('15', '2020', 'Wave Number 15, Year 2020', CURRENT_DATE(), CURRENT_DATE(), true),
-    ('16', '2022', 'Wave Number 16, Year 2022', CURRENT_DATE(), CURRENT_DATE(), true);
+    ('16', '2022', 'Wave Number 16, Year 2022', CURRENT_DATE(), CURRENT_DATE(), true),
+    ('A', 'all', 'Wave Number A, All Years', CURRENT_DATE(), CURRENT_DATE(), true),
+    ('E', 'exit', 'Wave Number E, Exit', CURRENT_DATE(), CURRENT_DATE(), true);
