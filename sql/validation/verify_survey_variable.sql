@@ -15,4 +15,5 @@ SELECT
     sv.active
 FROM dev_catalog.slv_cdm_hrs.survey_variable sv
 INNER JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON sv.hrs_wave_id = w.hrs_wave_id
-ORDER BY sv.survey_variable_id;
+WHERE sv.survey_variable_name LIKE 'R%'
+ORDER BY sv.survey_variable_name DESC;
