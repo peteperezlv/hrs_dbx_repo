@@ -9,4 +9,4 @@ SELECT
     update_date,
     active
 FROM dev_catalog.slv_cdm_hrs.hrs_survey_response
-LIMIT 10
+LIMIT 25

@@ -18,6 +18,7 @@ WITH unpivoted_age_data AS (
     -- Unpivot R*AGEY_E columns into rows using STACK
     SELECT 
         hhidpn,
+        HACOHORT,
         stack(16,
             'R1AGEY_E', R1AGEY_E,
             'R2AGEY_E', R2AGEY_E,
@@ -39,10 +40,10 @@ WITH unpivoted_age_data AS (
     FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 )
 SELECT 
-    1 as hrs_survey_respondent_id,
+    sr.hrs_survey_respondent_id,
     sv.hrs_survey_variable_id,
-    1 as hrs_wave_id,
-    1 as hrs_cohort_id,
+    sv.hrs_wave_id,
+    c.hrs_cohort_id,
     CAST(CAST(ua.age_value AS BIGINT) AS STRING) as hrs_survey_response_value,
     NULL as survey_response_description,
     CURRENT_DATE() as create_date,
@@ -51,4 +52,8 @@ SELECT
 FROM unpivoted_age_data ua
 INNER JOIN dev_catalog.slv_cdm_hrs.hrs_survey_variable sv 
     ON ua.survey_variable_name = sv.survey_variable_name
+INNER JOIN dev_catalog.slv_cdm_hrs.hrs_survey_respondent sr
+    ON CAST(CAST(ua.hhidpn AS BIGINT) AS STRING) = sr.hhidpn
+INNER JOIN dev_catalog.slv_cdm_hrs.hrs_cohort c
+    ON CAST(ua.HACOHORT AS BIGINT) = c.hacohort_number
 WHERE ua.age_value IS NOT NULL;
