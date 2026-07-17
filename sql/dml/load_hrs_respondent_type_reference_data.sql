@@ -12,4 +12,4 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_respondent_type (
 VALUES
     ('R', 'Reference Person or head of household.', CURRENT_DATE(), CURRENT_DATE(), true),
     ('S', 'Spouse', CURRENT_DATE(), CURRENT_DATE(), true),
-    ('H', 'Family Member', CURRENT_DATE(), CURRENT_DATE(), true);
+    ('H', 'Household Information provided by ether the Reference Person or head of household or a Spouse', CURRENT_DATE(), CURRENT_DATE(), true);
