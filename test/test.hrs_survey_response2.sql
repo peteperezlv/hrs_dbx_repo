@@ -48,7 +48,6 @@ WHERE age_value IS NOT NULL;
 -- ============================================================================
 -- Expected: Target count = Source count
 
-
 WITH source_unpivoted AS (
     SELECT 
         CAST(CAST(hhidpn AS BIGINT) AS STRING) AS hhidpn,

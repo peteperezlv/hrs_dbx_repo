@@ -58,22 +58,23 @@ print("✓ Cohort reference data loaded successfully")
 
 # COMMAND ----------
 
-# DBTITLE 1,Verify loaded cohort data
+# DBTITLE 1,Test Select Verify loaded cohort data
 # Step 3: Verify the cohort reference table
 
-df = spark.sql("""
-    SELECT 
-        cohort_id,
-        cohort_name,
-        cohort_description,
-        start_date,
-        end_date,
-        active
-    FROM dev_catalog.slv_cdm_hrs.cohort
-    ORDER BY cohort_name
-""")
+print("Running validation queries...")
 
-display(df)
+# Read and execute the SQL file (handles multiple statements)
+with open("../../sql/validation/verify_hrs_cohort_reference_data.sql", "r") as f:
+    sql_content = f.read()
+    # Split by semicolons and execute each statement
+    statements = [s.strip() for s in sql_content.split(';') if s.strip()]
+    
+    for i, stmt in enumerate(statements, 1):
+        print(f"\nExecuting statement {i}...")
+        result_df = spark.sql(stmt)
+        display(result_df)
+
+print("\n✓ All validation queries completed")
 
 # COMMAND ----------
 
