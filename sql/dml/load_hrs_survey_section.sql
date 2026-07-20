@@ -2,9 +2,9 @@
 -- Target: dev_catalog.slv_cdm_hrs.rhrs_survey_section
 -- rhrs_survey_section_id is auto-generated (IDENTITY column)
 
-INSERT INTO dev_catalog.slv_cdm_hrs.rhrs_survey_section (
-    rhrs_survey_section_name,
-    rhrs_survey_section_description,
+INSERT INTO dev_catalog.slv_cdm_hrs.hrs_survey_section (
+    hrs_survey_section_name,
+    hrs_survey_section_description,
     create_date,
     update_date,
     active

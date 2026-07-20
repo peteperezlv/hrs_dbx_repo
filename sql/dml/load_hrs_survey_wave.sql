@@ -2,7 +2,7 @@
 -- Target: dev_catalog.slv_cdm_hrs.hrs_wave
 -- hrs_wave_id is auto-generated (IDENTITY column)
 
-INSERT INTO dev_catalog.slv_cdm_hrs.hrs_wave (
+INSERT INTO dev_catalog.slv_cdm_hrs.hrs_survey_wave (
     wave_number,
     wave_year,
     wave_description,
