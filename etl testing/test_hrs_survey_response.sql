@@ -1,5 +1,5 @@
 -- ============================================================================
--- HRS Survey Response Age Data ETL Validation Script
+-- HRS Survey Response Age Data ETL Validation Script.  Simple chanee in VS Code.
 -- ============================================================================
 -- Purpose: Validate the ETL load of R*AGEY_E age variables into hrs_survey_response
 -- Target: dev_catalog.slv_cdm_hrs.hrs_survey_response
