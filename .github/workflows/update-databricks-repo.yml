@@ -1,0 +1,14 @@
+name: Update Databricks Repo
+
+on:
+  push:
+    branches:
+      - features
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Workflow Started
+        run: echo "Workflow is running!"
