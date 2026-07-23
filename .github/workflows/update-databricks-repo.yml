@@ -3,7 +3,7 @@ name: Update Databricks Repo
 on:
   push:
     branches:
-      - features
+      - feature
 
 jobs:
   test:
