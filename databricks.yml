@@ -1,0 +1,10 @@
+bundle:
+  name: hrs_dbx_repo
+
+workspace:
+  host: ${var.workspace_host}
+
+variables:
+
+  workspace_host:
+    description: Databricks workspace URL
