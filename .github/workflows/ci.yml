@@ -62,6 +62,15 @@ jobs:
         run: |
           databricks version
     
+      # Test the Databricks connection
+      - name: Test Databricks Connection
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks current-user me
+      
       # End Step
       - name: CI Completed
         run: echo "Repository validation completed successfully."
