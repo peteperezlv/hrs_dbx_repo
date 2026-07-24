@@ -70,6 +70,15 @@ jobs:
 
         run: |
           databricks current-user me
+
+      # Validate Databricks Bundle
+      - name: Validate Databricks Bundle
+        env:
+            DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+            DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+            databricks bundle validate
       
       # End Step
       - name: CI Completed
