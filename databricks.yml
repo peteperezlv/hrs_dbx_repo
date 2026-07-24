@@ -2,7 +2,7 @@ bundle:
   name: hrs_dbx_repo
 
 workspace:
-  host: ${var.workspace_host}
+  host: ${env.DATABRICKS_HOST}
 
 variables:
 
