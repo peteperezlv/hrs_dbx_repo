@@ -1,8 +1,2 @@
 bundle:
   name: hrs_dbx_repo
-
-targets:
-
-  dev:
-    workspace:
-      host: ${env.DATABRICKS_HOST}
