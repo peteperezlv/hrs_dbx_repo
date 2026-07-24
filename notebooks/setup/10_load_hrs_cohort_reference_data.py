@@ -52,7 +52,7 @@ from src.common.sql_utils import execute_sql_file
 print("Loading cohort reference data...")
 execute_sql_file(
     spark,
-    "../../sql/dml/load_cohort_reference_data.sql"
+    "../../sql/dml/load_hrs_cohort_reference_data.sql"
 )
 print("✓ Cohort reference data loaded successfully")
 
