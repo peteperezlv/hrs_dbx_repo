@@ -28,10 +28,12 @@ jobs:
       # Validation steps
       - name: Verify Repository Structure
         run: |
-          test -d etl_testing
-          test -d notebooks
-          test -d sql
-          test -d src
+          echo "Checking required folders..."
+          test -d etl_testing || (echo "❌ Missing etl_testing folder" && exit 1)
+          test -d notebooks || (echo "❌ Missing notebook folder" && exit 1)
+          test -d sql || (echo "❌ Missing sql folder" && exit 1)
+          test -d src || (echo "❌ Missing src folder" && exit 1)
+          test -d test || (echo "❌ Missing test folder" && exit 1)
 
       - name: List etl_testing Files
         run: find etl_testing -name "*.sql"
