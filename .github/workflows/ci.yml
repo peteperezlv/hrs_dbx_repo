@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  validate:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Display Branch
+        run: |
+          echo "Running CI on branch:"
+          echo "${{ github.ref_name }}"
+
+      - name: List Repository Contents
+        run: |
+          pwd
+          ls -R
+
+      - name: CI Completed
+        run: echo "Repository validation completed successfully."
