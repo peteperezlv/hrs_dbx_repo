@@ -24,6 +24,19 @@ jobs:
         run: |
           pwd
           ls -R
+    
+      # Validation steps
+      - name: Verify Repository Structure
+        run: |
+          test -d sql
+          test -d notebooks
 
+      - name: List SQL Files
+        run: find sql -name "*.sql"
+
+      - name: List Notebooks
+        run: find notebooks
+    
+      # End Step
       - name: CI Completed
         run: echo "Repository validation completed successfully."
