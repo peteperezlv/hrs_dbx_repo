@@ -1,2 +1,5 @@
 bundle:
   name: hrs_dbx_repo
+
+include:
+  - resources/*.yml
