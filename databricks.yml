@@ -1,10 +1,8 @@
 bundle:
   name: hrs_dbx_repo
 
-workspace:
-  host: ${env.DATABRICKS_HOST}
+targets:
 
-variables:
-
-  workspace_host:
-    description: Databricks workspace URL
+  dev:
+    workspace:
+      host: ${env.DATABRICKS_HOST}
