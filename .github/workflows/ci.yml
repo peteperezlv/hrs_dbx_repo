@@ -28,14 +28,22 @@ jobs:
       # Validation steps
       - name: Verify Repository Structure
         run: |
-          test -d sql
+          test -d etl_testing
           test -d notebooks
+          test -d sql
+          test -d src
+
+      - name: List etl_testing Files
+        run: find etl_testing -name "*.sql"
 
       - name: List SQL Files
         run: find sql -name "*.sql"
 
       - name: List Notebooks
         run: find notebooks
+
+      - name: List Source Files
+        run: find src
     
       # End Step
       - name: CI Completed
