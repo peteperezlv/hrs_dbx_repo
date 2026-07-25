@@ -1,0 +1,16 @@
+resources:
+
+  jobs:
+
+    hrs_etl_job:
+
+      name: HRS Data Warehouse ETL
+
+      tasks:
+
+        - task_key: placeholder
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/placeholder.py
+
+          existing_cluster_id: ""
