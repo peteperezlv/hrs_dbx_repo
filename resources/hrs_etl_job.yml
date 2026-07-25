@@ -11,6 +11,6 @@ resources:
         - task_key: placeholder
 
           notebook_task:
-            notebook_path: ../notebooks/orchestration/placeholder.py
+            #notebook_path: ../notebooks/orchestration/placeholder.py
 
           existing_cluster_id: ""
