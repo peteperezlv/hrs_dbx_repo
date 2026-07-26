@@ -16,8 +16,8 @@ def execute_sql_file(spark, sql_file, display_results=False):
     for stmt in sql_text.split(";"):
         stmt = stmt.strip()
 
-    if stmt:
-        statements.append(stmt)
+        if stmt:
+            statements.append(stmt)
 
     print(f"Found {len(statements)} SQL statement(s).\n")
 
