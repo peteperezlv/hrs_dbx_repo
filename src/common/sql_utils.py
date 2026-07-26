@@ -7,12 +7,8 @@ def execute_sql_file(spark, sql_file, display_results=False):
 
     sql_path = Path(sql_file)
 
-    #print(f"\nExecuting SQL file: {sql_path.name}")
-    print("hello")
     print("\n======================================")
-    print(f"SQL File Provided : {sql_file}")
-    print(f"SQL File Resolved : {sql_path.resolve()}")
-    print(f"File Exists       : {sql_path.exists()}")
+    print(f"Executing SQL file: {sql_path.name}")
     print("======================================")
 
     sql_text = sql_path.read_text()
