@@ -51,7 +51,7 @@ def execute_sql_file(spark, sql_file, display_results=False):
     # Step 3 - Use the enumerate function to loop throgh each SQL statement and execute it.
     for i, statement in enumerate(statements, start=1):
 
-        print(f"\nExecuting statement {i}/{len(statements)}\n")
+        print(f"\nExecuting statement {i}/{len(statements)}")
 
         result = spark.sql(statement)
 

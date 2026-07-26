@@ -12,10 +12,10 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_survey_respondent (
         update_date,
         active
     )
-SELECT DISTINCT CAST(CAST(hhid AS BIGINT) AS STRING) as hhid,
-    c.cohort_id,
+SELECT DISTINCT CAST(CAST(hhidpn AS BIGINT) AS STRING) as hhidpn,
+    CAST(CAST(hhid AS BIGINT) AS STRING) as hhid,
     CAST(CAST(pn AS BIGINT) AS STRING) as pn,
-    CAST(CAST(hhidpn AS BIGINT) AS STRING) as hhidpn,
+    c.cohort_id,
     CAST(HACOHORT AS INT) as hacohort_number,
     NULL as survey_respondent_description,
     CURRENT_DATE() as create_date,
