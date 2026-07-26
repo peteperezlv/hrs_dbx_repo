@@ -3,7 +3,7 @@
 --
 -- Source Table: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 --
--- Target Table: hrs_survey_respondent
+-- Target Table: hrs_respondent
 -- ============================================================================
 -- Expected: Zero missing respondents (all hhidpn values exist)
 WITH source_respondents AS (
@@ -58,6 +58,6 @@ SELECT hrs_respondent_id,
     create_date,
     update_date,
     active
-FROM dev_catalog.slv_cdm_hrs.hrs_survey_respondent
+FROM dev_catalog.slv_cdm_hrs.hrs_respondent
 ORDER BY hhid DESC
 LIMIT 20
