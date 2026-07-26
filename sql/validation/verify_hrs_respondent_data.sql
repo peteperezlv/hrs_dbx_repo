@@ -50,7 +50,7 @@ FROM source_count sc
 -- Test 3: Sample Respondents Data
 -- ============================================================================
 -- Displays 20 records in the hrs_respondent reference table
-SELECT hrs_respondent_id,
+SELECT respondent_id,
     hhid,
     pn,
     hhidpn,
