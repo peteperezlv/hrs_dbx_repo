@@ -34,7 +34,7 @@ WITH source_count AS (
 ),
 target_count AS (
     SELECT COUNT(DISTINCT hhidpn) AS cnt
-    FROM dev_catalog.slv_cdm_hrs.hrs_survey_respondent sr
+    FROM dev_catalog.slv_cdm_hrs.hrs_respondent sr
     WHERE hhidpn IS NOT NULL
 )
 SELECT 'Test 2: Target vs Source Count' AS test_name,
@@ -49,12 +49,12 @@ FROM source_count sc
 -- ============================================================================
 -- Test 3: Sample Respondents Data
 -- ============================================================================
--- Displays 20 records in the hrs_survey_respondent reference table
-SELECT hrs_survey_respondent_id,
+-- Displays 20 records in the hrs_respondent reference table
+SELECT hrs_respondent_id,
     hhid,
     pn,
     hhidpn,
-    survey_respondent_description,
+    respondent_description,
     create_date,
     update_date,
     active
