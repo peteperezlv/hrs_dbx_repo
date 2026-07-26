@@ -11,6 +11,11 @@ def execute_sql_file(spark, sql_file, display_results=False):
     print(f"Executing SQL file: {sql_path.name}")
     print("======================================")
 
+    if not sql_path.exists():
+        raise FileNotFoundError(
+            f"SQL file not found: {sql_path.resolve()}"
+    )
+
     sql_text = sql_path.read_text()
 
     statements = []
