@@ -78,6 +78,13 @@ bundle:
 include:
   - resources/*.yml
 
+# Add sync to make sure the Asset Bundle understand the paths to working files.
+sync:
+  include:
+    - src/**
+    - notebooks/**
+    - sql/**
+
 targets:
   default:
     mode: development
