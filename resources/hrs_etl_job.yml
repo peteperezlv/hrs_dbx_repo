@@ -66,6 +66,8 @@ resources:
         # --------------------------------------------------
         - task_key: create_objects
 
+          environment_key: serverless_env
+
           notebook_task:
             notebook_path: ../notebooks/setup/00_create_database_objects.ipynb
 
@@ -84,6 +86,8 @@ resources:
 
           depends_on:
             - task_key: create_objects
+
+          environment_key: serverless_env
 
           notebook_task:
             notebook_path: ../notebooks/setup/10_load_hrs_cohort_data.ipynb
@@ -104,5 +108,7 @@ resources:
           depends_on:
             - task_key: load_cohort
 
+          environment_key: serverless_env
+          
           notebook_task:
             notebook_path: ../notebooks/setup/20_load_hrs_respondent_data.ipynb
