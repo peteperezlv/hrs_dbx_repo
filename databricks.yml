@@ -90,4 +90,4 @@ targets:
     mode: development
 
     workspace:
-      host: https://dbc-17f8770d-ed78.cloud.databricks.com/browse/folders/workspace?o=7474647898253523>
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
