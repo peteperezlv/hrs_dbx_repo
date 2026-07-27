@@ -31,7 +31,7 @@ resources:
       name: HRS Data Warehouse Setup
 
       tasks:
-         # --------------------------------------------------
+        # --------------------------------------------------
         # Task 1:
         # Create database objects
         #
@@ -67,7 +67,7 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/setup/10_load_hrs_cohort_data.ipynb
-            
+
         # --------------------------------------------------
         # Task 3:
         # Load Respondent data

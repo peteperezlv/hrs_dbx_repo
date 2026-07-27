@@ -1,4 +1,13 @@
-# CI YML S
+
+# ==========================================================================================================
+# Continuous Integration Workflow
+#
+# Purpose:
+#   Validate all the working parts are in place before pushing changes to the Feature (developoment) branch.
+# ===========================================================================================================
+#
+# Execution Order:
+# ------------------------------------------------------------------------------------------------------------
 # Checkout Repository
 #         │
 #         ▼
@@ -58,8 +67,7 @@ jobs:
       #    pwd
       #    ls -R
     
-      # Verify Reqpository Structure
-# Verify Repository Structure
+      # Verify Reqpository Structure.  Check for required application folders.
       - name: Verify Repository Structure
         run: |
           echo "Checking required folders..."
@@ -75,6 +83,7 @@ jobs:
           test -f databricks.yml || (echo "❌ Missing databricks.yml" && exit 1)
           test -f resources/hrs_etl_job.yml || (echo "❌ Missing hrs_etl_job.yml" && exit 1)
 
+      ###############           THIS SECTION MAY NOT BE NEEDED ?            ###################################
       - name: List etl_testing Files
         run: find etl_testing -name "*.sql"
 
@@ -91,21 +100,24 @@ jobs:
           echo "✓ SQL validation complete"
 
       # Verify Required Notebooks
+      ###################  What about testing python code (linting) in the notebooks?   ##################################
       - name: Verify Required Notebooks
         run: |
           test -f notebooks/setup/00_create_database_objects.ipynb
           test -f notebooks/setup/10_load_hrs_cohort_data.ipynb
           test -f notebooks/setup/20_load_hrs_respondent_data.ipynb
 
-      # List Source Files
+      # List Source Files.
+      ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################
       - name: List Source Files
         run: find src
 
-      # List SQL Files
+      # List SQL Files.
+      ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################
       - name: List SQL Files
         run: find sql -name "*.sql"
 
-      # Check Python Syntax
+      # Check Python Syntax.  
       - name: Check Python Syntax
         run: |
           python -m compileall src
@@ -119,7 +131,9 @@ jobs:
         run: |
           databricks version
     
-      # Test the Databricks connection
+      # Test the Databricks connection. 
+      # Retrieves specific identity details about the currently authenticated user or service principal 
+      # that your local Databricks CLI is using to execute commands
       - name: Test Databricks Connection
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
@@ -128,7 +142,7 @@ jobs:
         run: |
           databricks current-user me
 
-      # Validate Databricks Bundle
+      # Validate Databricks Bundle.  Checks for a validat databricks.yml bundle definition.
       - name: Validate Databricks Bundle
         env:
             DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}

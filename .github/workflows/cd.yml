@@ -1,24 +1,96 @@
+# ==========================================================
+# Continuous Deployment Workflow
+#
+# Purpose:
+#   Deploy Databricks Asset Bundle and execute HRS ETL Job
+#
+# Trigger:
+#   Runs when code is merged into main branch
+#
+# Process:
+#
+#   Checkout Repository
+#          |
+#          v
+#   Install Databricks CLI
+#          |
+#          v
+#   Authenticate to Databricks
+#          |
+#          v
+#   Deploy Asset Bundle
+#          |
+#          v
+#   Run HRS ETL Workflow
+#
+# ==========================================================
+
+
 name: Continuous Deployment
 
+
 on:
+
   push:
     branches:
       - main
 
+
 jobs:
+
   deploy:
 
     runs-on: ubuntu-latest
 
+
     steps:
 
+
+      # Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Deployment Started
-        run: |
-          echo "Deploying branch:"
-          echo "${{ github.ref_name }}"
 
-      - name: Deployment Placeholder
-        run: echo "Deployment steps will be added later."
+
+      # Install Databricks CLI
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+
+
+      # Verify CLI Installation
+      - name: Verify Databricks CLI
+        run: |
+          databricks version
+
+
+
+      # Deploy Databricks Asset Bundle
+      - name: Deploy Databricks Bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks bundle deploy
+
+
+
+      # Run HRS ETL Job
+      - name: Run HRS ETL Job
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks bundle run hrs_setup
+
+
+
+      # Deployment Summary
+      - name: Deployment Complete
+        run: |
+          echo "==================================="
+          echo "Databricks deployment completed"
+          echo "HRS ETL workflow executed"
+          echo "==================================="
