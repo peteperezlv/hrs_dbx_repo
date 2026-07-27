@@ -1,5 +1,35 @@
+# ==========================================================
+# Databricks Asset Bundle Configuration
+# Project: HRS Data Warehouse
+#
+# Purpose:
+#   Defines the Databricks Asset Bundle used to deploy
+#   notebooks, workflows, and supporting resources.
+#
+# Deployment:
+#   Local:
+#       databricks bundle validate --profile hrs-dev
+#       databricks bundle deploy --profile hrs-dev
+#
+#   CI/CD:
+#       GitHub Actions will execute bundle deployment
+#       after changes are merged into the production branch.
+#
+# Repository Structure:
+#
+#   notebooks/  - Databricks notebooks used for orchestration
+#   sql/        - DDL, DML, and validation SQL scripts
+#   src/        - Reusable Python utilities
+#   resources/  - Databricks workflow definitions
+#
+# ==========================================================
+
 bundle:
+  # Unique name of the Databricks Asset Bundle
   name: hrs_dbx_repo
 
+# Include all Databricks resources.
+# Resource definitions are stored separately to keep
+# the bundle configuration modular.
 include:
   - resources/*.yml

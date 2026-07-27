@@ -1,16 +1,28 @@
 resources:
-
   jobs:
 
     hrs_etl_job:
-
-      name: HRS Data Warehouse ETL
+      name: HRS Data Warehouse Setup
 
       tasks:
 
-        - task_key: placeholder
+        - task_key: create_objects
 
           notebook_task:
-            #notebook_path: ../notebooks/orchestration/placeholder.py
+            notebook_path: ../notebooks/setup/00_create_database_objects.ipynb
 
-          existing_cluster_id: ""
+        - task_key: load_cohort
+
+          depends_on:
+            - task_key: create_objects
+
+          notebook_task:
+            notebook_path: ../notebooks/setup/10_load_hrs_cohort_data.ipynb
+
+        - task_key: load_respondent
+
+          depends_on:
+            - task_key: load_cohort
+
+          notebook_task:
+            notebook_path: ../notebooks/setup/20_load_hrs_respondent_data.ipynb
