@@ -5,6 +5,9 @@
 #   Creates and loads the foundational HRS Silver layer
 #   tables.
 #
+#    ***When it is run with the "databricks bundle validate --profile hrs-dev" PowerShell command, 
+#     a job is created named "HRS Data Warehouse Setup"***
+#
 # Execution Order:
 #
 #   1. create_objects
@@ -24,7 +27,9 @@
 #
 # </> How to run the bundle CLI
 #   bash       > databricks bundle run hrs_etl_job
-#   PowerShell > databricks bundle deploy --profile hrs-dev
+#   PowerShell > 
+#       databricks bundle validate --profile hrs-dev
+#       databricks bundle deploy --profile hrs-dev
 #
 # Do not add clusters in the Free Databricks addition.  Add this code when you go to paid.
 #   job_clusters:
@@ -109,6 +114,6 @@ resources:
             - task_key: load_cohort
 
           environment_key: serverless_env
-          
+
           notebook_task:
             notebook_path: ../notebooks/setup/20_load_hrs_respondent_data.ipynb
