@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Repository
+      # Checkout the working Repository (e.g. feature or feature/petes)
       - name: Checkout Repository
         uses: actions/checkout@v4
 
