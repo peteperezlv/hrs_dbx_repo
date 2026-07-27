@@ -75,8 +75,8 @@ jobs:
           test -f databricks.yml || (echo "❌ Missing databricks.yml" && exit 1)
           test -f resources/hrs_etl_job.yml || (echo "❌ Missing hrs_etl_job.yml" && exit 1)
 
-            - name: List etl_testing Files
-              run: find etl_testing -name "*.sql"
+      - name: List etl_testing Files
+        run: find etl_testing -name "*.sql"
 
       # Verify Required SQL
       - name: Verify Required SQL
