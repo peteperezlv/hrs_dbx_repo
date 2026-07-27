@@ -22,14 +22,65 @@
 #   src/        - Reusable Python utilities
 #   resources/  - Databricks workflow definitions
 #
+# We can then deploy with
+#   databricks bundle validate --profile hrs-dev
+#   databricks bundle deploy --profile hrs-dev
+#
+# feature branch
+#       │
+#       ▼
+# Develop & Test
+#       │
+# Commit
+#       ▼
+# GitHub CI
+#       │
+# Pull Request
+#       ▼
+# main branch
+#       │
+# GitHub CD
+#       ▼
+# Deploy to Databricks
+#
+#In this model:
+#
+#  feature = your development branch
+#  main = your production branch
+#  One Databricks workspace = hosts the deployed workflow
+#
+#This is a very common setup for solo developers.
+#
+#
+#How to distinguish "dev" and "prod"
+#
+#Instead of separate workspaces, you distinguish them by Git branches.
+#
+#For example:
+#
+#  Push to feature
+#  Run CI
+#  Validate SQL
+#  Validate the Asset Bundle
+#  Do not deploy automatically
+#  Merge into main
+#  Run CI again
+#  Deploy the bundle
+#  Execute the ETL workflow
+#
+#  That gives you a clean promotion process without needing multiple workspaces.
+#
 # ==========================================================
 
 bundle:
-  # Unique name of the Databricks Asset Bundle
   name: hrs_dbx_repo
 
-# Include all Databricks resources.
-# Resource definitions are stored separately to keep
-# the bundle configuration modular.
 include:
   - resources/*.yml
+
+targets:
+  default:
+    mode: development
+
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com/browse/folders/workspace?o=7474647898253523>

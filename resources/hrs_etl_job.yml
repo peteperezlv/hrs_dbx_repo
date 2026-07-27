@@ -1,16 +1,65 @@
+# ==========================================================
+# HRS Data Warehouse Setup Workflow
+#
+# Purpose:
+#   Creates and loads the foundational HRS Silver layer
+#   tables.
+#
+# Execution Order:
+#
+#   1. create_objects
+#        |
+#        v
+#   2. load_cohort
+#        |
+#        v
+#   3. load_respondent
+#
+# Dependencies:
+#   - Cohort table must exist before Respondent loads.
+#   - SQL logic is maintained separately under /sql.
+#
+# Notebooks:
+#   notebooks/setup/
+#
+# ==========================================================
 resources:
   jobs:
 
+    # Databricks Workflow name
     hrs_etl_job:
       name: HRS Data Warehouse Setup
 
       tasks:
-
+         # --------------------------------------------------
+        # Task 1:
+        # Create database objects
+        #
+        # Executes DDL scripts to create:
+        #   - schemas
+        #   - tables
+        #   - constraints
+        #
+        # Source:
+        #   notebooks/setup/00_create_database_objects.ipynb
+        #
+        # --------------------------------------------------
         - task_key: create_objects
 
           notebook_task:
             notebook_path: ../notebooks/setup/00_create_database_objects.ipynb
 
+        # --------------------------------------------------
+        # Task 2:
+        # Load Cohort reference data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_cohort
+        #
+        # Depends on:
+        #   create_objects
+        #
+        # --------------------------------------------------
         - task_key: load_cohort
 
           depends_on:
@@ -18,7 +67,18 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/setup/10_load_hrs_cohort_data.ipynb
-
+            
+        # --------------------------------------------------
+        # Task 3:
+        # Load Respondent data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_respondent
+        #
+        # Depends on:
+        #   load_cohort
+        #
+        # --------------------------------------------------
         - task_key: load_respondent
 
           depends_on:
