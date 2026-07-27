@@ -22,6 +22,14 @@
 # Notebooks:
 #   notebooks/setup/
 #
+# </> How to run the bundle CLI
+#   bash       > databricks bundle run hrs_etl_job
+#   PowerShell > databricks bundle deploy --profile hrs-dev
+#
+# Do not add clusters in the Free Databricks addition.  Add this code when you go to paid.
+#   job_clusters:
+#   - job_cluster_key: ...
+#
 # ==========================================================
 resources:
   jobs:
@@ -29,6 +37,18 @@ resources:
     # Databricks Workflow name
     hrs_etl_job:
       name: HRS Data Warehouse Setup
+
+      description: >
+        Creates and loads the foundational HRS Silver layer
+        tables from the RAND HRS dataset.
+
+      timeout_seconds: 3600
+
+      # Serverless environment definition
+      environments:
+        - environment_key: serverless_env
+          spec:
+            environment_version: "2"  #  Correct, modern replacement to the client: "1"
 
       tasks:
         # --------------------------------------------------
