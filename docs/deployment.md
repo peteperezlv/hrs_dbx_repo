@@ -26,17 +26,72 @@ Workflow Execution
 
 ## Local Deployment
 
+Local deployment works works with OAuth by using the hrs-dev profile.
+
+Initiate OAuth to connect to local databricks workspace. This will take you to the google authentication method.
+
+- databricks auth login --host https://dbc-17f8770d-ed78.cloud.databricks.com
+
+Show the Databricks Config: you should see a config for "[hrs-dev] wtih Auth Type = databricks-cli (after you Initiate the OAuth to connect)". The path is c:/users/pete/.databrickscfg.
+
+- databricks auth profiles or
+- cat ~./databrickscfg or
+- type $HOME\.databrickscfg
+
 Validate:
 
-databricks bundle validate --profile hrs-dev
+- databricks bundle validate --profile hrs-dev
+
+Run deployment commands in PowerShell.
+
+- databricks bundle deploy --profile hrs-dev
+
+Run a bundle resource like /resources/hrs_etl_job
+
+- databricks bundle run hrs_etl_job --profile hrs-dev
+
+## GitHub Deployment
+
+GitHub deployment requires additional Workspace APIs, including writing files under: /Workspace/Users/.../.bundle/
+For this reason, we must setup a Personal Access Token (PAT) with sufficient permissions.
+
+# Create a Personal Access Token in Databricks
+
+Databricks User -> Settings -> Developer -> Access Tokens -> Manage -> Generate New Token
+
+# Name the Token
+
+GitHub Actions CI/CD
+
+Copy the Databricks Access Token
+
+# Update GitHub
+
+repository -> Settings -> Secrets and variables -> Actions ->
+
+Create or Update DATABRICKS_TOKEN with Databricks PAT
+
+# Run GitHub Action (this should now work by using the DATABRICKS_TOKEN credentials)
+
+GitHub -> Repository -> Actions -> Run workflow
+
+## Check Auth Profile:
+
+- databricks auth profiles or
+- cat ~./databrickscfg or
+- type $HOME\.databrickscfg
+
+Validate:
+
+- databricks bundle validate --profile hrs-dev
 
 Deploy:
 
-databricks bundle deploy --profile hrs-dev
+- databricks bundle deploy --profile hrs-dev
 
-Run:
+Run a bunder resource
 
-databricks bundle run hrs_etl_job --profile hrs-dev
+- databricks bundle run hrs_etl_job --profile hrs-dev
 
 ## Relationship between the bundle and the data lifecycle
 
