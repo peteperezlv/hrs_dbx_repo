@@ -7,22 +7,36 @@ the HRS data warehouse development environment.
 
 ## Deployment Flow
 
-Developer Branch
-|
-v
-GitHub Pull Request
-|
-v
-CI Validation
-|
-v
-Production Merge
-|
-v
-Databricks Bundle Deployment
-|
-v
-Workflow Execution
+                GitHub (feature branch)
+                         │
+                         ▼
+                GitHub Actions (CI)
+                         │
+      ┌──────────────────┴──────────────────┐
+      │                                     │
+      │ Validate repository                 │
+      │ Check Python syntax                 │
+      │ Validate Asset Bundle               │
+      └──────────────────┬──────────────────┘
+                         │
+                         ▼
+                GitHub Actions (CD)
+                         │
+                         ▼
+            Databricks Asset Bundle Deploy
+                         │
+                         ▼
+            Databricks Workflow (hrs_etl_job)
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+
+Create HRS Tables Load Reference Data
+│ │
+└─────────────┬─────────────┘
+▼
+Unity Catalog
+dev_catalog.slv_cdm_hrs
 
 ## Local Deployment
 
@@ -54,6 +68,27 @@ Run a bundle resource like /resources/hrs_etl_job
 
 GitHub deployment requires additional Workspace APIs, including writing files under: /Workspace/Users/.../.bundle/
 For this reason, we must setup a Personal Access Token (PAT) with sufficient permissions.
+
+## Workflow
+
+Checkout Repository
+│
+▼
+Install Databricks CLI
+│
+▼
+Connect to Databricks
+│
+▼
+Bundle Deploy
+│
+▼
+Run HRS ETL Job
+│
+▼
+Success
+
+---
 
 # Create a Personal Access Token in Databricks
 
