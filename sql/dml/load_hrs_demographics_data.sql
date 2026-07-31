@@ -1,129 +1,299 @@
--- ============================================================================
--- HRS Demographics ETL Load Script
--- ============================================================================
--- Section: Demographics
--- Description: RAND HRS Codebook – Demographics
--- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
--- Target: dev_catalog.slv_cdm_hrs.hrs_demographics
--- Load Type: Initial Load (Append Only)
--- ============================================================================
-
--- ============================================================================
--- Business Rules:
--- - Generate one target record per respondent
--- - Direct copy of all demographics columns
--- - Preserve NULL values
--- - Exclude records where respondent lookup fails
--- - Skip duplicate HHIDPN values already in target
--- ============================================================================
-
+-- =====================================================================
+-- HRS Silver CDM DML Functional Specification (Wave Expansion Rule)
+-- =====================================================================
+-- Objective:
+--   Load dev_catalog.slv_cdm_hrs.hrs_demographics from
+--   dev_catalog.brz_raw_hrs.randhrs1992_2022v1 using:
+--     - Wide → long wave expansion (1 row per respondent per wave)
+--     - FK resolution via hrs_respondent (hhidpn) and hrs_wave (wave_number)
+--     - RAND type transformations (CONT, CATEG, CHAR)
+--     - Insert-only load pattern
+--
+-- Wave Expansion Rule:
+--   For each multi-wave target column (agey_e, cenreg, mstat), generate
+--   16 SELECT branches (waves 1–16) and UNION ALL them into an "expanded"
+--   dataset with columns:
+--     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, rahispan,
+--     raedyrs, rarelig, ravetrn
+--
+-- FK Rules:
+--   respondent_id: join hrs_respondent on hhidpn
+--   wave_id      : join hrs_wave on wave_number
+--
+-- Business Key:
+--   UNIQUE (respondent_id, wave_id)
+--
+-- =====================================================================
+-- COMPLETE 16-WAVE DML (Demographics)
+-- =====================================================================
+WITH expanded AS (
+    -- Wave 1
+    SELECT src.HHIDPN AS hhidpn,
+        1 AS wave_number,
+        TRY_CAST(src.R1AGEY_E AS DECIMAL(10, 2)) AS agey_e,
+        TRY_CAST(src.RARACEM AS INT) AS raracem,
+        TRY_CAST(src.RAHISPN AS INT) AS rahispan,
+        TRY_CAST(src.R1CENREG AS INT) AS cenreg,
+        TRY_CAST(src.RAEDYRS AS INT) AS raedyrs,
+        TRY_CAST(src.R1MSTAT AS INT) AS mstat,
+        TRY_CAST(src.RARELIG AS INT) AS rarelig,
+        TRY_CAST(src.RAVETRN AS INT) AS ravetrn
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 2
+    SELECT src.HHIDPN,
+        2,
+        TRY_CAST(src.R2AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPN AS INT),
+        TRY_CAST(src.R2CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R2MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 3
+    SELECT src.HHIDPN,
+        3,
+        TRY_CAST(src.R3AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R3CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R3MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 4
+    SELECT src.HHIDPN,
+        4,
+        TRY_CAST(src.R4AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R4CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R4MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 5
+    SELECT src.HHIDPN,
+        5,
+        TRY_CAST(src.R5AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R5CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R5MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 6
+    SELECT src.HHIDPN,
+        6,
+        TRY_CAST(src.R6AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R6CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R6MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 7
+    SELECT src.HHIDPN,
+        7,
+        TRY_CAST(src.R7AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R7CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R7MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 8
+    SELECT src.HHIDPN,
+        8,
+        TRY_CAST(src.R8AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R8CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R8MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 9
+    SELECT src.HHIDPN,
+        9,
+        TRY_CAST(src.R9AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R9CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R9MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 10
+    SELECT src.HHIDPN,
+        10,
+        TRY_CAST(src.R10AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R10CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R10MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 11
+    SELECT src.HHIDPN,
+        11,
+        TRY_CAST(src.R11AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R11CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R11MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 12
+    SELECT src.HHIDPN,
+        12,
+        TRY_CAST(src.R12AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R12CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R12MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 13
+    SELECT src.HHIDPN,
+        13,
+        TRY_CAST(src.R13AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R13CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R13MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 14
+    SELECT src.HHIDPN,
+        14,
+        TRY_CAST(src.R14AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R14CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R14MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 15
+    SELECT src.HHIDPN,
+        15,
+        TRY_CAST(src.R15AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R15CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R15MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+    UNION ALL
+    -- Wave 16
+    SELECT src.HHIDPN,
+        16,
+        TRY_CAST(src.R16AGEY_E AS DECIMAL(10, 2)),
+        TRY_CAST(src.RARACEM AS INT),
+        TRY_CAST(src.RAHISPAN AS INT),
+        TRY_CAST(src.R16CENREG AS INT),
+        TRY_CAST(src.RAEDYRS AS INT),
+        TRY_CAST(src.R16MSTAT AS INT),
+        TRY_CAST(src.RARELIG AS INT),
+        TRY_CAST(src.RAVETRN AS INT)
+    FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
+),
+resolved AS (
+    SELECT NULL AS hrs_demographics_id,
+        r.respondent_id AS respondent_id,
+        w.wave_id AS wave_id,
+        e.hhidpn AS hhidpn,
+        e.wave_number AS wave_number,
+        CURRENT_DATE() AS create_date,
+        CURRENT_DATE() AS update_date,
+        TRUE AS active,
+        e.agey_e AS agey_e,
+        e.raracem AS raracem,
+        e.rahispan AS rahispan,
+        e.cenreg AS cenreg,
+        e.raedyrs AS raedyrs,
+        e.mstat AS mstat,
+        e.rarelig AS rarelig,
+        e.ravetrn AS ravetrn,
+        ROW_NUMBER() OVER (
+            PARTITION BY r.respondent_id,
+            w.wave_id
+            ORDER BY e.hhidpn
+        ) AS rn
+    FROM expanded e
+        JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON r.hhidpn = e.hhidpn
+        JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON w.wave_number = e.wave_number
+)
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
-    hrs_survey_respondent_id,
+        hrs_demographics_id,
+        respondent_id,
+        wave_id,
+        hhidpn,
+        wave_number,
+        create_date,
+        update_date,
+        active,
+        agey_e,
+        raracem,
+        rahispan,
+        cenreg,
+        raedyrs,
+        mstat,
+        rarelig,
+        ravetrn
+    )
+SELECT hrs_demographics_id,
+    respondent_id,
+    wave_id,
+    hhidpn,
+    wave_number,
     create_date,
     update_date,
     active,
-    HHIDPN,
-    RAGENDER,
-    R1AGEY_E,
-    R2AGEY_E,
-    R3AGEY_E,
-    R4AGEY_E,
-    R5AGEY_E,
-    R6AGEY_E,
-    R7AGEY_E,
-    R8AGEY_E,
-    R9AGEY_E,
-    R10AGEY_E,
-    R11AGEY_E,
-    R12AGEY_E,
-    R13AGEY_E,
-    R14AGEY_E,
-    R15AGEY_E,
-    R16AGEY_E,
-    R1BMI,
-    R2BMI,
-    R3BMI,
-    R4BMI,
-    R5BMI,
-    R6BMI,
-    R7BMI,
-    R8BMI,
-    R9BMI,
-    R10BMI,
-    R11BMI,
-    R12BMI,
-    R13BMI,
-    R14BMI,
-    R15BMI,
-    R16BMI
-)
-SELECT
-    -- ========================================================================
-    -- Foreign Key: Respondent Lookup
-    -- Join source HHIDPN to hrs_survey_respondent to get respondent ID
-    -- ========================================================================
-    resp.hrs_survey_respondent_id,
-    
-    -- ========================================================================
-    -- Audit Columns
-    -- ========================================================================
-    CURRENT_DATE() AS create_date,
-    CURRENT_DATE() AS update_date,
-    TRUE AS active,
-    
-    -- ========================================================================
-    -- Direct Column Mapping: Demographics Attributes
-    -- Preserve NULL values, no transformations
-    -- Cast numeric columns to STRING to eliminate scientific notation
-    -- ========================================================================
-    CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) AS HHIDPN,
-    CAST(CAST(src.RAGENDER AS BIGINT) AS STRING) AS RAGENDER,
-    CAST(CAST(src.R1AGEY_E AS BIGINT) AS STRING) AS R1AGEY_E,
-    CAST(CAST(src.R2AGEY_E AS BIGINT) AS STRING) AS R2AGEY_E,
-    CAST(CAST(src.R3AGEY_E AS BIGINT) AS STRING) AS R3AGEY_E,
-    CAST(CAST(src.R4AGEY_E AS BIGINT) AS STRING) AS R4AGEY_E,
-    CAST(CAST(src.R5AGEY_E AS BIGINT) AS STRING) AS R5AGEY_E,
-    CAST(CAST(src.R6AGEY_E AS BIGINT) AS STRING) AS R6AGEY_E,
-    CAST(CAST(src.R7AGEY_E AS BIGINT) AS STRING) AS R7AGEY_E,
-    CAST(CAST(src.R8AGEY_E AS BIGINT) AS STRING) AS R8AGEY_E,
-    CAST(CAST(src.R9AGEY_E AS BIGINT) AS STRING) AS R9AGEY_E,
-    CAST(CAST(src.R10AGEY_E AS BIGINT) AS STRING) AS R10AGEY_E,
-    CAST(CAST(src.R11AGEY_E AS BIGINT) AS STRING) AS R11AGEY_E,
-    CAST(CAST(src.R12AGEY_E AS BIGINT) AS STRING) AS R12AGEY_E,
-    CAST(CAST(src.R13AGEY_E AS BIGINT) AS STRING) AS R13AGEY_E,
-    CAST(CAST(src.R14AGEY_E AS BIGINT) AS STRING) AS R14AGEY_E,
-    CAST(CAST(src.R15AGEY_E AS BIGINT) AS STRING) AS R15AGEY_E,
-    CAST(CAST(src.R16AGEY_E AS BIGINT) AS STRING) AS R16AGEY_E,
-    CAST(CAST(src.R1BMI AS BIGINT) AS STRING) AS R1BMI,
-    CAST(CAST(src.R2BMI AS BIGINT) AS STRING) AS R2BMI,
-    CAST(CAST(src.R3BMI AS BIGINT) AS STRING) AS R3BMI,
-    CAST(CAST(src.R4BMI AS BIGINT) AS STRING) AS R4BMI,
-    CAST(CAST(src.R5BMI AS BIGINT) AS STRING) AS R5BMI,
-    CAST(CAST(src.R6BMI AS BIGINT) AS STRING) AS R6BMI,
-    CAST(CAST(src.R7BMI AS BIGINT) AS STRING) AS R7BMI,
-    CAST(CAST(src.R8BMI AS BIGINT) AS STRING) AS R8BMI,
-    CAST(CAST(src.R9BMI AS BIGINT) AS STRING) AS R9BMI,
-    CAST(CAST(src.R10BMI AS BIGINT) AS STRING) AS R10BMI,
-    CAST(CAST(src.R11BMI AS BIGINT) AS STRING) AS R11BMI,
-    CAST(CAST(src.R12BMI AS BIGINT) AS STRING) AS R12BMI,
-    CAST(CAST(src.R13BMI AS BIGINT) AS STRING) AS R13BMI,
-    CAST(CAST(src.R14BMI AS BIGINT) AS STRING) AS R14BMI,
-    CAST(CAST(src.R15BMI AS BIGINT) AS STRING) AS R15BMI,
-    CAST(CAST(src.R16BMI AS BIGINT) AS STRING) AS R16BMI
-FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
-
--- ============================================================================
--- Respondent Lookup: INNER JOIN
--- Ensures every target record references a valid respondent
--- Excludes rows where respondent lookup fails
--- ============================================================================
-INNER JOIN dev_catalog.slv_cdm_hrs.hrs_survey_respondent resp
-    ON CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) = resp.hhidpn
-
--- ============================================================================
--- Duplicate Handling: Skip Existing Records
--- Ensures restartability - do not insert duplicate HHIDPN values
--- ============================================================================
-LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_demographics tgt
-    ON CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) = tgt.HHIDPN
-WHERE tgt.HHIDPN IS NULL;
+    agey_e,
+    raracem,
+    rahispan,
+    cenreg,
+    raedyrs,
+    mstat,
+    rarelig,
+    ravetrn
+FROM resolved
+WHERE rn = 1;

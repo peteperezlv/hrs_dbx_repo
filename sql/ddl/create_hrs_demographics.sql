@@ -11,49 +11,24 @@
 -- ============================================================================
 DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.hrs_demographics;
 CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_demographics (
-    --------------------------------------------------------------------
-    -- Identity Key
-    --------------------------------------------------------------------
     hrs_demographics_id BIGINT GENERATED ALWAYS AS IDENTITY COMMENT 'System-generated surrogate key',
-    --------------------------------------------------------------------
-    -- Foreign Keys
-    --------------------------------------------------------------------
-    respondent_id BIGINT NOT NULL COMMENT 'References hrs_survey_respondent.respondent_id',
-    wave_id BIGINT NOT NULL COMMENT 'References hrs_survey_wave.wave_id',
-    --------------------------------------------------------------------
-    -- Audit Columns
-    --------------------------------------------------------------------
+    respondent_id BIGINT NOT NULL COMMENT 'FK to hrs_respondent.respondent_id',
+    wave_id SMALLINT NOT NULL COMMENT 'FK to hrs_wave.wave_id',
+    hhidpn INT COMMENT 'Household Respondent Identifier',
+    wave_number SMALLINT NOT NULL COMMENT 'Wave Number',
     create_date DATE NOT NULL COMMENT 'Record creation date',
-    update_date DATE NOT NULL COMMENT 'Record last update date',
-    active BOOLEAN NOT NULL COMMENT 'Active record indicator',
-    --------------------------------------------------------------------
-    -- Identifier Columns
-    --------------------------------------------------------------------
-    HHIDPN STRING COMMENT 'Household Respondent Identifier',
-    RAGENDER STRING COMMENT 'Respondent Gender',
-    --------------------------------------------------------------------
-    -- Age Variables
-    --------------------------------------------------------------------
-    R1AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 1',
-    R2AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 2',
-    R3AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 3',
-    R4AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 4',
-    R5AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 5',
-    R6AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 6',
-    R7AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 7',
-    R8AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 8',
-    R9AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 9',
-    R10AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 10',
-    R11AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 11',
-    R12AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 12',
-    R13AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 13',
-    R14AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 14',
-    R15AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 15',
-    R16AGEY_E DECIMAL(4, 2) COMMENT 'Respondent Age - Wave 16',
-    --------------------------------------------------------------------
-    -- Constraints
-    --------------------------------------------------------------------
-    CONSTRAINT hrs_demographics_pk PRIMARY KEY (hrs_demographics_id),
-    CONSTRAINT hrs_demographics_respondent_fk FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_survey_respondent (respondent_id),
-    CONSTRAINT hrs_demographics_wave_fk FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_survey_wave (wave_id)
-) USING DELTA COMMENT 'Stores RAND HRS Demographics survey observations in the Silver Common Data Model.';
+    update_date DATE NOT NULL COMMENT 'Last update date',
+    active BOOLEAN NOT NULL COMMENT 'Active indicator',
+    agey_e DECIMAL(10, 2) COMMENT 'Respondent Age (continuous, mapped across waves)',
+    raracem TINYINT COMMENT 'RARACEM: R Race-masked',
+    rahispan TINYINT COMMENT 'RAHISPAN: R Hispanic',
+    cenreg TINYINT COMMENT 'Census Region (mapped across waves)',
+    raedyrs TINYINT COMMENT 'RAEDYRS: R Years of Education',
+    mstat TINYINT COMMENT 'R Marital Status (mapped across waves)',
+    rarelig TINYINT COMMENT 'RARELIG: R Religion',
+    ravetrn TINYINT COMMENT 'RAVETRN: R Veteran Status',
+    CONSTRAINT pk_hrs_demographics PRIMARY KEY (hrs_demographics_id),
+    CONSTRAINT fk_hrs_demographics_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_respondent (respondent_id),
+    CONSTRAINT fk_hrs_demographics_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_wave (wave_id),
+    CONSTRAINT uq_hrs_demographics_respondent_wave UNIQUE (respondent_id, wave_id)
+) USING DELTA COMMENT 'Stores RAND HRS Demographic observations';
