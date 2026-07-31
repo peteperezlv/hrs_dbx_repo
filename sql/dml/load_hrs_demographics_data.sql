@@ -95,6 +95,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
         FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1
     ),
     wave_unpivoted AS (
+        --wave 1
         SELECT HHIDPN,
             1 AS wave_number,
             TRY_CAST(R1AGEY_E AS DECIMAL(10, 2)) AS agey_e,
@@ -102,6 +103,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R1MSTAT AS TINYINT) AS mstat
         FROM source_base
         UNION ALL
+        --wave 2
         SELECT HHIDPN,
             2 AS wave_number,
             TRY_CAST(R2AGEY_E AS DECIMAL(10, 2)),
@@ -109,6 +111,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R2MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 3
         SELECT HHIDPN,
             3 AS wave_number,
             TRY_CAST(R3AGEY_E AS DECIMAL(10, 2)),
@@ -116,6 +119,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R3MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 4
         SELECT HHIDPN,
             4 AS wave_number,
             TRY_CAST(R4AGEY_E AS DECIMAL(10, 2)),
@@ -123,6 +127,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R4MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 5
         SELECT HHIDPN,
             5 AS wave_number,
             TRY_CAST(R5AGEY_E AS DECIMAL(10, 2)),
@@ -130,6 +135,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R5MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 6
         SELECT HHIDPN,
             6 AS wave_number,
             TRY_CAST(R6AGEY_E AS DECIMAL(10, 2)),
@@ -137,6 +143,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R6MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 7
         SELECT HHIDPN,
             7 AS wave_number,
             TRY_CAST(R7AGEY_E AS DECIMAL(10, 2)),
@@ -144,6 +151,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R7MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 8
         SELECT HHIDPN,
             8 AS wave_number,
             TRY_CAST(R8AGEY_E AS DECIMAL(10, 2)),
@@ -151,6 +159,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R8MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 9
         SELECT HHIDPN,
             9 AS wave_number,
             TRY_CAST(R9AGEY_E AS DECIMAL(10, 2)),
@@ -158,6 +167,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R9MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 10
         SELECT HHIDPN,
             10 AS wave_number,
             TRY_CAST(R10AGEY_E AS DECIMAL(10, 2)),
@@ -165,6 +175,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R10MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 11
         SELECT HHIDPN,
             11 AS wave_number,
             TRY_CAST(R11AGEY_E AS DECIMAL(10, 2)),
@@ -172,6 +183,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R11MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 12
         SELECT HHIDPN,
             12 AS wave_number,
             TRY_CAST(R12AGEY_E AS DECIMAL(10, 2)),
@@ -179,6 +191,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R12MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 13
         SELECT HHIDPN,
             13 AS wave_number,
             TRY_CAST(R13AGEY_E AS DECIMAL(10, 2)),
@@ -186,6 +199,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R13MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 14
         SELECT HHIDPN,
             14 AS wave_number,
             TRY_CAST(R14AGEY_E AS DECIMAL(10, 2)),
@@ -193,6 +207,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R14MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 15
         SELECT HHIDPN,
             15 AS wave_number,
             TRY_CAST(R15AGEY_E AS DECIMAL(10, 2)),
@@ -200,6 +215,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R15MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 16
         SELECT HHIDPN,
             16 AS wave_number,
             TRY_CAST(R16AGEY_E AS DECIMAL(10, 2)),
