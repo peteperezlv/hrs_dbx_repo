@@ -1,25 +1,37 @@
 -- =====================================================================
--- HRS Silver CDM INSERT...SELECT – Demographics Section
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_demographics
--- Load Pattern: Insert Only (Section 4)
--- Grain: One row per respondent per survey wave (Section 9)
+-- AI Assistant Used: Claude
 --
--- SOURCE:  dev_catalog.brz_raw_hrs.randhrs1992_2022v1
---
--- AI Assistant: Claude
--- 
+-- Objective:
+--   Load dev_catalog.slv_cdm_hrs.hrs_demographics from
+--   dev_catalog.brz_raw_hrs.randhrs1992_2022v1 using:
+--     - Wide → long wave expansion (1 row per respondent per wave)
+--     - FK resolution via hrs_respondent (hhidpn) and hrs_wave (wave_number)
+--     - RAND type transformations (CONT, CATEG, CHAR)
+--     - Insert-only load pattern
 -- Generated per Specification Document: /notebooks/DDL Specifications/hrs_deomographics_specification.ipynb
---
--- CONFIRMED:
---   - hrs_respondent join column: HHIDPN
---   - hrs_wave join column: wave_number
---   - Section 12 'Wave' column = wave_number inserted into target
+--     - Load Pattern: Insert Only (Section 4)
+--     - Grain: One row per respondent per survey wave (Section 9)
+--     - Section 12 'Wave' column = wave_number inserted into target
 --
 -- ASSUMPTION (carried forward):
 --   Source is a wide table, one row per respondent (HHIDPN).
 --   Wave-varying: R{n}AGEY_E, R{n}CENREG, R{n}MSTAT (n = 1..16)
 --   Wave-invariant (replicated across all 16 wave rows):
 --     RARACEM, RAHISPN, RAEDYRS, RARELIG, RAVETRN
+--
+-- Wave Expansion Rule:
+--   For each multi-wave target column (agey_e, cenreg, mstat), generate
+--   16 SELECT branches (waves 1–16) and UNION ALL them into an "expanded"
+--   dataset with columns:
+--     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, rahispan,
+--     raedyrs, rarelig, ravetrn
+--
+-- FK Rules:
+--   respondent_id: join hrs_respondent on hhidpn
+--   wave_id      : join hrs_wave on wave_number
+--
+-- Business Key:
+--   UNIQUE (respondent_id, wave_id)
 -- =====================================================================
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
         respondent_id,
