@@ -1,97 +1,464 @@
--- ============================================================================
--- HRS Health ETL Load Script
--- ============================================================================
--- Section: Health
--- Description: RAND HRS Codebook – Health
--- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
--- Target: dev_catalog.slv_cdm_hrs.hrs_health
--- Load Type: Initial Load (Append Only)
--- ============================================================================
-
--- ============================================================================
--- Business Rules:
--- - Generate one target record per respondent
--- - Direct copy of all health columns
--- - Preserve NULL values
--- - Exclude records where respondent lookup fails
--- - Skip duplicate HHIDPN values already in target
--- ============================================================================
-
+-- =====================================================================
+-- HRS Silver CDM INSERT...SELECT – Health Section
+-- Target Table: dev_catalog.slv_cdm_hrs.hrs_health
+-- Load Pattern: Insert Only (Section 4)
+-- Grain: One row per respondent per survey wave (Section 9)
+--
+-- SOURCE:  dev_catalog.brz_raw_hrs.randhrs1992_2022v1
+--
+-- CONFIRMED:
+--   - hrs_respondent join column: HHIDPN
+--   - hrs_wave join column: wave_number (STRING)
+--   - Section 12 'Wave' column = wave_number inserted into target
+--
+-- ASSUMPTION (carried forward from Demographics pattern):
+--   Source is a wide table, one row per respondent (HHIDPN).
+--   All 10 business columns in this section are wave-varying:
+--     shlt, bmi, hibpe, diabe, cancre, lunge, hearte, stroke, psyche, arthre
+--   (R{n}SHLT, R{n}BMI, R{n}HIBPE, R{n}DIABE, R{n}CANCRE, R{n}LUNGE,
+--    R{n}HEARTE, R{n}STROKE, R{n}PSYCHE, R{n}ARTHRE for n = 1..16)
+--   There are no wave-invariant business columns in this section, so
+--   there is no separate "source_base" CTE like Demographics used —
+--   everything is produced directly by the unpivot.
+--
+-- wave_number is STRING on both hrs_health and hrs_wave (per spec
+-- change), so wave numbers are cast to STRING in the unpivot to
+-- match on join without implicit coercion.
+-- =====================================================================
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_health (
-    hrs_survey_respondent_id,
-    create_date,
-    update_date,
-    active,
-    HHIDPN,
-    RAGENDER,
-    R1BMI,
-    R2BMI,
-    R3BMI,
-    R4BMI,
-    R5BMI,
-    R6BMI,
-    R7BMI,
-    R8BMI,
-    R9BMI,
-    R10BMI,
-    R11BMI,
-    R12BMI,
-    R13BMI,
-    R14BMI,
-    R15BMI,
-    R16BMI
-)
-SELECT
-    -- ========================================================================
-    -- Foreign Key: Respondent Lookup
-    -- Join source HHIDPN to hrs_survey_respondent to get respondent ID
-    -- ========================================================================
-    resp.hrs_survey_respondent_id,
-    
-    -- ========================================================================
-    -- Audit Columns
-    -- ========================================================================
+        respondent_id,
+        wave_id,
+        hhidpn,
+        wave_number,
+        shlt,
+        bmi,
+        hibpe,
+        diabe,
+        cancre,
+        lunge,
+        hearte,
+        stroke,
+        psyche,
+        arthre,
+        create_date,
+        update_date,
+        active
+    ) WITH source_base AS (
+        SELECT HHIDPN,
+            R1SHLT,
+            R2SHLT,
+            R3SHLT,
+            R4SHLT,
+            R5SHLT,
+            R6SHLT,
+            R7SHLT,
+            R8SHLT,
+            R9SHLT,
+            R10SHLT,
+            R11SHLT,
+            R12SHLT,
+            R13SHLT,
+            R14SHLT,
+            R15SHLT,
+            R16SHLT,
+            R1BMI,
+            R2BMI,
+            R3BMI,
+            R4BMI,
+            R5BMI,
+            R6BMI,
+            R7BMI,
+            R8BMI,
+            R9BMI,
+            R10BMI,
+            R11BMI,
+            R12BMI,
+            R13BMI,
+            R14BMI,
+            R15BMI,
+            R16BMI,
+            R1HIBPE,
+            R2HIBPE,
+            R3HIBPE,
+            R4HIBPE,
+            R5HIBPE,
+            R6HIBPE,
+            R7HIBPE,
+            R8HIBPE,
+            R9HIBPE,
+            R10HIBPE,
+            R11HIBPE,
+            R12HIBPE,
+            R13HIBPE,
+            R14HIBPE,
+            R15HIBPE,
+            R16HIBPE,
+            R1DIABE,
+            R2DIABE,
+            R3DIABE,
+            R4DIABE,
+            R5DIABE,
+            R6DIABE,
+            R7DIABE,
+            R8DIABE,
+            R9DIABE,
+            R10DIABE,
+            R11DIABE,
+            R12DIABE,
+            R13DIABE,
+            R14DIABE,
+            R15DIABE,
+            R16DIABE,
+            R1CANCRE,
+            R2CANCRE,
+            R3CANCRE,
+            R4CANCRE,
+            R5CANCRE,
+            R6CANCRE,
+            R7CANCRE,
+            R8CANCRE,
+            R9CANCRE,
+            R10CANCRE,
+            R11CANCRE,
+            R12CANCRE,
+            R13CANCRE,
+            R14CANCRE,
+            R15CANCRE,
+            R16CANCRE,
+            R1LUNGE,
+            R2LUNGE,
+            R3LUNGE,
+            R4LUNGE,
+            R5LUNGE,
+            R6LUNGE,
+            R7LUNGE,
+            R8LUNGE,
+            R9LUNGE,
+            R10LUNGE,
+            R11LUNGE,
+            R12LUNGE,
+            R13LUNGE,
+            R14LUNGE,
+            R15LUNGE,
+            R16LUNGE,
+            R1HEARTE,
+            R2HEARTE,
+            R3HEARTE,
+            R4HEARTE,
+            R5HEARTE,
+            R6HEARTE,
+            R7HEARTE,
+            R8HEARTE,
+            R9HEARTE,
+            R10HEARTE,
+            R11HEARTE,
+            R12HEARTE,
+            R13HEARTE,
+            R14HEARTE,
+            R15HEARTE,
+            R16HEARTE,
+            R1STROKE,
+            R2STROKE,
+            R3STROKE,
+            R4STROKE,
+            R5STROKE,
+            R6STROKE,
+            R7STROKE,
+            R8STROKE,
+            R9STROKE,
+            R10STROKE,
+            R11STROKE,
+            R12STROKE,
+            R13STROKE,
+            R14STROKE,
+            R15STROKE,
+            R16STROKE,
+            R1PSYCHE,
+            R2PSYCHE,
+            R3PSYCHE,
+            R4PSYCHE,
+            R5PSYCHE,
+            R6PSYCHE,
+            R7PSYCHE,
+            R8PSYCHE,
+            R9PSYCHE,
+            R10PSYCHE,
+            R11PSYCHE,
+            R12PSYCHE,
+            R13PSYCHE,
+            R14PSYCHE,
+            R15PSYCHE,
+            R16PSYCHE,
+            R1ARTHRE,
+            R2ARTHRE,
+            R3ARTHRE,
+            R4ARTHRE,
+            R5ARTHRE,
+            R6ARTHRE,
+            R7ARTHRE,
+            R8ARTHRE,
+            R9ARTHRE,
+            R10ARTHRE,
+            R11ARTHRE,
+            R12ARTHRE,
+            R13ARTHRE,
+            R14ARTHRE,
+            R15ARTHRE,
+            R16ARTHRE
+        FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1
+    ),
+    wave_unpivoted AS (
+        SELECT HHIDPN,
+            CAST(1 AS STRING) AS wave_number,
+            TRY_CAST(R1SHLT AS TINYINT) AS shlt,
+            TRY_CAST(R1BMI AS DECIMAL(10, 2)) AS bmi,
+            TRY_CAST(R1HIBPE AS TINYINT) AS hibpe,
+            TRY_CAST(R1DIABE AS TINYINT) AS diabe,
+            TRY_CAST(R1CANCRE AS TINYINT) AS cancre,
+            TRY_CAST(R1LUNGE AS TINYINT) AS lunge,
+            TRY_CAST(R1HEARTE AS TINYINT) AS hearte,
+            TRY_CAST(R1STROKE AS TINYINT) AS stroke,
+            TRY_CAST(R1PSYCHE AS TINYINT) AS psyche,
+            TRY_CAST(R1ARTHRE AS TINYINT) AS arthre
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(2 AS STRING),
+            TRY_CAST(R2SHLT AS TINYINT),
+            TRY_CAST(R2BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R2HIBPE AS TINYINT),
+            TRY_CAST(R2DIABE AS TINYINT),
+            TRY_CAST(R2CANCRE AS TINYINT),
+            TRY_CAST(R2LUNGE AS TINYINT),
+            TRY_CAST(R2HEARTE AS TINYINT),
+            TRY_CAST(R2STROKE AS TINYINT),
+            TRY_CAST(R2PSYCHE AS TINYINT),
+            TRY_CAST(R2ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(3 AS STRING),
+            TRY_CAST(R3SHLT AS TINYINT),
+            TRY_CAST(R3BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R3HIBPE AS TINYINT),
+            TRY_CAST(R3DIABE AS TINYINT),
+            TRY_CAST(R3CANCRE AS TINYINT),
+            TRY_CAST(R3LUNGE AS TINYINT),
+            TRY_CAST(R3HEARTE AS TINYINT),
+            TRY_CAST(R3STROKE AS TINYINT),
+            TRY_CAST(R3PSYCHE AS TINYINT),
+            TRY_CAST(R3ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(4 AS STRING),
+            TRY_CAST(R4SHLT AS TINYINT),
+            TRY_CAST(R4BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R4HIBPE AS TINYINT),
+            TRY_CAST(R4DIABE AS TINYINT),
+            TRY_CAST(R4CANCRE AS TINYINT),
+            TRY_CAST(R4LUNGE AS TINYINT),
+            TRY_CAST(R4HEARTE AS TINYINT),
+            TRY_CAST(R4STROKE AS TINYINT),
+            TRY_CAST(R4PSYCHE AS TINYINT),
+            TRY_CAST(R4ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(5 AS STRING),
+            TRY_CAST(R5SHLT AS TINYINT),
+            TRY_CAST(R5BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R5HIBPE AS TINYINT),
+            TRY_CAST(R5DIABE AS TINYINT),
+            TRY_CAST(R5CANCRE AS TINYINT),
+            TRY_CAST(R5LUNGE AS TINYINT),
+            TRY_CAST(R5HEARTE AS TINYINT),
+            TRY_CAST(R5STROKE AS TINYINT),
+            TRY_CAST(R5PSYCHE AS TINYINT),
+            TRY_CAST(R5ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(6 AS STRING),
+            TRY_CAST(R6SHLT AS TINYINT),
+            TRY_CAST(R6BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R6HIBPE AS TINYINT),
+            TRY_CAST(R6DIABE AS TINYINT),
+            TRY_CAST(R6CANCRE AS TINYINT),
+            TRY_CAST(R6LUNGE AS TINYINT),
+            TRY_CAST(R6HEARTE AS TINYINT),
+            TRY_CAST(R6STROKE AS TINYINT),
+            TRY_CAST(R6PSYCHE AS TINYINT),
+            TRY_CAST(R6ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(7 AS STRING),
+            TRY_CAST(R7SHLT AS TINYINT),
+            TRY_CAST(R7BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R7HIBPE AS TINYINT),
+            TRY_CAST(R7DIABE AS TINYINT),
+            TRY_CAST(R7CANCRE AS TINYINT),
+            TRY_CAST(R7LUNGE AS TINYINT),
+            TRY_CAST(R7HEARTE AS TINYINT),
+            TRY_CAST(R7STROKE AS TINYINT),
+            TRY_CAST(R7PSYCHE AS TINYINT),
+            TRY_CAST(R7ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(8 AS STRING),
+            TRY_CAST(R8SHLT AS TINYINT),
+            TRY_CAST(R8BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R8HIBPE AS TINYINT),
+            TRY_CAST(R8DIABE AS TINYINT),
+            TRY_CAST(R8CANCRE AS TINYINT),
+            TRY_CAST(R8LUNGE AS TINYINT),
+            TRY_CAST(R8HEARTE AS TINYINT),
+            TRY_CAST(R8STROKE AS TINYINT),
+            TRY_CAST(R8PSYCHE AS TINYINT),
+            TRY_CAST(R8ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(9 AS STRING),
+            TRY_CAST(R9SHLT AS TINYINT),
+            TRY_CAST(R9BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R9HIBPE AS TINYINT),
+            TRY_CAST(R9DIABE AS TINYINT),
+            TRY_CAST(R9CANCRE AS TINYINT),
+            TRY_CAST(R9LUNGE AS TINYINT),
+            TRY_CAST(R9HEARTE AS TINYINT),
+            TRY_CAST(R9STROKE AS TINYINT),
+            TRY_CAST(R9PSYCHE AS TINYINT),
+            TRY_CAST(R9ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(10 AS STRING),
+            TRY_CAST(R10SHLT AS TINYINT),
+            TRY_CAST(R10BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R10HIBPE AS TINYINT),
+            TRY_CAST(R10DIABE AS TINYINT),
+            TRY_CAST(R10CANCRE AS TINYINT),
+            TRY_CAST(R10LUNGE AS TINYINT),
+            TRY_CAST(R10HEARTE AS TINYINT),
+            TRY_CAST(R10STROKE AS TINYINT),
+            TRY_CAST(R10PSYCHE AS TINYINT),
+            TRY_CAST(R10ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(11 AS STRING),
+            TRY_CAST(R11SHLT AS TINYINT),
+            TRY_CAST(R11BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R11HIBPE AS TINYINT),
+            TRY_CAST(R11DIABE AS TINYINT),
+            TRY_CAST(R11CANCRE AS TINYINT),
+            TRY_CAST(R11LUNGE AS TINYINT),
+            TRY_CAST(R11HEARTE AS TINYINT),
+            TRY_CAST(R11STROKE AS TINYINT),
+            TRY_CAST(R11PSYCHE AS TINYINT),
+            TRY_CAST(R11ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(12 AS STRING),
+            TRY_CAST(R12SHLT AS TINYINT),
+            TRY_CAST(R12BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R12HIBPE AS TINYINT),
+            TRY_CAST(R12DIABE AS TINYINT),
+            TRY_CAST(R12CANCRE AS TINYINT),
+            TRY_CAST(R12LUNGE AS TINYINT),
+            TRY_CAST(R12HEARTE AS TINYINT),
+            TRY_CAST(R12STROKE AS TINYINT),
+            TRY_CAST(R12PSYCHE AS TINYINT),
+            TRY_CAST(R12ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(13 AS STRING),
+            TRY_CAST(R13SHLT AS TINYINT),
+            TRY_CAST(R13BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R13HIBPE AS TINYINT),
+            TRY_CAST(R13DIABE AS TINYINT),
+            TRY_CAST(R13CANCRE AS TINYINT),
+            TRY_CAST(R13LUNGE AS TINYINT),
+            TRY_CAST(R13HEARTE AS TINYINT),
+            TRY_CAST(R13STROKE AS TINYINT),
+            TRY_CAST(R13PSYCHE AS TINYINT),
+            TRY_CAST(R13ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(14 AS STRING),
+            TRY_CAST(R14SHLT AS TINYINT),
+            TRY_CAST(R14BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R14HIBPE AS TINYINT),
+            TRY_CAST(R14DIABE AS TINYINT),
+            TRY_CAST(R14CANCRE AS TINYINT),
+            TRY_CAST(R14LUNGE AS TINYINT),
+            TRY_CAST(R14HEARTE AS TINYINT),
+            TRY_CAST(R14STROKE AS TINYINT),
+            TRY_CAST(R14PSYCHE AS TINYINT),
+            TRY_CAST(R14ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(15 AS STRING),
+            TRY_CAST(R15SHLT AS TINYINT),
+            TRY_CAST(R15BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R15HIBPE AS TINYINT),
+            TRY_CAST(R15DIABE AS TINYINT),
+            TRY_CAST(R15CANCRE AS TINYINT),
+            TRY_CAST(R15LUNGE AS TINYINT),
+            TRY_CAST(R15HEARTE AS TINYINT),
+            TRY_CAST(R15STROKE AS TINYINT),
+            TRY_CAST(R15PSYCHE AS TINYINT),
+            TRY_CAST(R15ARTHRE AS TINYINT)
+        FROM source_base
+        UNION ALL
+        SELECT HHIDPN,
+            CAST(16 AS STRING),
+            TRY_CAST(R16SHLT AS TINYINT),
+            TRY_CAST(R16BMI AS DECIMAL(10, 2)),
+            TRY_CAST(R16HIBPE AS TINYINT),
+            TRY_CAST(R16DIABE AS TINYINT),
+            TRY_CAST(R16CANCRE AS TINYINT),
+            TRY_CAST(R16LUNGE AS TINYINT),
+            TRY_CAST(R16HEARTE AS TINYINT),
+            TRY_CAST(R16STROKE AS TINYINT),
+            TRY_CAST(R16PSYCHE AS TINYINT),
+            TRY_CAST(R16ARTHRE AS TINYINT)
+        FROM source_base
+    )
+SELECT r.respondent_id,
+    w.wave_id,
+    wu.HHIDPN AS hhidpn,
+    wu.wave_number,
+    wu.shlt,
+    wu.bmi,
+    wu.hibpe,
+    wu.diabe,
+    wu.cancre,
+    wu.lunge,
+    wu.hearte,
+    wu.stroke,
+    wu.psyche,
+    wu.arthre,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
-    TRUE AS active,
-    
-    -- ========================================================================
-    -- Direct Column Mapping: Health Attributes
-    -- Preserve NULL values, no transformations
-    -- Cast numeric columns to STRING to eliminate scientific notation
-    -- ========================================================================
-    CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) AS HHIDPN,
-    CAST(CAST(src.RAGENDER AS BIGINT) AS STRING) AS RAGENDER,
-    CAST(CAST(src.R1BMI AS BIGINT) AS STRING) AS R1BMI,
-    CAST(CAST(src.R2BMI AS BIGINT) AS STRING) AS R2BMI,
-    CAST(CAST(src.R3BMI AS BIGINT) AS STRING) AS R3BMI,
-    CAST(CAST(src.R4BMI AS BIGINT) AS STRING) AS R4BMI,
-    CAST(CAST(src.R5BMI AS BIGINT) AS STRING) AS R5BMI,
-    CAST(CAST(src.R6BMI AS BIGINT) AS STRING) AS R6BMI,
-    CAST(CAST(src.R7BMI AS BIGINT) AS STRING) AS R7BMI,
-    CAST(CAST(src.R8BMI AS BIGINT) AS STRING) AS R8BMI,
-    CAST(CAST(src.R9BMI AS BIGINT) AS STRING) AS R9BMI,
-    CAST(CAST(src.R10BMI AS BIGINT) AS STRING) AS R10BMI,
-    CAST(CAST(src.R11BMI AS BIGINT) AS STRING) AS R11BMI,
-    CAST(CAST(src.R12BMI AS BIGINT) AS STRING) AS R12BMI,
-    CAST(CAST(src.R13BMI AS BIGINT) AS STRING) AS R13BMI,
-    CAST(CAST(src.R14BMI AS BIGINT) AS STRING) AS R14BMI,
-    CAST(CAST(src.R15BMI AS BIGINT) AS STRING) AS R15BMI,
-    CAST(CAST(src.R16BMI AS BIGINT) AS STRING) AS R16BMI
-FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 src
-
--- ============================================================================
--- Respondent Lookup: INNER JOIN
--- Ensures every target record references a valid respondent
--- Excludes rows where respondent lookup fails
--- ============================================================================
-INNER JOIN dev_catalog.slv_cdm_hrs.hrs_survey_respondent resp
-    ON CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) = resp.hhidpn
-
--- ============================================================================
--- Duplicate Handling: Skip Existing Records
--- Ensures restartability - do not insert duplicate HHIDPN values
--- ============================================================================
-LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_health tgt
-    ON CAST(CAST(src.HHIDPN AS BIGINT) AS STRING) = tgt.HHIDPN
-WHERE tgt.HHIDPN IS NULL;
+    TRUE AS active
+FROM wave_unpivoted wu
+    JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
+WHERE wu.shlt IS NOT NULL
+    OR wu.bmi IS NOT NULL
+    OR wu.hibpe IS NOT NULL
+    OR wu.diabe IS NOT NULL
+    OR wu.cancre IS NOT NULL
+    OR wu.lunge IS NOT NULL
+    OR wu.hearte IS NOT NULL
+    OR wu.stroke IS NOT NULL
+    OR wu.psyche IS NOT NULL
+    OR wu.arthre IS NOT NULL;
