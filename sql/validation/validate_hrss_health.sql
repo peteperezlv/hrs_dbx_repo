@@ -4,6 +4,8 @@
 -- Purpose: Unit test suite for DDL structure + post-load data quality
 -- Maps to: Section 15 (Validation Requirements) of the Functional Spec
 --
+-- AI Assistant: Claude
+--
 -- Usage: Run each numbered block independently, or run the entire
 --        script and inspect the final UNION ALL summary result set.
 --        Every check returns STATUS = 'PASS' or 'FAIL'.
