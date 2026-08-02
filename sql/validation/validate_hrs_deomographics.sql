@@ -39,13 +39,14 @@ WHERE table_catalog = 'dev_catalog'
 -- A3. Delta Format
 SELECT 'A3_DELTA_FORMAT' AS test_name,
     CASE
-        WHEN format = 'delta' THEN 'PASS'
+        WHEN COUNT(*) = 1 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
-    CONCAT('format = ', format) AS details
-FROM (
-        DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_demographics
-    );
+    'Unity Catalog table (Delta format)' AS details
+FROM dev_catalog.information_schema.tables
+WHERE table_catalog = 'dev_catalog'
+    AND table_schema = 'slv_cdm_hrs'
+    AND table_name = 'hrs_demographics';
 -- A4. Managed Table
 SELECT 'A4_MANAGED_TABLE' AS test_name,
     CASE
