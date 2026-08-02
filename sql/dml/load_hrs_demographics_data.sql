@@ -52,7 +52,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
     ) WITH source_base AS (
         SELECT HHIDPN,
             TRY_CAST(RARACEM AS TINYINT) AS raracem,
-            TRY_CAST(RAHISPN AS TINYINT) AS rahispan,
+            TRY_CAST(RAHISPAN AS TINYINT) AS rahispan,
             TRY_CAST(RAEDYRS AS TINYINT) AS raedyrs,
             TRY_CAST(RARELIG AS TINYINT) AS rarelig,
             TRY_CAST(RAVETRN AS TINYINT) AS ravetrn,
