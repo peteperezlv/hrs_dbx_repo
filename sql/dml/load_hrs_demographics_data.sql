@@ -254,6 +254,3 @@ FROM wave_unpivoted wu
     JOIN source_base sb ON wu.HHIDPN = sb.HHIDPN
     JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
     JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
-WHERE wu.agey_e IS NOT NULL
-    OR wu.cenreg IS NOT NULL
-    OR wu.mstat IS NOT NULL;
