@@ -25,7 +25,7 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_demographics (
     -- Identifier Columns
     -- ---------------------------------------------------------------
     hhidpn BIGINT NOT NULL COMMENT 'Household Respondent Identifier',
-    wave_number SMALLINT NOT NULL COMMENT 'Wave Number',
+    wave_number STRING NOT NULL COMMENT 'Wave Number',
     -- ---------------------------------------------------------------
     -- Business Columns (from Source-to-Target Mapping Matrix, Section 12)
     -- ---------------------------------------------------------------
