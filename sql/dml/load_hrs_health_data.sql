@@ -40,7 +40,8 @@
 -- This is not a spec requirement -- rows are excluded only when they
 -- fail the required respondent_id / wave_id FK resolution below.
 -- =====================================================================
-TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hrs_health --
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hrs_health;
+--
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_health (
         respondent_id,
         wave_id,
