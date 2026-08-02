@@ -1,5 +1,5 @@
 -- =====================================================================
--- HRS Silver CDM DDL – Health Section
+-- HRS Silver CDM DDL – Health Section 
 -- Target Table: dev_catalog.slv_cdm_hrs.hrs_health
 -- Generated per: HRS Silver CDM DDL Functional Specification v1.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake

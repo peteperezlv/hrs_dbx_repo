@@ -45,28 +45,6 @@ FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
     AND table_name = 'hrs_health';
--- A3. Delta Format (Unity Catalog tables are Delta by default)
-SELECT 'A3_DELTA_FORMAT' AS test_name,
-    CASE
-        WHEN COUNT(*) = 1 THEN 'PASS'
-        ELSE 'FAIL'
-    END AS status,
-    'Unity Catalog table (Delta format)' AS details
-FROM dev_catalog.information_schema.tables
-WHERE table_catalog = 'dev_catalog'
-    AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health';
--- A4. Managed Table (Unity Catalog tables are MANAGED by default)
-SELECT 'A4_MANAGED_TABLE' AS test_name,
-    CASE
-        WHEN COUNT(*) = 1 THEN 'PASS'
-        ELSE 'FAIL'
-    END AS status,
-    'Unity Catalog table (MANAGED type)' AS details
-FROM dev_catalog.information_schema.tables
-WHERE table_catalog = 'dev_catalog'
-    AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health';
 -- A5. Identity Column Exists (hrs_health_id)
 SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
     CASE
