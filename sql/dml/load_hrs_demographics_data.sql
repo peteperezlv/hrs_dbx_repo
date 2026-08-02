@@ -123,6 +123,22 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
             TRY_CAST(R2MSTAT AS TINYINT)
         FROM source_base
         UNION ALL
+        -- Wave 3
+        SELECT HHIDPN,
+            CAST(3 AS STRING) AS wave_number,
+            TRY_CAST(R3AGEY_E AS DECIMAL(10, 2)),
+            TRY_CAST(R3CENREG AS TINYINT),
+            TRY_CAST(R3MSTAT AS TINYINT)
+        FROM source_base
+        UNION ALL
+        -- Wave 4
+        SELECT HHIDPN,
+            CAST(4 AS STRING) AS wave_number,
+            TRY_CAST(R4AGEY_E AS DECIMAL(10, 2)),
+            TRY_CAST(R4CENREG AS TINYINT),
+            TRY_CAST(R4MSTAT AS TINYINT)
+        FROM source_base
+        UNION ALL
         -- Wave 5
         SELECT HHIDPN,
             CAST(5 AS STRING) AS wave_number,

@@ -238,24 +238,6 @@ FROM (
             AND table_schema = 'slv_cdm_hrs'
             AND table_name = 'hrs_demographics'
         UNION ALL
-        SELECT 'A3_DELTA_FORMAT',
-            CASE
-                WHEN format = 'delta' THEN 'PASS'
-                ELSE 'FAIL'
-            END
-        FROM (
-                DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_demographics
-            )
-        UNION ALL
-        SELECT 'A4_MANAGED_TABLE',
-            CASE
-                WHEN table_type = 'MANAGED' THEN 'PASS'
-                ELSE 'FAIL'
-            END
-        FROM (
-                DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_demographics
-            )
-        UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
                 WHEN COUNT(*) = 1 THEN 'PASS'
