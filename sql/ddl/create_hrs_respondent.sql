@@ -4,7 +4,7 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_respondent (
     cohort_id BIGINT,
     hhid STRING,
     pn STRING,
-    hhidpn STRING,
+    hhidpn BIGINT,
     hacohort INT,
     respondent_description STRING,
     create_date DATE,
