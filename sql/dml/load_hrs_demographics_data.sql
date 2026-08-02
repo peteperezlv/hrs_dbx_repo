@@ -33,6 +33,8 @@
 -- Business Key:
 --   UNIQUE (respondent_id, wave_id)
 -- =====================================================================
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hrs_demographics;
+--
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
         respondent_id,
         wave_id,
