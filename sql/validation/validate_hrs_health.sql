@@ -301,26 +301,6 @@ FROM (
             AND table_schema = 'slv_cdm_hrs'
             AND table_name = 'hrs_health'
         UNION ALL
-        SELECT 'A3_DELTA_FORMAT',
-            CASE
-                WHEN COUNT(*) = 1 THEN 'PASS'
-                ELSE 'FAIL'
-            END
-        FROM dev_catalog.information_schema.tables
-        WHERE table_catalog = 'dev_catalog'
-            AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-        UNION ALL
-        SELECT 'A4_MANAGED_TABLE',
-            CASE
-                WHEN COUNT(*) = 1 THEN 'PASS'
-                ELSE 'FAIL'
-            END
-        FROM dev_catalog.information_schema.tables
-        WHERE table_catalog = 'dev_catalog'
-            AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-        UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
                 WHEN COUNT(*) = 1 THEN 'PASS'
