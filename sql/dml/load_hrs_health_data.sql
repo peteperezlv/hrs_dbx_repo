@@ -24,6 +24,14 @@
 -- wave_number is STRING on both hrs_health and hrs_wave (per spec
 -- change), so wave numbers are cast to STRING in the unpivot to
 -- match on join without implicit coercion.
+--
+-- NOTE: Every respondent x wave (1-16) combination is inserted
+-- unconditionally. No NOT NULL filter is applied on the business
+-- columns, since any one of them (shlt, bmi, hibpe, diabe, cancre,
+-- lunge, hearte, stroke, psyche, arthre) may legitimately be NULL
+-- for a given respondent/wave without invalidating the row. This
+-- is not a spec requirement -- rows are excluded only when they
+-- fail the required respondent_id / wave_id FK resolution below.
 -- =====================================================================
 INSERT INTO dev_catalog.slv_cdm_hrs.hrs_health (
         respondent_id,
@@ -451,14 +459,4 @@ SELECT r.respondent_id,
     TRUE AS active
 FROM wave_unpivoted wu
     JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
-WHERE wu.shlt IS NOT NULL
-    OR wu.bmi IS NOT NULL
-    OR wu.hibpe IS NOT NULL
-    OR wu.diabe IS NOT NULL
-    OR wu.cancre IS NOT NULL
-    OR wu.lunge IS NOT NULL
-    OR wu.hearte IS NOT NULL
-    OR wu.stroke IS NOT NULL
-    OR wu.psyche IS NOT NULL
-    OR wu.arthre IS NOT NULL;
+    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number;
