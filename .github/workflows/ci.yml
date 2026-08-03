@@ -84,8 +84,8 @@ jobs:
           test -f resources/hrs_etl_job.yml || (echo "❌ Missing hrs_etl_job.yml" && exit 1)
 
       ###############           THIS SECTION MAY NOT BE NEEDED ?            ###################################
-      - name: List etl_testing Files
-        run: find etl_testing -name "*.sql"
+      #- name: List etl_testing Files
+      #  run: find etl_testing -name "*.sql"
 
       # Verify Required SQL
       - name: Verify Required SQL
