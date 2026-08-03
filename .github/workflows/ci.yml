@@ -68,6 +68,7 @@ jobs:
       #    ls -R
     
       # Verify Reqpository Structure.  Check for required application folders.
+      # when ready, add this: test -d etl_testing || (echo "❌ Missing etl_testing folder" && exit 1)
       - name: Verify Repository Structure
         run: |
           echo "Checking required folders..."
