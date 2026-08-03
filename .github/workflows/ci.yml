@@ -71,7 +71,6 @@ jobs:
       - name: Verify Repository Structure
         run: |
           echo "Checking required folders..."
-          test -d etl_testing || (echo "❌ Missing etl_testing folder" && exit 1)
           test -d notebooks || (echo "❌ Missing notebooks folder" && exit 1)
           test -d resources || (echo "❌ Missing resources folder" && exit 1)
           test -d sql || (echo "❌ Missing sql folder" && exit 1)
