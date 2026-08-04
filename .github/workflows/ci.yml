@@ -103,9 +103,9 @@ jobs:
       ###################  What about testing python code (linting) in the notebooks?   ##################################
       - name: Verify Required Notebooks
         run: |
-          test -f notebooks/setup/00_create_database_objects.ipynb
-          test -f notebooks/setup/10_load_hrs_cohort_data.ipynb
-          test -f notebooks/setup/20_load_hrs_respondent_data.ipynb
+          test -f notebooks/orchestration/00_create_database_objects.ipynb
+          test -f notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+          test -f notebooks/orchestration/20_load_hrs_respondent_data.ipynb
 
       # List Source Files.
       ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################
