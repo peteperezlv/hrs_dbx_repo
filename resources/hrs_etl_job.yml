@@ -35,6 +35,10 @@
 #   job_clusters:
 #   - job_cluster_key: ...
 #
+# When To Edit this file
+#   - When you rename a orchestration notebook file
+#   - When you add a new orchestration notebook file
+#
 # ==========================================================
 resources:
   jobs:
