@@ -164,7 +164,7 @@ resources:
           environment_key: serverless_env
 
           notebook_task:
-            notebook_path: ../notebooks/orchestration/30_load_hrs_demographics_data.ipynb
+            notebook_path: ../notebooks/orchestration/40_load_hrs_demographics_data.ipynb
 
         # --------------------------------------------------
         # Task 5:
@@ -186,7 +186,7 @@ resources:
           environment_key: serverless_env
 
           notebook_task:
-            notebook_path: ../notebooks/orchestration/30_load_hrs_health_data.ipynb
+            notebook_path: ../notebooks/orchestration/50_load_hrs_health_data.ipynb
 
         # --------------------------------------------------
         # Task 6:
@@ -208,4 +208,4 @@ resources:
           environment_key: serverless_env
 
           notebook_task:
-            notebook_path: ../notebooks/orchestration/30_load_hrs_leave_behind_data.ipynb
+            notebook_path: ../notebooks/orchestration/60_load_hrs_leave_behind_data.ipynb
