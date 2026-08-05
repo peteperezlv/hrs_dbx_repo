@@ -116,4 +116,4 @@ resources:
           environment_key: serverless_env
 
           notebook_task:
-            notebook_path: ../notebooks/orchestration/20_load_hrs_respondent_data.ipynb
+            notebook_path: ../notebooks/orchestration/30_load_hrs_respondent_data.ipynb
