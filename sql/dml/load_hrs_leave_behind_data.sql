@@ -24,11 +24,11 @@
 --       business columns hardcoded NULL,
 -- combined via UNION ALL.
 --
--- Spouse-variant columns (S{w}LB{TRAIT}) exist in source but are
+-- Spouse-variant columns (S{w}LB{TRAIT}) exist in source but are 
 -- explicitly out of scope for this table per Section 9's business
 -- decision -- not selected into source_base.
 --
--- wave_number is STRING on both hrs_leave_behind and hrs_wave; the
+-- wave_number is STRING on both hrs_leave_behind and hrs_wave. the
 -- UNPIVOT column aliases (`8`...`16`) and the scaffold's literal wave
 -- numbers are both cast to STRING to match on join without coercion.
 --
@@ -191,7 +191,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.hrs_leave_behind (
     ),
     -- =====================================================================
     -- Branch (b): Waves 1-7 -- synthetic NULL scaffold (no source columns
-    -- exist for these waves; this is a column-existence gap, not a null-
+    -- exist for these waves. this is a column-existence gap, not a null-
     -- value gap, so UNPIVOT cannot reference them at all)
     -- =====================================================================
     distinct_respondents AS (

@@ -479,4 +479,4 @@ SELECT r.respondent_id,
     TRUE AS active
 FROM wave_unpivoted wu
     JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number;
+    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
