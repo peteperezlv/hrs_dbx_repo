@@ -97,9 +97,18 @@ jobs:
           echo "Checking required SQL files..."
 
           test -f sql/ddl/create_hrs_cohort.sql || (echo "❌ Missing create_hrs_cohort.sql" && exit 1)
-          test -f sql/dml/load_hrs_cohort_data.sql || (echo "❌ Missing load_hrs_cohort_data.sql" && exit 1)
+          test -f sql/ddl/create_hrs_wave.sql || (echo "❌ Missing create_hrs_wave.sql" && exit 1)
           test -f sql/ddl/create_hrs_respondent.sql || (echo "❌ Missing create_hrs_respondent.sql" && exit 1)
+          test -f sql/ddl/create_hrs_demographics.sql || (echo "❌ Missing create_hrs_demographics.sql" && exit 1)
+          test -f sql/ddl/create_hrs_health.sql || (echo "❌ Missing create_hrs_health.sql" && exit 1)
+          test -f sql/ddl/create_hrs_leave_behind.sql || (echo "❌ Missing create_hrs_leave_behind.sql" && exit 1)
+
+          test -f sql/dml/load_hrs_cohort_data.sql || (echo "❌ Missing load_hrs_cohort_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_wave_data.sql || (echo "❌ Missing load_hrs_wave_data.sql" && exit 1)
           test -f sql/dml/load_hrs_respondent_data.sql || (echo "❌ Missing load_hrs_respondent_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_demographics_data.sql || (echo "❌ Missing load_hrs_demographics_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_health_data.sql || (echo "❌ Missing load_hrs_health_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_leave_behind_data.sql || (echo "❌ Missing load_hrs_leave_behind_data.sql" && exit 1)
 
           echo "✓ SQL validation complete"
 
@@ -109,7 +118,11 @@ jobs:
         run: |
           test -f notebooks/orchestration/00_create_database_objects.ipynb
           test -f notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+          test -f notebooks/orchestration/20_load_hrs_wave_data.ipynb
           test -f notebooks/orchestration/30_load_hrs_respondent_data.ipynb
+          test -f notebooks/orchestration/40_load_hrs_demographics_data.ipynb
+          test -f notebooks/orchestration/50_load_hrs_health_data.ipynb
+          test -f notebooks/orchestration/60_load_hrs_leave_behind_data.ipynb
 
       # List Source Files.
       ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################

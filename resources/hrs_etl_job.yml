@@ -61,7 +61,7 @@ resources:
 
       tasks:
         # --------------------------------------------------
-        # Task 1:
+        # Task 0:
         # Create database objects
         #
         # Executes DDL scripts to create:
@@ -81,7 +81,7 @@ resources:
             notebook_path: ../notebooks/orchestration/00_create_database_objects.ipynb
 
         # --------------------------------------------------
-        # Task 2:
+        # Task 1:
         # Load Cohort reference data
         #
         # Loads:
@@ -100,6 +100,28 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+
+        # --------------------------------------------------
+        # Task 2:
+        # Load Wave reference data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_wave
+        #
+        # Depends on:
+        #   create_objects
+        #
+        # --------------------------------------------------
+        - task_key: load_wave
+
+          depends_on:
+            - task_key: create_objects
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/20_load_hrs_wave_data.ipynb
+
 
         # --------------------------------------------------
         # Task 3:
@@ -121,3 +143,69 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/30_load_hrs_respondent_data.ipynb
+
+        # --------------------------------------------------
+        # Task 4:
+        # Load Demographics data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_demographics
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_demographics
+
+          depends_on:
+            - task_key: load_respondent
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/30_load_hrs_demographics_data.ipynb
+
+        # --------------------------------------------------
+        # Task 5:
+        # Load Health data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_health
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_demographics
+
+          depends_on:
+            - task_key: load_respondent
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/30_load_hrs_health_data.ipynb
+
+        # --------------------------------------------------
+        # Task 6:
+        # Load Leave Behind data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_leave_behind
+
+          depends_on:
+            - task_key: load_respondent
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/30_load_hrs_leave_behind_data.ipynb
