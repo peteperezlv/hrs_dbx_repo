@@ -40,9 +40,7 @@ SELECT 'A3_DELTA_FORMAT' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('format = ', format) AS details
-FROM (
-        DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
-    );
+FROM DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind;
 -- A4. Managed Table
 SELECT 'A4_MANAGED_TABLE' AS test_name,
     CASE
@@ -50,9 +48,7 @@ SELECT 'A4_MANAGED_TABLE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('table_type = ', table_type) AS details
-FROM (
-        DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
-    );
+FROM DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind;
 -- A5. Identity Column Exists (hrs_leave_behind_id)
 SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
     CASE
@@ -357,18 +353,14 @@ FROM (
                 WHEN format = 'delta' THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM (
-                DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
-            )
+        FROM DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
         UNION ALL
         SELECT 'A4_MANAGED_TABLE',
             CASE
                 WHEN table_type = 'MANAGED' THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM (
-                DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
-            )
+        FROM DESCRIBE DETAIL dev_catalog.slv_cdm_hrs.hrs_leave_behind
         UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
