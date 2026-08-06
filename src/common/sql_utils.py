@@ -16,6 +16,8 @@
     # Step 2 - Read the SQL file statements and create an array of SQL statements.
     # Step 3 - Use the enumerate function to loop throgh each SQL statement and execute it.
 
+#** Caution: Make sure that the SQL statements processed by this utility do not contain superfluous ';' in comments.  Only use at the end of each sql statement.
+
 from pathlib import Path
 
 def execute_sql_file(spark, sql_file, display_results=False):
