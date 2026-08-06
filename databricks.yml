@@ -85,9 +85,31 @@ sync:
     - notebooks/**
     - sql/**
 
+# =====================================================================
+# TARGETS (modern replacement for deprecated "environments")
+# =====================================================================
 targets:
-  default:
-    mode: development
 
+  dev:
+    mode: development
     workspace:
       host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: dev_catalog
+      schema_prefix: slv_cdm_hrs_dev
+
+  staging:
+    mode: development
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: staging_catalog
+      schema_prefix: slv_cdm_hrs_stg
+
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: prod_catalog
+      schema_prefix: slv_cdm_hrs

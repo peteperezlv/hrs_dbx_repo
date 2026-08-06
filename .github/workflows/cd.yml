@@ -1,5 +1,6 @@
 # ==========================================================
 # Continuous Deployment
+# MS Copilot Assisted
 #
 # Purpose:
 #   Deploy the Databricks Asset Bundle and execute the
@@ -24,10 +25,20 @@
 #        ▼
 # Deployment Summary
 #
+# NOTE:  workflow_dispath - The branch selection you see when running 
+# the workflow is GitHub's default behavior - it always lets you choose 
+# which branch to run a manually-triggered workflow on. This prompt 
+# appears in the GitHub UI, not in the YAML file itself.
+#
 # ==========================================================
 
 name: Continuous Deployment
 
+#---------------------------------------
+#  workflow_dispatch is GitHub's default
+#  behavior for choosing the branch to 
+#  deploy to.
+#---------------------------------------
 on:
   workflow_dispatch:
 
@@ -69,7 +80,9 @@ jobs:
           databricks current-user me
 
       #---------------------------------------
-      # Deploy Bundle
+      # Runs the job in the "databricks.yml" file
+      # Defines the Databricks Asset Bundle used to deploy
+      #   notebooks, workflows, and supporting resources.
       #---------------------------------------
       - name: Deploy Asset Bundle
         env:
@@ -77,7 +90,7 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         run: |
-          databricks bundle deploy
+          databricks bundle deploy --target dev
 
       #---------------------------------------
       # Execute Workflow
