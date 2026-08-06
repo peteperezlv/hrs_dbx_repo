@@ -23,7 +23,7 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_leave_behind (
     -- ---------------------------------------------------------------
     -- Business Columns (from Source-to-Target Mapping Matrix, Section 12)
     -- All columns below are wave-varying, sourced only for Waves 8-16
-    -- (Leave-Behind Big 5 items were not fielded before Wave 8); rows
+    -- (Leave-Behind Big 5 items were not fielded before Wave 8) rows
     -- for Waves 1-7 carry NULL across all 5 business columns by design.
     -- ---------------------------------------------------------------
     lbneur DECIMAL(10, 2) COMMENT 'R#LBNEUR: Big 5 Neuroticism (RAND CONT variable, Waves 8-16 only), Nullable = yes',
