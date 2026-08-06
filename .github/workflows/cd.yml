@@ -71,13 +71,13 @@ jobs:
       #---------------------------------------
       # Test Workspace Connection
       #---------------------------------------
-      #- name: Test Databricks Connection
-      #  env:
-      #    DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      #    DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      - name: Test Databricks Connection
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-      #  run: |
-      #    databricks current-user me
+        run: |
+          databricks current-user me --target dev
 
       #---------------------------------------
       # Runs the job in the "databricks.yml" file
@@ -104,7 +104,7 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         run: |
-          databricks bundle run hrs_etl_job
+          databricks bundle run hrs_etl_job --target dev
 
       #---------------------------------------
       # Summary
