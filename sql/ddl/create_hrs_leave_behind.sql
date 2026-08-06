@@ -26,11 +26,11 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_leave_behind (
     -- (Leave-Behind Big 5 items were not fielded before Wave 8); rows
     -- for Waves 1-7 carry NULL across all 5 business columns by design.
     -- ---------------------------------------------------------------
-    lbneur DECIMAL(10, 2) COMMENT 'R#LBNEUR: Big 5 Neuroticism (RAND CONT variable, Waves 8-16 only); Nullable = yes',
-    lbext DECIMAL(10, 2) COMMENT 'R#LBEXT: Big 5 Extroversion (RAND CONT variable, Waves 8-16 only); Nullable = yes',
-    lbopen DECIMAL(10, 2) COMMENT 'R#LBOPEN: Big 5 Openness to Experience (RAND CONT variable, Waves 8-16 only); Nullable = yes',
-    lbagr DECIMAL(10, 2) COMMENT 'R#LBAGR: Big 5 Agreeableness (RAND CONT variable, Waves 8-16 only); Nullable = yes',
-    lbcon5 DECIMAL(10, 2) COMMENT 'R#LBCON5: Big 5 Conscientiousness, 5 Sub-items composite (RAND CONT variable, Waves 8-16 only); Nullable = yes',
+    lbneur DECIMAL(10, 2) COMMENT 'R#LBNEUR: Big 5 Neuroticism (RAND CONT variable, Waves 8-16 only), Nullable = yes',
+    lbext DECIMAL(10, 2) COMMENT 'R#LBEXT: Big 5 Extroversion (RAND CONT variable, Waves 8-16 only), Nullable = yes',
+    lbopen DECIMAL(10, 2) COMMENT 'R#LBOPEN: Big 5 Openness to Experience (RAND CONT variable, Waves 8-16 only), Nullable = yes',
+    lbagr DECIMAL(10, 2) COMMENT 'R#LBAGR: Big 5 Agreeableness (RAND CONT variable, Waves 8-16 only), Nullable = yes',
+    lbcon5 DECIMAL(10, 2) COMMENT 'R#LBCON5: Big 5 Conscientiousness, 5 Sub-items composite (RAND CONT variable, Waves 8-16 only), Nullable = yes',
     -- ---------------------------------------------------------------
     -- Audit Columns
     -- ---------------------------------------------------------------

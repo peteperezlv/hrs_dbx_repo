@@ -24,16 +24,16 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_health (
     -- Business Columns (from Source-to-Target Mapping Matrix, Section 12)
     -- All columns below are wave-varying (RwXXXXX)
     -- ---------------------------------------------------------------
-    shlt TINYINT COMMENT 'R#SHLT: Self-Rated Health (RAND CATEG variable); Nullable = yes',
-    bmi DECIMAL(10, 2) COMMENT 'R#BMI: Body Mass Index (RAND CONT variable); Nullable = yes',
-    hibpe TINYINT COMMENT 'R#HIBPE: Ever Diagnosed High Blood Pressure (RAND CATEG variable); Nullable = yes',
-    diabe TINYINT COMMENT 'R#DIABE: Ever Diagnosed Diabetes (RAND CATEG variable); Nullable = yes',
-    cancre TINYINT COMMENT 'R#CANCRE: Ever Diagnosed Cancer (RAND CATEG variable); Nullable = yes',
-    lunge TINYINT COMMENT 'R#LUNGE: Ever Diagnosed Lung Disease (RAND CATEG variable); Nullable = yes',
-    hearte TINYINT COMMENT 'R#HEARTE: Ever Diagnosed Heart Problems (RAND CATEG variable); Nullable = yes',
-    stroke TINYINT COMMENT 'R#STROKE: Ever Diagnosed Stroke (RAND CATEG variable); Nullable = yes',
-    psyche TINYINT COMMENT 'R#PSYCHE: Ever Diagnosed Psychiatric Problems (RAND CATEG variable); Nullable = yes',
-    arthre TINYINT COMMENT 'R#ARTHRE: Ever Diagnosed Arthritis (RAND CATEG variable); Nullable = yes',
+    shlt TINYINT COMMENT 'R#SHLT: Self-Rated Health (RAND CATEG variable), Nullable = yes',
+    bmi DECIMAL(10, 2) COMMENT 'R#BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
+    hibpe TINYINT COMMENT 'R#HIBPE: Ever Diagnosed High Blood Pressure (RAND CATEG variable), Nullable = yes',
+    diabe TINYINT COMMENT 'R#DIABE: Ever Diagnosed Diabetes (RAND CATEG variable), Nullable = yes',
+    cancre TINYINT COMMENT 'R#CANCRE: Ever Diagnosed Cancer (RAND CATEG variable), Nullable = yes',
+    lunge TINYINT COMMENT 'R#LUNGE: Ever Diagnosed Lung Disease (RAND CATEG variable), Nullable = yes',
+    hearte TINYINT COMMENT 'R#HEARTE: Ever Diagnosed Heart Problems (RAND CATEG variable), Nullable = yes',
+    stroke TINYINT COMMENT 'R#STROKE: Ever Diagnosed Stroke (RAND CATEG variable), Nullable = yes',
+    psyche TINYINT COMMENT 'R#PSYCHE: Ever Diagnosed Psychiatric Problems (RAND CATEG variable), Nullable = yes',
+    arthre TINYINT COMMENT 'R#ARTHRE: Ever Diagnosed Arthritis (RAND CATEG variable), Nullable = yes',
     -- ---------------------------------------------------------------
     -- Audit Columns
     -- ---------------------------------------------------------------
