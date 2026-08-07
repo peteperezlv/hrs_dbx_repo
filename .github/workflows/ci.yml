@@ -156,10 +156,9 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
         run: |
-          databricks current-user me 
-
+          databricks current-user me --target dev
+          
       # Validate Databricks Bundle.  Checks for a validate databricks.yml bundle definition.
       - name: Validate Databricks Bundle
         env:
