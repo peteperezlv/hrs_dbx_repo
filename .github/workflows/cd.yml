@@ -25,7 +25,7 @@
 #        ▼
 # Deployment Summary
 #
-# NOTE:  workflow_dispath - The branch selection you see when running 
+# NOTE:  workflow_dispath - The branch selection you see when running  
 # the workflow is GitHub's default behavior - it always lets you choose 
 # which branch to run a manually-triggered workflow on. This prompt 
 # appears in the GitHub UI, not in the YAML file itself.
