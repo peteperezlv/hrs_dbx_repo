@@ -7,6 +7,12 @@
 #
 #    ***When it is run with the "databricks bundle validate --profile hrs-dev" PowerShell command, 
 #     a job is created named "HRS Data Warehouse Setup"***
+# ==========================================================
+# Bundle Awareness
+# Databricks bundles auto Databricks Bundles automatically treat everything under resources/ as bundle-managed assets.
+# This is the #1 requirement.  If the file were outside resources/, it would not be bundle-aware.
+# ==========================================================
+# 
 #
 # Execution Order:
 #
@@ -45,7 +51,7 @@ resources:
 
     # Databricks Workflow name
     hrs_etl_job:
-      name: HRS Data Warehouse Setup
+      name: HRS Data Warehouse Setup - ${bundle.target}
 
       description: >
         Creates and loads the foundational HRS Silver layer
@@ -177,10 +183,10 @@ resources:
         #   load_respondent and load_wave
         #
         # --------------------------------------------------
-        - task_key: load_demographics
+        - task_key: load_health
 
           depends_on:
-            - task_key: load_respondent
+            - task_key: load_health
             - task_key: load_wave
 
           environment_key: serverless_env

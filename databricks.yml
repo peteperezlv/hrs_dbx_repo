@@ -1,5 +1,7 @@
 # ==========================================================
 # Databricks Asset Bundle Configuration
+# This is the bundle manifest
+#
 # Project: HRS Data Warehouse
 #
 # Purpose:
@@ -69,7 +71,16 @@
 #  Execute the ETL workflow
 #
 #  That gives you a clean promotion process without needing multiple workspaces.
-#
+# 
+# ==========================================================
+# Bundle awareness
+# When you run something like databricks bundle deploy --target dev in the cd.yml file,
+#  The bundle:
+#     - Loads databricks.yml
+#     - Loads all included resource files
+#     - Applies target overrides (dev/staging/prod)
+#     - Builds a deployment plan
+#     - Deploys the job into the workspace
 # ==========================================================
 
 bundle:
@@ -89,13 +100,20 @@ sync:
 # TARGETS (modern replacement for deprecated "environments")
 # =====================================================================
 
-# Declare variabls globally
+# ============================================================
+# Declare GLOBAL VARIABLES (must be maps, not strings)
+# Databricks Bundles require all variables to be declared globally
+# Databricks expects variables to be declared as maps, not strings
+# ============================================================
 variables:
   catalog_name:
     default: ""
   schema_prefix:
     default: ""
 
+# ============================================================
+# TARGETS (modern replacement for deprecated "environments")
+# ============================================================
 targets:
   dev:
     mode: development
