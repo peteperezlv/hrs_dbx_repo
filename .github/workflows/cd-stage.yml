@@ -1,0 +1,42 @@
+# ==========================================================
+# Continuous Deployment ‑ Staging Workflow (auto deploy on Main)
+#
+# MS Copilot Assisted
+#
+# Purpose:
+#   Deploy the Databricks Asset Bundle to Staging and execute the
+#   HRS ETL workflow.
+#   
+#   Runs integration tests after PR merge.
+#
+# ==========================================================
+
+name: CD - Staging Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Deploy Bundle to Staging
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle deploy --target staging
+
+      - name: Run Staging Workflow
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle workflow hrs_etl_job --target staging
