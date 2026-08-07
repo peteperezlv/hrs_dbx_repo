@@ -85,15 +85,18 @@ sync:
     - notebooks/**
     - sql/**
 
-# =====================================================================
-# TARGETS (modern replacement for deprecated "environments")
-# =====================================================================
-
-# Declare variabls globally
+# ============================================================
+# GLOBAL VARIABLES (must be maps, not strings)
+# ============================================================
 variables:
-  catalog_name: ""
-  schema_prefix: ""
-  
+  catalog_name:
+    default: ""
+  schema_prefix:
+    default: ""
+
+# ============================================================
+# TARGETS (modern replacement for deprecated "environments")
+# ============================================================
 targets:
 
   dev:
