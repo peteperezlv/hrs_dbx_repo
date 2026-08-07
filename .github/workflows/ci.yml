@@ -45,7 +45,7 @@
 #         ▼
 # CI Summary
 
-name: CI - Continuous Integration
+name: CI - Validate Feature Braanch
 
 on:
   push:

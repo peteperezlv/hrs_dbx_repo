@@ -11,7 +11,7 @@
 #
 # ==========================================================
 
-name: CD - Deployment to Production
+name: CD - Deployment to Prod
 
 on:
   workflow_dispatch:
