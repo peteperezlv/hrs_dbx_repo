@@ -90,9 +90,13 @@ sync:
 # =====================================================================
 
 # Declare variabls globally
+variables:
+  catalog_name:
+    default: ""
+  schema_prefix:
+    default: ""
 
 targets:
-
   dev:
     mode: development
     workspace:
