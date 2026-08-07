@@ -186,7 +186,7 @@ resources:
         - task_key: load_health
 
           depends_on:
-            - task_key: load_health
+            - task_key: load_respondent
             - task_key: load_wave
 
           environment_key: serverless_env
