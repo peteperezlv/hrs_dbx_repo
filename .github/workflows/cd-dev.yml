@@ -1,0 +1,117 @@
+# ==========================================================
+# Continuous Deployment
+# MS Copilot Assisted
+#
+# Purpose:
+#   Deploy the Databricks Asset Bundle and execute the
+#   HRS ETL workflow.
+#
+# Deployment Flow
+#
+# Checkout Repository
+#        │
+#        ▼
+# Install Databricks CLI
+#        │
+#        ▼
+# Test Databricks Connection
+#        │
+#        ▼
+# Deploy Asset Bundle
+#        │
+#        ▼
+# Execute HRS Workflow
+#        │
+#        ▼
+# Deployment Summary
+#
+# NOTE:  workflow_dispath - The branch selection you see when running  
+# the workflow is GitHub's default behavior - it always lets you choose 
+# which branch to run a manually-triggered workflow on. This prompt 
+# appears in the GitHub UI, not in the YAML file itself.
+#
+# ==========================================================
+
+name: CD - Deployment to Dev
+#---------------------------------------
+#  workflow_dispatch is GitHub's default
+#  behavior for choosing the branch to 
+#  deploy to.
+#---------------------------------------
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      #---------------------------------------
+      # Checkout Repository
+      #---------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      #---------------------------------------
+      # Install Databricks CLI
+      #---------------------------------------
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      #---------------------------------------
+      # Verify CLI
+      #---------------------------------------
+      - name: Verify Databricks CLI
+        run: databricks version
+
+      #---------------------------------------
+      # Test Workspace Connection
+      #---------------------------------------
+      - name: Test Databricks Connection
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks current-user me --target dev
+
+      #---------------------------------------
+      # Runs the job in the "databricks.yml" file
+      # Defines the Databricks Asset Bundle used to deploy
+      #   notebooks, workflows, and supporting resources.
+      #---------------------------------------
+      - name: Deploy Asset Bundle
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks bundle deploy --target dev
+
+      #---------------------------------------
+      # Execute Workflow
+      #---------------------------------------
+      - name: Run HRS ETL Workflow
+
+        timeout-minutes: 30                    # This prevents a GitHub runner from waiting indefinitely if a Databricks job hangs.
+
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+          databricks bundle run hrs_etl_job --target dev
+
+      #---------------------------------------
+      # Summary
+      #---------------------------------------
+      - name: Deployment Summary
+        run: |
+          echo "======================================"
+          echo "Deployment completed successfully"
+          echo "Bundle deployed"
+          echo "HRS workflow executed"
+          echo "======================================"

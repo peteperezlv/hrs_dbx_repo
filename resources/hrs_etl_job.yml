@@ -1,0 +1,217 @@
+# ==========================================================
+# HRS Data Warehouse Setup Workflow
+#
+# Purpose:
+#   Creates and loads the foundational HRS Silver layer
+#   tables.
+#
+#    ***When it is run with the "databricks bundle validate --profile hrs-dev" PowerShell command, 
+#     a job is created named "HRS Data Warehouse Setup"***
+# ==========================================================
+# Bundle Awareness
+# Databricks bundles auto Databricks Bundles automatically treat everything under resources/ as bundle-managed assets.
+# This is the #1 requirement.  If the file were outside resources/, it would not be bundle-aware.
+# ==========================================================
+# 
+#
+# Execution Order:
+#
+#   1. create_objects
+#        |
+#        v
+#   2. load_cohort
+#        |
+#        v
+#   3. load_respondent
+#
+# Dependencies:
+#   - Cohort table must exist before Respondent loads.
+#   - SQL logic is maintained separately under /sql.
+#
+# Notebooks:
+#   notebooks/setup/
+#
+# </> How to run the bundle CLI
+#   bash       > databricks bundle run hrs_etl_job
+#   PowerShell > 
+#       databricks bundle validate --profile hrs-dev
+#       databricks bundle deploy --profile hrs-dev
+#
+# Do not add clusters in the Free Databricks addition.  Add this code when you go to paid.
+#   job_clusters:
+#   - job_cluster_key: ...
+#
+# When To Edit this file
+#   - When you rename a orchestration notebook file
+#   - When you add a new orchestration notebook file
+#
+# ==========================================================
+resources:
+  jobs:
+
+    # Databricks Workflow name
+    hrs_etl_job:
+      name: HRS Data Warehouse Setup - ${bundle.target}
+
+      description: >
+        Creates and loads the foundational HRS Silver layer
+        tables from the RAND HRS dataset.
+
+      timeout_seconds: 3600
+
+      # Serverless environment definition
+      environments:
+        - environment_key: serverless_env
+          spec:
+            environment_version: "2"  #  Correct, modern replacement to the client: "1"
+
+      tasks:
+        # --------------------------------------------------
+        # Task 0:
+        # Create database objects
+        #
+        # Executes DDL scripts to create:
+        #   - schemas
+        #   - tables
+        #   - constraints
+        #
+        # Source:
+        #   notebooks/setup/00_create_database_objects.ipynb
+        #
+        # --------------------------------------------------
+        - task_key: create_objects
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/00_create_database_objects.ipynb
+
+        # --------------------------------------------------
+        # Task 1:
+        # Load Cohort reference data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_cohort
+        #
+        # Depends on:
+        #   create_objects
+        #
+        # --------------------------------------------------
+        - task_key: load_cohort
+
+          depends_on:
+            - task_key: create_objects
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+
+        # --------------------------------------------------
+        # Task 2:
+        # Load Wave reference data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_wave
+        #
+        # Depends on:
+        #   create_objects
+        #
+        # --------------------------------------------------
+        - task_key: load_wave
+
+          depends_on:
+            - task_key: create_objects
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/20_load_hrs_wave_data.ipynb
+
+
+        # --------------------------------------------------
+        # Task 3:
+        # Load Respondent data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_respondent
+        #
+        # Depends on:
+        #   load_cohort
+        #
+        # --------------------------------------------------
+        - task_key: load_respondent
+
+          depends_on:
+            - task_key: load_cohort
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/30_load_hrs_respondent_data.ipynb
+
+        # --------------------------------------------------
+        # Task 4:
+        # Load Demographics data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_demographics
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_demographics
+
+          depends_on:
+            - task_key: load_respondent
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/40_load_hrs_demographics_data.ipynb
+
+        # --------------------------------------------------
+        # Task 5:
+        # Load Health data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_health
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_health
+
+          depends_on:
+            - task_key: load_health
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/50_load_hrs_health_data.ipynb
+
+        # --------------------------------------------------
+        # Task 6:
+        # Load Leave Behind data
+        #
+        # Loads:
+        #   dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        #
+        # Depends on:
+        #   load_respondent and load_wave
+        #
+        # --------------------------------------------------
+        - task_key: load_leave_behind
+
+          depends_on:
+            - task_key: load_respondent
+            - task_key: load_wave
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/60_load_hrs_leave_behind_data.ipynb

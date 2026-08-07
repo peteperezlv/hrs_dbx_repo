@@ -1,0 +1,213 @@
+
+# ==========================================================================================================
+# Continuous Integration Workflow.  
+#
+# Purpose:
+#   Validate all the working parts are in place before pushing changes to the Feature (developoment) branch.
+#
+#
+# When To Edit this file
+#   - When you rename a orchestration notebook file
+#   - When you add a new orchestration notebook file
+# ===========================================================================================================
+#
+# Execution Order:
+# ------------------------------------------------------------------------------------------------------------
+# Checkout Repository
+#         │
+#         ▼
+# Verify Repository Structure
+#         │
+#         ▼
+# Verify Required SQL
+#         │
+#         ▼
+# Verify Required Notebooks
+#         │
+#         ▼
+# List Source Files
+#         │
+#         ▼
+#Check Python Syntax
+#         │
+#         ▼
+# Install Databricks CLI
+#         │
+#         ▼
+# Verify CLI
+#         │
+#         ▼
+# Test Databricks Connection
+#         │
+#         ▼
+# Validate Asset Bundle
+#         │
+#         ▼
+# CI Summary
+
+name: CI - Validate Feature Braanch
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  validate:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      #---------------------------------------
+      # Checkout the working Repository (e.g. feature or feature/petes)
+      #---------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Display Branch
+        run: |
+          echo "Running CI on branch:"
+          echo "${{ github.ref_name }}"
+
+      #---------------------------------------
+      # Python setup
+      #---------------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      #- name: List Repository Contents
+      #  run: |
+      #    pwd
+      #    ls -R
+    
+      #---------------------------------------
+      # Verify Reqpository Structure.  Check for required application folders.
+      # when ready, add this: test -d etl_testing || (echo "❌ Missing etl_testing folder" && exit 1)
+      #---------------------------------------
+      - name: Verify Repository Structure
+        run: |
+          echo "Checking required folders..."
+          test -d notebooks || (echo "❌ Missing notebooks folder" && exit 1)
+          test -d resources || (echo "❌ Missing resources folder" && exit 1)
+          test -d sql || (echo "❌ Missing sql folder" && exit 1)
+          test -d src || (echo "❌ Missing src folder" && exit 1)
+      #---------------------------------------
+      # Verify Bundle Configuration
+      #---------------------------------------
+      - name: Verify Bundle Configuration
+        run: |
+          test -f databricks.yml || (echo "❌ Missing databricks.yml" && exit 1)
+          test -f resources/hrs_etl_job.yml || (echo "❌ Missing hrs_etl_job.yml" && exit 1)
+
+      ###############           THIS SECTION MAY NOT BE NEEDED ?            ###################################
+      #- name: List etl_testing Files
+      #  run: find etl_testing -name "*.sql"
+
+      #---------------------------------------
+      # Verify Required SQL
+      #---------------------------------------
+      - name: Verify Required SQL
+        run: |
+          echo "Checking required SQL files..."
+
+          test -f sql/ddl/create_hrs_cohort.sql || (echo "❌ Missing create_hrs_cohort.sql" && exit 1)
+          test -f sql/ddl/create_hrs_wave.sql || (echo "❌ Missing create_hrs_wave.sql" && exit 1)
+          test -f sql/ddl/create_hrs_respondent.sql || (echo "❌ Missing create_hrs_respondent.sql" && exit 1)
+          test -f sql/ddl/create_hrs_demographics.sql || (echo "❌ Missing create_hrs_demographics.sql" && exit 1)
+          test -f sql/ddl/create_hrs_health.sql || (echo "❌ Missing create_hrs_health.sql" && exit 1)
+          test -f sql/ddl/create_hrs_leave_behind.sql || (echo "❌ Missing create_hrs_leave_behind.sql" && exit 1)
+
+          test -f sql/dml/load_hrs_cohort_data.sql || (echo "❌ Missing load_hrs_cohort_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_wave_data.sql || (echo "❌ Missing load_hrs_wave_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_respondent_data.sql || (echo "❌ Missing load_hrs_respondent_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_demographics_data.sql || (echo "❌ Missing load_hrs_demographics_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_health_data.sql || (echo "❌ Missing load_hrs_health_data.sql" && exit 1)
+          test -f sql/dml/load_hrs_leave_behind_data.sql || (echo "❌ Missing load_hrs_leave_behind_data.sql" && exit 1)
+
+          echo "✓ SQL validation complete"
+
+      #---------------------------------------
+      # Verify Required Notebooks
+      ###################  What about testing python code (linting) in the notebooks?   ##################################
+      #---------------------------------------
+      - name: Verify Required Notebooks
+        run: |
+          test -f notebooks/orchestration/00_create_database_objects.ipynb
+          test -f notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+          test -f notebooks/orchestration/20_load_hrs_wave_data.ipynb
+          test -f notebooks/orchestration/30_load_hrs_respondent_data.ipynb
+          test -f notebooks/orchestration/40_load_hrs_demographics_data.ipynb
+          test -f notebooks/orchestration/50_load_hrs_health_data.ipynb
+          test -f notebooks/orchestration/60_load_hrs_leave_behind_data.ipynb
+
+      # List Source Files.
+      ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################
+      - name: List Source Files
+        run: find src
+
+      # List SQL Files.
+      ############################   NOT SURE WHAT VALUE listing the files PROVIDES   #####################################
+      - name: List SQL Files
+        run: find sql -name "*.sql"
+
+      #---------------------------------------
+      # Check Python Syntax.  
+      #---------------------------------------
+      - name: Check Python Syntax
+        run: |
+          python -m compileall src
+
+      #---------------------------------------
+      # Install the modern Databricks CLI
+      #---------------------------------------
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      #---------------------------------------
+      # Verify Databricks CLI
+      #---------------------------------------
+      - name: Verify Databricks CLI
+        run: |
+          databricks version
+      
+      #---------------------------------------
+      # Test the Databricks connection. 
+      # Retrieves specific identity details about the currently authenticated user or service principal 
+      # that your local Databricks CLI is using to execute commands
+      #---------------------------------------
+      - name: Test Databricks Connection
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          databricks current-user me --target dev
+          
+      #---------------------------------------
+      # Validate Databricks Bundle.  Checks for a validate databricks.yml bundle definition.
+      #---------------------------------------
+      - name: Validate Databricks Bundle
+        env:
+            DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+            DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        run: |
+            databricks bundle validate --target dev
+
+      #---------------------------------------
+      # End Step
+      #---------------------------------------
+      - name: CI Success
+        run: echo "Repository validation completed successfully."
+        
+      - name: CI Summary
+        run: |
+          echo "==================================="
+          echo "CI validation completed successfully"
+          echo "Repository structure verified"
+          echo "Python syntax verified"
+          echo "Databricks connection verified"
+          echo "Bundle validation successful"
+          echo "==================================="
+      

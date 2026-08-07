@@ -1,0 +1,42 @@
+# ==========================================================
+# Continuous Deployment ‑ Production Workflow (auto deploy on Main)
+#
+# MS Copilot Assisted
+#
+# Purpose:
+#   Deploy the Databricks Asset Bundle to Staging and execute the
+#   HRS ETL workflow.
+#
+# Production deploy should always be manual.
+#
+# ==========================================================
+
+name: CD - Deployment to Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Deploy Bundle to Prod
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle deploy --target prod
+
+      - name: Run Production Workflow
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: databricks bundle workflow hrs_etl_job --target prod

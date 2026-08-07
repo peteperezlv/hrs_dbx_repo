@@ -1,0 +1,140 @@
+# ==========================================================
+# Databricks Asset Bundle Configuration
+# This is the bundle manifest
+#
+# Project: HRS Data Warehouse
+#
+# Purpose:
+#   Defines the Databricks Asset Bundle used to deploy
+#   notebooks, workflows, and supporting resources.
+#
+# Deployment:
+#   Local:
+#       databricks bundle validate --profile hrs-dev
+#       databricks bundle deploy --profile hrs-dev
+#
+#   CI/CD:
+#       GitHub Actions will execute bundle deployment
+#       after changes are merged into the production branch.
+#
+# Repository Structure:
+#
+#   notebooks/  - Databricks notebooks used for orchestration
+#   sql/        - DDL, DML, and validation SQL scripts
+#   src/        - Reusable Python utilities
+#   resources/  - Databricks workflow definitions
+#
+# We can then deploy with
+#   databricks bundle validate --profile hrs-dev
+#   databricks bundle deploy --profile hrs-dev
+#
+# feature branch
+#       │
+#       ▼
+# Develop & Test
+#       │
+# Commit
+#       ▼
+# GitHub CI
+#       │
+# Pull Request
+#       ▼
+# main branch
+#       │
+# GitHub CD
+#       ▼
+# Deploy to Databricks
+#
+#In this model:
+#
+#  feature = your development branch
+#  main = your production branch
+#  One Databricks workspace = hosts the deployed workflow
+#
+#This is a very common setup for solo developers.
+#
+#
+#How to distinguish "dev" and "prod"
+#
+#Instead of separate workspaces, you distinguish them by Git branches.
+#
+#For example:
+#
+#  Push to feature
+#  Run CI
+#  Validate SQL
+#  Validate the Asset Bundle
+#  Do not deploy automatically
+#  Merge into main
+#  Run CI again
+#  Deploy the bundle
+#  Execute the ETL workflow
+#
+#  That gives you a clean promotion process without needing multiple workspaces.
+# 
+# ==========================================================
+# Bundle awareness
+# When you run something like databricks bundle deploy --target dev in the cd.yml file,
+#  The bundle:
+#     - Loads databricks.yml
+#     - Loads all included resource files
+#     - Applies target overrides (dev/staging/prod)
+#     - Builds a deployment plan
+#     - Deploys the job into the workspace
+# ==========================================================
+
+bundle:
+  name: hrs_dbx_repo
+
+include:
+  - resources/*.yml
+
+# Add sync to make sure the Asset Bundle understand the paths to working files.
+sync:
+  include:
+    - src/**
+    - notebooks/**
+    - sql/**
+
+# =====================================================================
+# TARGETS (modern replacement for deprecated "environments")
+# =====================================================================
+
+# ============================================================
+# Declare GLOBAL VARIABLES (must be maps, not strings)
+# Databricks Bundles require all variables to be declared globally
+# Databricks expects variables to be declared as maps, not strings
+# ============================================================
+variables:
+  catalog_name:
+    default: ""
+  schema_prefix:
+    default: ""
+
+# ============================================================
+# TARGETS (modern replacement for deprecated "environments")
+# ============================================================
+targets:
+  dev:
+    mode: development
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: dev_catalog
+      schema_prefix: slv_cdm_hrs_dev
+
+  staging:
+    mode: development
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: staging_catalog
+      schema_prefix: slv_cdm_hrs_stg
+
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-17f8770d-ed78.cloud.databricks.com
+    variables:
+      catalog_name: prod_catalog
+      schema_prefix: slv_cdm_hrs
