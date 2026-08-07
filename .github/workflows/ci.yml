@@ -166,7 +166,7 @@ jobs:
             DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         run: |
-            databricks bundle validate
+            databricks bundle validate --target dev
 
 
       # End Step
