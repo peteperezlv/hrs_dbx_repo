@@ -45,7 +45,7 @@
 #         ▼
 # CI Summary
 
-name: Continuous Integration
+name: CI - Continuous Integration
 
 on:
   push:
