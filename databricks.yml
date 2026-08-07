@@ -88,6 +88,12 @@ sync:
 # =====================================================================
 # TARGETS (modern replacement for deprecated "environments")
 # =====================================================================
+
+# Declare variabls globally
+variables:
+  catalog_name: ""
+  schema_prefix: ""
+  
 targets:
 
   dev:
