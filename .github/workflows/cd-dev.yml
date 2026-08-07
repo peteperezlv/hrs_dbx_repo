@@ -32,8 +32,7 @@
 #
 # ==========================================================
 
-name: Continuous Deployment
-
+name: CD - Production Deployment
 #---------------------------------------
 #  workflow_dispatch is GitHub's default
 #  behavior for choosing the branch to 
