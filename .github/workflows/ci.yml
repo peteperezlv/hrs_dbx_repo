@@ -158,7 +158,7 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         run: |
-          databricks current-user me --target dev
+          databricks current-user me --targets dev
 
       # Validate Databricks Bundle.  Checks for a validate databricks.yml bundle definition.
       - name: Validate Databricks Bundle
