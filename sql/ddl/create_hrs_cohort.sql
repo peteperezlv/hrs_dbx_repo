@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS IDENTIFIER(
         '.',
         :schema_prefix,
         '.hrs_cohort'
-    );
+    )
+);
 CREATE TABLE IDENTIFIER(
     CONCAT(
         :catalog_name,
