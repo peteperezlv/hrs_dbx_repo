@@ -1,7 +1,23 @@
 -- Load Survey Respondent Reference Data 
 -- Target: dev_catalog.slv_cdm_hrs.hrs_survey_respondent
 -- hrs_survey_respondent_id is auto-generated (IDENTITY column)
-INSERT INTO dev_catalog.slv_cdm_hrs.hrs_respondent (
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.hrs_respondent'
+    )
+);
+--
+INSERT INTO IDENTIFIER(
+        CONCAT(
+            :catalog_name,
+            '.',
+            :schema_prefix,
+            '.hrs_respondent'
+        )
+    ) (
         cohort_id,
         hhid,
         pn,
