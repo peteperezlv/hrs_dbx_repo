@@ -1,3 +1,4 @@
+-- comments
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
         :catalog_name,

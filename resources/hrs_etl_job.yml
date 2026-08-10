@@ -34,7 +34,7 @@
 # </> How to run the bundle CLI
 #   bash       > databricks bundle run hrs_etl_job
 #   PowerShell > 
-#       databricks bundle validate --profile hrs-dev
+#       databricks bundle validate --profile hrs-dev 
 #       databricks bundle deploy --profile hrs-dev
 #
 # Do not add clusters in the Free Databricks addition.  Add this code when you go to paid.
