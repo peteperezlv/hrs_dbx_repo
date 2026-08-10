@@ -135,6 +135,7 @@ targets:
     mode: production
     workspace:
       host: https://dbc-17f8770d-ed78.cloud.databricks.com
+      root_path: /Workspace/Users/peteperez.lv@gmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
       catalog_name: prod_catalog
       schema_prefix: slv_cdm_hrs
