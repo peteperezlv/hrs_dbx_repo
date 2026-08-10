@@ -4,8 +4,22 @@
 -- Generated per: HRS Silver CDM DDL/DML Functional Specification v2.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 -- =====================================================================
-DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.hrs_leave_behind;
-CREATE TABLE dev_catalog.slv_cdm_hrs.hrs_leave_behind (
+DROP TABLE IF EXISTS IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.hrs_leave_behind'
+    )
+);
+CREATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.hrs_leave_behind'
+    )
+) (
     -- ---------------------------------------------------------------
     -- Identity Column
     -- ---------------------------------------------------------------

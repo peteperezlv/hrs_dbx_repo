@@ -33,9 +33,23 @@
 -- Business Key:
 --   UNIQUE (respondent_id, wave_id)
 -- =====================================================================
-TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hrs_demographics;
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.hrs_demographics'
+    )
+);
 --
-INSERT INTO dev_catalog.slv_cdm_hrs.hrs_demographics (
+INSERT INTO IDENTIFIER(
+        CONCAT(
+            :catalog_name,
+            '.',
+            :schema_prefix,
+            '.hrs_demographics'
+        )
+    ) (
         respondent_id,
         wave_id,
         hhidpn,

@@ -37,9 +37,23 @@
 -- Rows are excluded only when respondent_id / wave_id cannot be resolved
 -- via the required FK joins below.
 -- =====================================================================
-TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hrs_leave_behind;
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.hrs_leave_behind'
+    )
+);
 --
-INSERT INTO dev_catalog.slv_cdm_hrs.hrs_leave_behind (
+INSERT INTO IDENTIFIER(
+        CONCAT(
+            :catalog_name,
+            '.',
+            :schema_prefix,
+            '.hrs_leave_behind'
+        )
+    ) (
         respondent_id,
         wave_id,
         hhidpn,
