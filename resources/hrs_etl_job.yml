@@ -85,6 +85,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/00_create_database_objects.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
         # --------------------------------------------------
         # Task 1:
@@ -106,6 +109,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/10_load_hrs_cohort_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
         # --------------------------------------------------
         # Task 2:
@@ -127,6 +133,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/20_load_hrs_wave_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
 
         # --------------------------------------------------
@@ -149,6 +158,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/30_load_hrs_respondent_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
         # --------------------------------------------------
         # Task 4:
@@ -171,6 +183,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/40_load_hrs_demographics_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
         # --------------------------------------------------
         # Task 5:
@@ -193,6 +208,9 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/50_load_hrs_health_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
 
         # --------------------------------------------------
         # Task 6:
@@ -215,3 +233,6 @@ resources:
 
           notebook_task:
             notebook_path: ../notebooks/orchestration/60_load_hrs_leave_behind_data.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
