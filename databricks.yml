@@ -129,7 +129,7 @@ targets:
       host: https://dbc-17f8770d-ed78.cloud.databricks.com
     variables:
       catalog_name: staging_catalog
-      schema_prefix: slv_cdm_hrs_stg
+      schema_prefix: slv_cdm_hrs
 
   prod:
     mode: production
