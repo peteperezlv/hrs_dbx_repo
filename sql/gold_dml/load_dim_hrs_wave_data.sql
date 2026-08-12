@@ -17,7 +17,6 @@ INSERT INTO IDENTIFIER(
             '.dim_hrs_wave'
         )
     ) (
-        wave_id,
         wave_number,
         wave_year,
         wave_description,
@@ -25,8 +24,7 @@ INSERT INTO IDENTIFIER(
         update_date,
         active
     )
-SELECT wave_id,
-    wave_number,
+SELECT wave_number,
     wave_year,
     wave_description,
     CURRENT_DATE() AS create_date,
