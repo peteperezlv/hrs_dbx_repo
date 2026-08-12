@@ -1,4 +1,4 @@
--- Load Cohort Reference Data from RAND Longitudinal Dataset
+-- Load Cohort Reference Data from RAND Longitudinal Datase t
 -- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 -- Target: dev_catalog.slv_cdm_hrs.cohort
 -- cohort_id is auto-generated (IDENTITY column)

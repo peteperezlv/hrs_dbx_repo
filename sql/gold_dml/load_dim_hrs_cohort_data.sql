@@ -15,7 +15,6 @@ INSERT INTO IDENTIFIER(
             '.dim_hrs_cohort'
         )
     ) (
-        cohort_id,
         hacohort_number,
         hacohort_label,
         hacohort_description,
@@ -23,8 +22,7 @@ INSERT INTO IDENTIFIER(
         update_date,
         active
     )
-SELECT cohort_id,
-    hacohort_number,
+SELECT hacohort_number,
     hacohort_label,
     hacohort_description,
     CURRENT_DATE() AS create_date,
