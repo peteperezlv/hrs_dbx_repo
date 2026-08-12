@@ -17,6 +17,7 @@ INSERT INTO IDENTIFIER(
             '.dim_hrs_wave'
         )
     ) (
+        wave_id,
         wave_number,
         wave_year,
         wave_description,

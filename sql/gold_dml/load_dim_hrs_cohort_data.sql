@@ -15,6 +15,7 @@ INSERT INTO IDENTIFIER(
             '.dim_hrs_cohort'
         )
     ) (
+        cohort_id,
         hacohort_number,
         hacohort_label,
         hacohort_description,
