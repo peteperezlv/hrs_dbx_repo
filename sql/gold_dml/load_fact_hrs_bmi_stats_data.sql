@@ -1,15 +1,13 @@
 -- Load BMI Statistics Fact Table
 -- Calculate descriptive statistics grouped by wave and cohort
-TRUNCATE TABLE dev_catalog.gld_star_hrs.fact_hrs_bmi_stats;
---
-INSERT INTO dev_catalog.gld_star_hrs.fact_hrs_bmi_stats TRUNCATE TABLE IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_hrs_bmi_stats'
-        )
-    );
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.fact_hrs_bmi_stats'
+    )
+);
 --
 INSERT INTO IDENTIFIER(
         CONCAT(
