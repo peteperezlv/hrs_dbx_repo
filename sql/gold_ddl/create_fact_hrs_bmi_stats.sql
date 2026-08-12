@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_bmi_stats'
+        '.fact_hrs_bmi_stats'
     )
 );
 --
@@ -24,13 +24,13 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_bmi_stats'
+        '.fact_hrs_bmi_stats'
     )
 ) (
     -- ---------------------------------------------------------------
     -- Identity Column
     -- ---------------------------------------------------------------
-    hrs_bmi_stats_id BIGINT GENERATED ALWAYS AS IDENTITY COMMENT 'System-generated surrogate key',
+    hrs_fact_bmi_stats_id BIGINT GENERATED ALWAYS AS IDENTITY COMMENT 'System-generated surrogate key',
     --
     -- ---------------------------------------------------------------
     -- Foreign Keys
@@ -59,6 +59,7 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Constraints
     -- ---------------------------------------------------------------
-    CONSTRAINT pk_hrs_bmi_stats_id PRIMARY KEY (hrs_bmi_stats_id) --CONSTRAINT fk_hrs_bmi_stats_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.gld_sdm_hrs.hrs_cohort(cohort_id),
-    --CONSTRAINT fk_hrs_bmi_stats_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.gld_sdm_hrs.hrs_wave (wave_id)
+    CONSTRAINT pk_hrs_fact_bmi_stats_id PRIMARY KEY (hrs_bmi_stats_id),
+    CONSTRAINT fk_hrs_fact_bmi_stats_dim_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_cohort(cohort_id),
+    CONSTRAINT fk_fact_hrs_bmi_stats_dim_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_wave (wave_id)
 ) USING DELTA COMMENT 'BMI descriptive statistics table.  Grouped by Cohort and wave';
