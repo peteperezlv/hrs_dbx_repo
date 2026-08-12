@@ -1,6 +1,7 @@
 -- Copy raw HRS data from source catalog to target catalog
 -- Parameters: :source_catalog, :target_catalog
 CREATE SCHEMA IF NOT EXISTS IDENTIFIER(CONCAT(:target_catalog, '.brz_raw_hrs'));
+--
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
         :target_catalog,
