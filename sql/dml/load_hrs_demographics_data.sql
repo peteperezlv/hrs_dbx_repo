@@ -17,13 +17,13 @@
 --   Source is a wide table, one row per respondent (HHIDPN).
 --   Wave-varying: R{n}AGEY_E, R{n}CENREG, R{n}MSTAT (n = 1..16)
 --   Wave-invariant (replicated across all 16 wave rows):
---     RARACEM, RAHISPN, RAEDYRS, RARELIG, RAVETRN
+--     RARACEM, RAGENDER, RAHISPN, RAEDYRS, RARELIG, RAVETRN
 --
 -- Wave Expansion Rule:
 --   For each multi-wave target column (agey_e, cenreg, mstat), generate
 --   16 SELECT branches (waves 1–16) and UNION ALL them into an "expanded"
 --   dataset with columns:
---     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, rahispan,
+--     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, ragender, rahispan,
 --     raedyrs, rarelig, ravetrn
 --
 -- FK Rules:
@@ -56,6 +56,7 @@ INSERT INTO IDENTIFIER(
         wave_number,
         agey_e,
         raracem,
+        ragender,
         rahispan,
         cenreg,
         raedyrs,
@@ -68,6 +69,7 @@ INSERT INTO IDENTIFIER(
     ) WITH source_base AS (
         SELECT HHIDPN,
             TRY_CAST(RARACEM AS TINYINT) AS raracem,
+            TRY_CAST(RAGENDER AS TINYINT) AS ragender,
             TRY_CAST(RAHISPAN AS TINYINT) AS rahispan,
             TRY_CAST(RAEDYRS AS TINYINT) AS raedyrs,
             TRY_CAST(RARELIG AS TINYINT) AS rarelig,
@@ -257,6 +259,7 @@ SELECT r.respondent_id,
     wu.wave_number,
     wu.agey_e,
     sb.raracem,
+    sb.ragender,
     sb.rahispan,
     wu.cenreg,
     sb.raedyrs,

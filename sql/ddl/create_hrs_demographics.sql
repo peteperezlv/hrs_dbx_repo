@@ -48,6 +48,7 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     agey_e DECIMAL(10, 2) COMMENT 'Respondent Age (RAND CONT variable, e.g. R#AGEY_E), Nullable = yes',
     raracem TINYINT COMMENT 'RARACEM: R Race-masked (RAND CATEG variable), Nullable = yes',
+    ragender TINYINT COMMENT 'RAGENDER: R Gender-masked (RAND CATEG variable), Nullable = yes',
     rahispan TINYINT COMMENT 'RAHISPAN: R Hispanic (RAND CATEG variable), Nullable = yes',
     cenreg TINYINT COMMENT 'R#CENREG: Census Region by wave (RAND CATEG variable), Nullable = yes',
     raedyrs TINYINT COMMENT 'RAEDYRS: R Years of Education (RAND CATEG variable), Nullable = yes',
