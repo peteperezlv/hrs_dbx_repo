@@ -1,5 +1,12 @@
--- Load BMI Statistics Fact Table
--- Calculate descriptive statistics grouped by wave and cohort
+-- =========================================================================================================
+-- Load BMI Statistics Fact Table.  Calculate descriptive statistics grouped by wave and cohort
+-- Process: 
+--   1) Get stats data from slv_cdm_hrs.hrs_health
+--   2) Get wave_id and cohort_id with the following JOINS (used derive valued from through the source)
+--          JOIN slv_cdm_hrs.hrs_health to slv_cdm_hrs.hrs_respondent
+--          JOIN slv_cdm_hrs.hrs_respondent to gld_star_hrs.dim_hrs_cohort (this table is identify to slv)
+--          JOIN slv_cdm_hrs.hrs_health to gld_star_hrs.dim_hrs_wave (this table is identify to slv)
+-- ==========================================================================================================
 TRUNCATE TABLE IDENTIFIER(
     CONCAT(
         :catalog_name,
