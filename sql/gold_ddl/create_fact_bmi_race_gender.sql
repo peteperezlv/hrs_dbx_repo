@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.fact_hrs_bmi_stats'
+        '.fact_hrs_bmi_race_gender_stats'
     )
 );
 --
@@ -24,7 +24,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.fact_hrs_bmi_stats'
+        '.fact_hrs_bmi_race_gender_stats'
     )
 ) (
     -- ---------------------------------------------------------------
@@ -42,6 +42,7 @@ CREATE TABLE IDENTIFIER(
     -- Business Columns
     -- ---------------------------------------------------------------
     raracem INT,
+    ragender INT,
     hacohort INT,
     bmi DECIMAL(10, 2) COMMENT 'BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
     bmi_count int COMMENT 'Total number of records for a BMI value',
@@ -61,6 +62,6 @@ CREATE TABLE IDENTIFIER(
     -- Constraints
     -- ---------------------------------------------------------------
     CONSTRAINT pk_hrs_fact_bmi_race_gender_stats_id PRIMARY KEY (fact_hrs_bmi_race_gender_stats_id),
-    CONSTRAINT fk_hrs_fact_bmi_stats_dim_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_cohort(cohort_id),
-    CONSTRAINT fk_fact_hrs_bmi_stats_dim_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_wave (wave_id)
+    CONSTRAINT fk_hrs_fact_bmi_race_gender_stats_dim_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_cohort(cohort_id),
+    CONSTRAINT fk_fact_hrs_bmi_race_gender_stats_dim_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_wave (wave_id)
 ) USING DELTA COMMENT 'BMI descriptive statistics table.  Grouped by Cohort and wave';
