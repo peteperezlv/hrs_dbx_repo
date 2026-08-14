@@ -1,5 +1,14 @@
 -- Load BMI Statistics Fact Table by Race and Gender
 -- Calculate descriptive statistics grouped by wave, cohort, and race
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.fact_hrs_bmi_race_gender_stats'
+    )
+);
+--
 INSERT INTO IDENTIFIER(
         CONCAT(
             :catalog_name,
@@ -11,8 +20,8 @@ INSERT INTO IDENTIFIER(
         cohort_id,
         wave_id,
         raracem,
+        ragender,
         hacohort,
-        bmi,
         bmi_count,
         bmi_mean,
         bmi_sd,
@@ -25,8 +34,8 @@ INSERT INTO IDENTIFIER(
 SELECT dc.cohort_id,
     dw.wave_id,
     d.raracem,
+    d.ragender,
     r.hacohort,
-    NULL AS bmi,
     -- Not storing individual BMI values, only aggregates
     CAST(COUNT(*) AS INT) AS bmi_count,
     CAST(AVG(h.bmi) AS INT) AS bmi_mean,
@@ -44,13 +53,16 @@ FROM dev_catalog.slv_cdm_hrs.hrs_health h
     INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_cohort dc ON r.cohort_id = dc.cohort_id
 WHERE h.bmi IS NOT NULL
     AND d.raracem IS NOT NULL
+    AND d.ragender IS NOT NULL
     AND h.active = TRUE
     AND r.active = TRUE
     AND d.active = TRUE
 GROUP BY dw.wave_id,
     dc.cohort_id,
     d.raracem,
+    d.ragender,
     r.hacohort
 ORDER BY dw.wave_id,
     dc.cohort_id,
-    d.raracem;
+    d.raracem,
+    d.ragender;

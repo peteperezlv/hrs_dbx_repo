@@ -1,4 +1,4 @@
--- =====================================================================
+-- =========================================================================================================
 -- HRS GOLD Star Data Model DDL – Demographics Section
 --
 -- Target Table: dev_catalog.gld_sdm_hrs.hrs_bmi_stats
@@ -9,7 +9,10 @@
 --
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 --
--- =====================================================================
+-- NOTE: Do not include the bmi column in the target table.  We do not want a separate group for each unique 
+-- BMI value.  We just want to group by wave/cohort/race/gender combinations.
+--
+-- =========================================================================================================
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
         :catalog_name,
@@ -44,12 +47,12 @@ CREATE TABLE IDENTIFIER(
     raracem INT,
     ragender INT,
     hacohort INT,
-    bmi DECIMAL(10, 2) COMMENT 'BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
-    bmi_count int COMMENT 'Total number of records for a BMI value',
-    bmi_mean int COMMENT '',
-    bmi_sd int COMMENT '',
-    bmi_min int COMMENT '',
-    bmi_max int COMMENT '',
+    --bmi DECIMAL(10, 2) COMMENT 'BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
+    bmi_count INT COMMENT 'Total number of records for a BMI value',
+    bmi_mean INT COMMENT '',
+    bmi_sd DECIMAL(10, 2) COMMENT '',
+    bmi_min INT COMMENT '',
+    bmi_max INT COMMENT '',
     --
     -- ---------------------------------------------------------------
     -- Audit Columns

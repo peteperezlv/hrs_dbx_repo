@@ -42,7 +42,6 @@ CREATE TABLE IDENTIFIER(
     -- Business Columns
     -- ---------------------------------------------------------------
     hacohort INT,
-    bmi DECIMAL(10, 2) COMMENT 'BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
     bmi_count int COMMENT 'Total number of records for a BMI value',
     bmi_mean int COMMENT '',
     bmi_sd int COMMENT '',
