@@ -43,8 +43,8 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     hacohort INT,
     bmi_count int COMMENT 'Total number of records for a BMI value',
-    bmi_mean int COMMENT '',
-    bmi_sd int COMMENT '',
+    bmi_mean DOUBLE COMMENT '',
+    bmi_sd DOUBLE COMMENT '',
     bmi_min int COMMENT '',
     bmi_max int COMMENT '',
     --

@@ -38,7 +38,7 @@ SELECT dc.cohort_id,
     r.hacohort,
     -- Not storing individual BMI values, only aggregates
     CAST(COUNT(*) AS INT) AS bmi_count,
-    CAST(AVG(h.bmi) AS INT) AS bmi_mean,
+    CAST(AVG(h.bmi) AS DOUBLE) AS bmi_mean,
     CAST(STDDEV(h.bmi) AS INT) AS bmi_sd,
     CAST(MIN(h.bmi) AS INT) AS bmi_min,
     CAST(MAX(h.bmi) AS INT) AS bmi_max,
