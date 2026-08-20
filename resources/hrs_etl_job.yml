@@ -51,7 +51,7 @@ resources:
 
     # Databricks Workflow name
     hrs_etl_job:
-      name: HRS Data Warehouse Setup - ${bundle.target}
+      name: Setup HRS Silver Tables - ${bundle.target}
 
       description: >
         Creates and loads the foundational HRS Silver layer
