@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM DDL – Health Section 
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_health
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_health
 -- Generated per: HRS Silver CDM DDL Functional Specification v1.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 -- =====================================================================
@@ -27,8 +27,8 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Foreign Keys
     -- ---------------------------------------------------------------
-    respondent_id BIGINT NOT NULL COMMENT 'Foreign key to hrs_respondent.respondent_id',
-    wave_id BIGINT NOT NULL COMMENT 'Foreign key to hrs_wave.wave_id',
+    respondent_id BIGINT NOT NULL COMMENT 'Foreign key to hub_respondent.respondent_id',
+    wave_id BIGINT NOT NULL COMMENT 'Foreign key to fact_wave.wave_id',
     -- ---------------------------------------------------------------
     -- Identifier Columns
     -- ---------------------------------------------------------------
@@ -58,7 +58,7 @@ CREATE TABLE IDENTIFIER(
     -- Constraints
     -- ---------------------------------------------------------------
     CONSTRAINT pk_fact_health PRIMARY KEY (hrs_health_id),
-    CONSTRAINT fk_fact_health_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
-    CONSTRAINT fk_fact_health_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id),
-    CONSTRAINT uq_fact_health_respondent_wave UNIQUE (respondent_id, wave_id)
+    CONSTRAINT fk_fact_health_hub_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
+    CONSTRAINT fk_fact_health_dim_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id),
+    CONSTRAINT uq_fact_health_respondent_dim_wave UNIQUE (respondent_id, wave_id)
 ) USING DELTA COMMENT 'Stores RAND HRS Health observations';
