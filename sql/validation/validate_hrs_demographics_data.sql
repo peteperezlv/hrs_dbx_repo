@@ -123,7 +123,7 @@ SELECT 'B1_ROWS_LOADED' AS test_name,
     END AS status,
     CONCAT('Row count = ', COUNT(*)) AS details
 FROM dev_catalog.slv_cdm_hrs.fact_demographics;
--- B2. respondent_id Exists in hrs_respondent (referential integrity)
+-- B2. respondent_id Exists in hub_respondent (referential integrity)
 SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
@@ -131,9 +131,9 @@ SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY' AS test_name,
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
 FROM dev_catalog.slv_cdm_hrs.fact_demographics d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+    LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
 WHERE r.respondent_id IS NULL;
--- B3. wave_id Exists in hrs_wave (referential integrity)
+-- B3. wave_id Exists in dim_wave (referential integrity)
 SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
@@ -141,7 +141,7 @@ SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY' AS test_name,
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
 FROM dev_catalog.slv_cdm_hrs.fact_demographics d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+    LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
 WHERE w.wave_id IS NULL;
 -- B4. No Duplicate respondent_id + wave_id
 SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
@@ -321,7 +321,7 @@ FROM (
                 ELSE 'FAIL'
             END
         FROM dev_catalog.slv_cdm_hrs.fact_demographics d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+            LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
         WHERE r.respondent_id IS NULL
         UNION ALL
         SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY',
@@ -330,7 +330,7 @@ FROM (
                 ELSE 'FAIL'
             END
         FROM dev_catalog.slv_cdm_hrs.fact_demographics d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+            LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
         WHERE w.wave_id IS NULL
         UNION ALL
         SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE',
