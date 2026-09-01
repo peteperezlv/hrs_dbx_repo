@@ -6,7 +6,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.dim_wave' -
+        '.dim_wave'
     )
 );
 -- Temp table
