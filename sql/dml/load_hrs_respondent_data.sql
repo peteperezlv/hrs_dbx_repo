@@ -38,4 +38,4 @@ SELECT DISTINCT c.cohort_id,
     CURRENT_DATE() as update_date,
     true as active
 FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 ra
-    INNER JOIN dev_catalog.slv_cdm_hrs.hub_cohort c ON CAST(ra.HACOHORT AS BIGINT) = c.hacohort_number
+    INNER JOIN dev_catalog.slv_cdm_hrs.dim_cohort c ON CAST(ra.HACOHORT AS BIGINT) = c.hacohort_number
