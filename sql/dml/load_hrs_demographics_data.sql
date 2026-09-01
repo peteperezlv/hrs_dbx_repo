@@ -271,5 +271,5 @@ SELECT r.respondent_id,
     TRUE AS active
 FROM wave_unpivoted wu
     JOIN source_base sb ON wu.HHIDPN = sb.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.fact_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.fact_wave w ON wu.wave_number = w.wave_number
+    JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON wu.wave_number = w.wave_number
