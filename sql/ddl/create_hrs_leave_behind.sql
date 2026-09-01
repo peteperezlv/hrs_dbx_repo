@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM DDL – Leave-Behind: Big 5 Personality Traits
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_leave_behind
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_leave_behind
 -- Generated per: HRS Silver CDM DDL/DML Functional Specification v2.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 -- =====================================================================
@@ -54,7 +54,7 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Constraints
     -- ---------------------------------------------------------------
-    CONSTRAINT pk_fact_leave_behind PRIMARY KEY (hrs_leave_behind_id),
+    CONSTRAINT pk_fact_leave_behind PRIMARY KEY (fact_leave_behind_id),
     CONSTRAINT fk_fact_leave_behind_hub_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
     CONSTRAINT fk_fact_leave_behind_dim_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id),
     CONSTRAINT uq_fact_leave_behind_respondent_dim_wave UNIQUE (respondent_id, wave_id)
