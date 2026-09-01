@@ -1,14 +1,14 @@
 -- =====================================================================
 -- HRS Silver CDM INSERT...SELECT – Leave-Behind: Big 5 Personality Traits
--- Target Table: dev_catalog.slv_cdm_hrs.fact_leave_behind
+-- Target Table: dev_catalog.slv_cdm_hrs.hrs_leave_behind
 -- Load Pattern: Insert Only (Section 4)
 -- Grain: One row per respondent per survey wave, Waves 1-16 (Section 9)
 --
 -- SOURCE:  dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 --
 -- CONFIRMED:
---   - hub_respondent join column: HHIDPN
---   - dim_wave join column: wave_number (STRING)
+--   - hrs_respondent join column: HHIDPN
+--   - hrs_wave join column: wave_number (STRING)
 --   - Section 12 'Wave' column = wave_number inserted into target
 --
 -- IMPORTANT: This section's source columns (R8LBNEUR...R16LBNEUR, and the
@@ -24,11 +24,11 @@
 --       business columns hardcoded NULL,
 -- combined via UNION ALL.
 --
--- Spouse-variant columns (S{w}LB{TRAIT}) exist in source but are
+-- Spouse-variant columns (S{w}LB{TRAIT}) exist in source but are 
 -- explicitly out of scope for this table per Section 9's business
 -- decision -- not selected into source_base.
 --
--- wave_number is STRING on both fact_leave_behind and dim_wave; the
+-- wave_number is STRING on both hrs_leave_behind and hrs_wave. the
 -- UNPIVOT column aliases (`8`...`16`) and the scaffold's literal wave
 -- numbers are both cast to STRING to match on join without coercion.
 --
@@ -37,7 +37,23 @@
 -- Rows are excluded only when respondent_id / wave_id cannot be resolved
 -- via the required FK joins below.
 -- =====================================================================
-INSERT INTO dev_catalog.slv_cdm_hrs.fact_leave_behind (
+TRUNCATE TABLE IDENTIFIER(
+    CONCAT(
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.fact_leave_behind'
+    )
+);
+--
+INSERT INTO IDENTIFIER(
+        CONCAT(
+            :catalog_name,
+            '.',
+            :schema_prefix,
+            '.fact_leave_behind'
+        )
+    ) (
         respondent_id,
         wave_id,
         hhidpn,
@@ -191,7 +207,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_leave_behind (
     ),
     -- =====================================================================
     -- Branch (b): Waves 1-7 -- synthetic NULL scaffold (no source columns
-    -- exist for these waves; this is a column-existence gap, not a null-
+    -- exist for these waves. this is a column-existence gap, not a null-
     -- value gap, so UNPIVOT cannot reference them at all)
     -- =====================================================================
     distinct_respondents AS (
