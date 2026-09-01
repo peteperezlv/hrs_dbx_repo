@@ -67,6 +67,6 @@ CREATE TABLE IDENTIFIER(
     -- Constraints
     -- ---------------------------------------------------------------
     CONSTRAINT pk_fact_demographics PRIMARY KEY (hrs_demographics_id),
-    CONSTRAINT fk_fact_demographics_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
-    CONSTRAINT fk_fact_demographics_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id)
+    CONSTRAINT fk_fact_demographics_hub_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
+    CONSTRAINT fk_fact_demographics_dim_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id)
 ) USING DELTA COMMENT 'Stores RAND HRS Demographic observations';

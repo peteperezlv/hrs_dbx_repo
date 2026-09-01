@@ -57,8 +57,8 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Constraints
     -- ---------------------------------------------------------------
-    CONSTRAINT pk_hrs_health PRIMARY KEY (hrs_health_id),
-    CONSTRAINT fk_hrs_health_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_respondent (respondent_id),
-    CONSTRAINT fk_hrs_health_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_wave (wave_id),
-    CONSTRAINT uq_hrs_health_respondent_wave UNIQUE (respondent_id, wave_id)
+    CONSTRAINT pk_fact_health PRIMARY KEY (hrs_health_id),
+    CONSTRAINT fk_fact_health_hub_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
+    CONSTRAINT fk_fact_health_dim_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id),
+    CONSTRAINT uq_fact_health_respondent_dim_wave UNIQUE (respondent_id, wave_id)
 ) USING DELTA COMMENT 'Stores RAND HRS Health observations';
