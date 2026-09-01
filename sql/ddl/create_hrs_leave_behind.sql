@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_leave_behind'
+        '.fact_leave_behind'
     )
 );
 CREATE TABLE IDENTIFIER(
@@ -17,7 +17,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_leave_behind'
+        '.fact_leave_behind'
     )
 ) (
     -- ---------------------------------------------------------------

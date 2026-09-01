@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_cohort'
+        '.dim_cohort'
     )
 );
 CREATE TABLE IDENTIFIER(
@@ -12,7 +12,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_cohort'
+        '.dim_cohort'
     )
 ) (
     cohort_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

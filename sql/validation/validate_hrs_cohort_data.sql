@@ -1,7 +1,7 @@
 -- ========================Test 1 for Missing Cohorts============================
 -- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 --
--- Target: dev_catalog.slv_cdm_hrs.hrs_cohort
+-- Target: dev_catalog.slv_cdm_hrs.dim_cohort
 --
 -- Expected: Zero missing cohorts (all HACOHORT values exist in source and target.)
 -- ===============================================================================
@@ -12,7 +12,7 @@ WITH source_cohorts AS (
 missing_cohorts AS (
     SELECT sc.hacohort_number
     FROM source_cohorts sc
-        LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_cohort c ON sc.hacohort_number = c.hacohort_number
+        LEFT JOIN dev_catalog.slv_cdm_hrs.dim_cohort c ON sc.hacohort_number = c.hacohort_number
     WHERE c.hacohort_number IS NULL
 )
 SELECT 'Test 5: Missing Cohorts' AS test_name,
@@ -34,5 +34,5 @@ SELECT cohort_id,
     create_date,
     update_date,
     active
-FROM dev_catalog.slv_cdm_hrs.hrs_cohort
+FROM dev_catalog.slv_cdm_hrs.dim_cohort
 ORDER BY cohort_id

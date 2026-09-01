@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_respondent'
+        '.hub_respondent'
     )
 );
 CREATE TABLE IDENTIFIER(
@@ -11,7 +11,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_respondent'
+        '.hub_respondent'
     )
 ) (
     respondent_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

@@ -2,13 +2,13 @@
 -- AI Assistant Used: Claude and Genie
 --
 -- Objective:
---   Load dev_catalog.slv_cdm_hrs.hrs_demographics from
+--   Load dev_catalog.slv_cdm_hrs.fact_demographics from
 --   dev_catalog.brz_raw_hrs.randhrs1992_2022v1 using:
 --     - Wide → long wave expansion (1 row per respondent per wave)
---     - FK resolution via hrs_respondent (hhidpn) and hrs_wave (wave_number)
+--     - FK resolution via fact_respondent (hhidpn) and fact_wave (wave_number)
 --     - RAND type transformations (CONT, CATEG, CHAR)
 --     - Insert-only load pattern
--- Generated per Specification Document: /notebooks/DDL Specifications/hrs_deomographics_specification.ipynb
+-- Generated per Specification Document: /notebooks/DDL Specifications/fact_deomographics_specification.ipynb
 --     - Load Pattern: Insert Only (Section 4)
 --     - Grain: One row per respondent per survey wave (Section 9)
 --     - Section 12 'Wave' column = wave_number inserted into target
@@ -27,8 +27,8 @@
 --     raedyrs, rarelig, ravetrn
 --
 -- FK Rules:
---   respondent_id: join hrs_respondent on hhidpn
---   wave_id      : join hrs_wave on wave_number
+--   respondent_id: join fact_respondent on hhidpn
+--   wave_id      : join fact_wave on wave_number
 --
 -- Business Key:
 --   UNIQUE (respondent_id, wave_id)
@@ -38,7 +38,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_demographics'
+        '.fact_demographics'
     )
 );
 --
@@ -47,7 +47,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_demographics'
+            '.fact_demographics'
         )
     ) (
         respondent_id,
@@ -271,5 +271,5 @@ SELECT r.respondent_id,
     TRUE AS active
 FROM wave_unpivoted wu
     JOIN source_base sb ON wu.HHIDPN = sb.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
+    JOIN dev_catalog.slv_cdm_hrs.fact_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.fact_wave w ON wu.wave_number = w.wave_number

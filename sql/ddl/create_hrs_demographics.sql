@@ -12,18 +12,18 @@
 -- =====================================================================
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.hrs_demographics'
+        -- :catalog_name,
+        'dev_catalog.' --'.',
+        --:schema_prefix,
+        'slv_cdm_hrs' '.fact_demographics'
     )
 );
 CREATE TABLE IDENTIFIER(
     CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.hrs_demographics'
+        -- :catalog_name,
+        'dev_catalog.' --'.',
+        --:schema_prefix,
+        'slv_cdm_hrs' '.fact_demographics'
     )
 ) (
     -- ---------------------------------------------------------------
@@ -66,7 +66,7 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Constraints
     -- ---------------------------------------------------------------
-    CONSTRAINT pk_hrs_demographics PRIMARY KEY (hrs_demographics_id),
-    CONSTRAINT fk_hrs_demographics_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_respondent (respondent_id),
-    CONSTRAINT fk_hrs_demographics_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_wave (wave_id)
+    CONSTRAINT pk_fact_demographics PRIMARY KEY (hrs_demographics_id),
+    CONSTRAINT fk_fact_demographics_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
+    CONSTRAINT fk_fact_demographics_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id)
 ) USING DELTA COMMENT 'Stores RAND HRS Demographic observations';
