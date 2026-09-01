@@ -24,5 +24,5 @@ CREATE TABLE IDENTIFIER(
     create_date DATE,
     update_date DATE,
     active BOOLEAN,
-    CONSTRAINT hrs_respondent_hrs_cohort_fk FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_cohort(cohort_id)
+    CONSTRAINT hub_respondent_dim_cohort_fk FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_cohort(cohort_id)
 ) USING DELTA COMMENT 'Respondent tracking table';
