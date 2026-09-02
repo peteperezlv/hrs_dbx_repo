@@ -4,6 +4,10 @@
 # Purpose:
 #   Creates and loads the foundational HRS Silver layer
 #   tables.
+# 
+# Source Data: RAND HRS dataset
+# Target Schema: based on input {bundle.target}
+#  **For example:** if {bundle.target} = dev, then files are deployed to /dev_catalog.slv_cdm_hrs/
 #
 #    ***When it is run with the "databricks bundle validate --profile hrs-dev" PowerShell command, 
 #     a job is created named "HRS Data Warehouse Setup"***
@@ -54,8 +58,7 @@ resources:
       name: Setup HRS Silver Tables - ${bundle.target}
 
       description: >
-        Creates and loads the foundational HRS Silver layer
-        tables from the RAND HRS dataset.
+        Creates and loads the foundational HRS Silver layer tables from GitHub Main branch.
 
       timeout_seconds: 3600
 
@@ -94,7 +97,7 @@ resources:
         # Load Cohort reference data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_cohort
+        #   dev_catalog.slv_cdm_hrs.dim_cohort
         #
         # Depends on:
         #   create_objects
@@ -118,7 +121,7 @@ resources:
         # Load Wave reference data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_wave
+        #   dev_catalog.slv_cdm_hrs.dim_wave
         #
         # Depends on:
         #   create_objects
@@ -143,7 +146,7 @@ resources:
         # Load Respondent data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_respondent
+        #   dev_catalog.slv_cdm_hrs.hub_respondent
         #
         # Depends on:
         #   load_cohort
@@ -167,7 +170,7 @@ resources:
         # Load Demographics data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_demographics
+        #   dev_catalog.slv_cdm_hrs.fact_demographics
         #
         # Depends on:
         #   load_respondent and load_wave
@@ -192,7 +195,7 @@ resources:
         # Load Health data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_health
+        #   dev_catalog.slv_cdm_hrs.fact_health
         #
         # Depends on:
         #   load_respondent and load_wave
@@ -217,7 +220,7 @@ resources:
         # Load Leave Behind data
         #
         # Loads:
-        #   dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        #   dev_catalog.slv_cdm_hrs.fact_leave_behind
         #
         # Depends on:
         #   load_respondent and load_wave

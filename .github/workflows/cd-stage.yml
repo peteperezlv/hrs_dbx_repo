@@ -3,9 +3,14 @@
 #
 # MS Copilot Assisted
 #
-# Purpose:
-#   Deploy the Databricks Asset Bundle to Staging and execute the
-#   HRS ETL workflow.
+# Purpose: Deploy the Databricks Asset Bundle to Staging and execute the HRS ETL workflow.
+#
+# Execution Mode: Auto-triggerd when feature branch is merged into main branch(on: push)
+#
+# Source Data: RAND HRS dataset
+#
+# Target Schema: /staging_catalog/slv_cdm_hrs/
+#  **For example:** if {bundle.target} = dev, then files are deployed to /staging_catalog.slv_cdm_hrs/
 #   
 #   Runs integration tests after PR merge. 
 #
@@ -25,6 +30,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          node-version: '24'
 
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
