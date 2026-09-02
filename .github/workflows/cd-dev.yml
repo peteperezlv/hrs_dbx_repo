@@ -1,11 +1,16 @@
-# ==========================================================
+# ===============================================================================================
 # Continuous Deployment
 # MS Copilot Assisted
 #
-# Purpose:
-#   Deploy the Databricks Asset Bundle and execute the
-#   HRS ETL workflow.
+# Purpose: Deploy the Databricks Asset Bundle and execute the HRS ETL workflow.
 #
+# Execution Mode: Manually Triggerd (Workflow_dispatch)
+#
+# Source Data: RAND HRS dataset
+#
+# Target Schema: /dev_catalog/slv_cdm_hrs/
+#  **For example:** if {bundle.target} = dev, then files are deployed to /dev_catalog.slv_cdm_hrs/
+# ==================================================================================================
 # Deployment Flow
 #
 # Checkout Repository
@@ -54,6 +59,8 @@ jobs:
       #---------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          node-version: '24'
 
       #---------------------------------------
       # Install Databricks CLI
