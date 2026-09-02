@@ -29,5 +29,5 @@ SELECT hacohort_number,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     active
-FROM staging_catalog.slv_cdm_hrs.hrs_cohort
+FROM staging_catalog.slv_cdm_hrs.dim_cohort
 WHERE active = TRUE;

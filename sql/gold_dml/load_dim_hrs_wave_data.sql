@@ -31,5 +31,5 @@ SELECT wave_number,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     active
-FROM staging_catalog.slv_cdm_hrs.hrs_wave
+FROM staging_catalog.slv_cdm_hrs.dim_wave
 WHERE active = TRUE;

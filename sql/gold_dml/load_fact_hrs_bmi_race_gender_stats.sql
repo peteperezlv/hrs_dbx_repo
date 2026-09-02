@@ -45,9 +45,9 @@ SELECT dc.cohort_id,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     TRUE AS active
-FROM dev_catalog.slv_cdm_hrs.hrs_health h
-    INNER JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON h.respondent_id = r.respondent_id
-    INNER JOIN dev_catalog.slv_cdm_hrs.hrs_demographics d ON h.respondent_id = d.respondent_id
+FROM dev_catalog.slv_cdm_hrs.fact_health h
+    INNER JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON h.respondent_id = r.respondent_id
+    INNER JOIN dev_catalog.slv_cdm_hrs.fact_demographics d ON h.respondent_id = d.respondent_id
     AND h.wave_id = d.wave_id
     INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_wave dw ON h.wave_id = dw.wave_id
     INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_cohort dc ON r.cohort_id = dc.cohort_id
