@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_respondent'
+        '.hub_respondent'
     )
 );
 CREATE TABLE IDENTIFIER(
@@ -11,7 +11,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_respondent'
+        '.hub_respondent'
     )
 ) (
     respondent_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -24,5 +24,5 @@ CREATE TABLE IDENTIFIER(
     create_date DATE,
     update_date DATE,
     active BOOLEAN,
-    CONSTRAINT hrs_respondent_hrs_cohort_fk FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_cohort(cohort_id)
+    CONSTRAINT hub_respondent_dim_cohort_fk FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_cohort(cohort_id)
 ) USING DELTA COMMENT 'Respondent tracking table';

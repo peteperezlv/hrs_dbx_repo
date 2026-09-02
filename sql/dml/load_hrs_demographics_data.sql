@@ -2,13 +2,13 @@
 -- AI Assistant Used: Claude and Genie
 --
 -- Objective:
---   Load dev_catalog.slv_cdm_hrs.hrs_demographics from
+--   Load dev_catalog.slv_cdm_hrs.fact_demographics from
 --   dev_catalog.brz_raw_hrs.randhrs1992_2022v1 using:
 --     - Wide → long wave expansion (1 row per respondent per wave)
---     - FK resolution via hrs_respondent (hhidpn) and hrs_wave (wave_number)
+--     - FK resolution via fact_respondent (hhidpn) and fact_wave (wave_number)
 --     - RAND type transformations (CONT, CATEG, CHAR)
 --     - Insert-only load pattern
--- Generated per Specification Document: /notebooks/DDL Specifications/hrs_deomographics_specification.ipynb
+-- Generated per Specification Document: /notebooks/DDL Specifications/fact_deomographics_specification.ipynb
 --     - Load Pattern: Insert Only (Section 4)
 --     - Grain: One row per respondent per survey wave (Section 9)
 --     - Section 12 'Wave' column = wave_number inserted into target
@@ -17,18 +17,18 @@
 --   Source is a wide table, one row per respondent (HHIDPN).
 --   Wave-varying: R{n}AGEY_E, R{n}CENREG, R{n}MSTAT (n = 1..16)
 --   Wave-invariant (replicated across all 16 wave rows):
---     RARACEM, RAHISPN, RAEDYRS, RARELIG, RAVETRN
+--     RARACEM, RAGENDER, RAHISPN, RAEDYRS, RARELIG, RAVETRN
 --
 -- Wave Expansion Rule:
 --   For each multi-wave target column (agey_e, cenreg, mstat), generate
 --   16 SELECT branches (waves 1–16) and UNION ALL them into an "expanded"
 --   dataset with columns:
---     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, rahispan,
+--     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, ragender, rahispan,
 --     raedyrs, rarelig, ravetrn
 --
 -- FK Rules:
---   respondent_id: join hrs_respondent on hhidpn
---   wave_id      : join hrs_wave on wave_number
+--   respondent_id: join fact_respondent on hhidpn
+--   wave_id      : join fact_wave on wave_number
 --
 -- Business Key:
 --   UNIQUE (respondent_id, wave_id)
@@ -38,7 +38,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_demographics'
+        '.fact_demographics'
     )
 );
 --
@@ -47,7 +47,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_demographics'
+            '.fact_demographics'
         )
     ) (
         respondent_id,
@@ -56,6 +56,7 @@ INSERT INTO IDENTIFIER(
         wave_number,
         agey_e,
         raracem,
+        ragender,
         rahispan,
         cenreg,
         raedyrs,
@@ -68,6 +69,7 @@ INSERT INTO IDENTIFIER(
     ) WITH source_base AS (
         SELECT HHIDPN,
             TRY_CAST(RARACEM AS TINYINT) AS raracem,
+            TRY_CAST(RAGENDER AS TINYINT) AS ragender,
             TRY_CAST(RAHISPAN AS TINYINT) AS rahispan,
             TRY_CAST(RAEDYRS AS TINYINT) AS raedyrs,
             TRY_CAST(RARELIG AS TINYINT) AS rarelig,
@@ -257,6 +259,7 @@ SELECT r.respondent_id,
     wu.wave_number,
     wu.agey_e,
     sb.raracem,
+    sb.ragender,
     sb.rahispan,
     wu.cenreg,
     sb.raedyrs,
@@ -268,5 +271,5 @@ SELECT r.respondent_id,
     TRUE AS active
 FROM wave_unpivoted wu
     JOIN source_base sb ON wu.HHIDPN = sb.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
+    JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON wu.wave_number = w.wave_number

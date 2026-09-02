@@ -1,12 +1,12 @@
 -- Load Survey Respondent Reference Data 
--- Target: dev_catalog.slv_cdm_hrs.hrs_survey_respondent
--- hrs_survey_respondent_id is auto-generated (IDENTITY column)
+-- Target: dev_catalog.slv_cdm_hrs.hub_respondent
+-- hub_survey_respondent_id is auto-generated (IDENTITY column)
 TRUNCATE TABLE IDENTIFIER(
     CONCAT(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_respondent'
+        '.hub_respondent'
     )
 );
 --
@@ -15,7 +15,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_respondent'
+            '.hub_respondent'
         )
     ) (
         cohort_id,
@@ -38,4 +38,4 @@ SELECT DISTINCT c.cohort_id,
     CURRENT_DATE() as update_date,
     true as active
 FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1 ra
-    INNER JOIN dev_catalog.slv_cdm_hrs.hrs_cohort c ON CAST(ra.HACOHORT AS BIGINT) = c.hacohort_number
+    INNER JOIN dev_catalog.slv_cdm_hrs.dim_cohort c ON CAST(ra.HACOHORT AS BIGINT) = c.hacohort_number

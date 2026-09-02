@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM Validation Script – Health Section
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_health
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_health
 -- Purpose: Unit test suite for DDL structure + post-load data quality
 -- Maps to: Section 15 (Validation Requirements) of the Functional Spec
 --
@@ -33,7 +33,7 @@ SELECT 'A1_TABLE_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health';
+    AND table_name = 'fact_health';
 -- A2. Correct Schema (catalog.schema.table resolves)
 SELECT 'A2_CORRECT_SCHEMA' AS test_name,
     CASE
@@ -44,8 +44,8 @@ SELECT 'A2_CORRECT_SCHEMA' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health';
--- A5. Identity Column Exists (hrs_health_id)
+    AND table_name = 'fact_health';
+-- A5. Identity Column Exists (fact_health_id)
 SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
     CASE
         WHEN COUNT(*) = 1 THEN 'PASS'
@@ -55,8 +55,8 @@ SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
-    AND column_name = 'hrs_health_id';
+    AND table_name = 'fact_health'
+    AND column_name = 'fact_health_id';
 -- A6. Respondent FK Exists (constraint level)
 SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
     CASE
@@ -67,8 +67,8 @@ SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
-    AND constraint_name = 'fk_hrs_health_respondent'
+    AND table_name = 'fact_health'
+    AND constraint_name = 'fk_fact_health_respondent'
     AND constraint_type = 'FOREIGN KEY';
 -- A7. Wave FK Exists (constraint level)
 SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
@@ -80,8 +80,8 @@ SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
-    AND constraint_name = 'fk_hrs_health_wave'
+    AND table_name = 'fact_health'
+    AND constraint_name = 'fk_fact_health_wave'
     AND constraint_type = 'FOREIGN KEY';
 -- A8. Audit Columns Exist (create_date, update_date, active)
 SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
@@ -93,7 +93,7 @@ SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
+    AND table_name = 'fact_health'
     AND column_name IN ('create_date', 'update_date', 'active');
 -- A9. Primary Key Constraint Exists
 SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
@@ -105,8 +105,8 @@ SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
-    AND constraint_name = 'pk_hrs_health'
+    AND table_name = 'fact_health'
+    AND constraint_name = 'pk_fact_health'
     AND constraint_type = 'PRIMARY KEY';
 -- A10. Business Key Unique Constraint Exists
 SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
@@ -118,8 +118,8 @@ SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_health'
-    AND constraint_name = 'uq_hrs_health_respondent_wave'
+    AND table_name = 'fact_health'
+    AND constraint_name = 'uq_fact_health_respondent_wave'
     AND constraint_type = 'UNIQUE';
 -- =====================================================================
 -- SECTION B: DATA QUALITY VALIDATIONS (run AFTER INSERT...SELECT load)
@@ -131,26 +131,26 @@ SELECT 'B1_ROWS_LOADED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Row count = ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health;
--- B2. respondent_id Exists in hrs_respondent (referential integrity)
+FROM dev_catalog.slv_cdm_hrs.fact_health;
+-- B2. respondent_id Exists in hub_respondent (referential integrity)
 SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+FROM dev_catalog.slv_cdm_hrs.fact_health d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
 WHERE r.respondent_id IS NULL;
--- B3. wave_id Exists in hrs_wave (referential integrity)
+-- B3. wave_id Exists in dim_wave (referential integrity)
 SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+FROM dev_catalog.slv_cdm_hrs.fact_health d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
 WHERE w.wave_id IS NULL;
 -- B4. No Duplicate respondent_id + wave_id
 SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
@@ -162,7 +162,7 @@ SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
 FROM (
         SELECT respondent_id,
             wave_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         GROUP BY respondent_id,
             wave_id
         HAVING COUNT(*) > 1
@@ -174,7 +174,7 @@ SELECT 'B5_NOT_NULL_COLUMNS_ENFORCED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with NULL required fields: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health
+FROM dev_catalog.slv_cdm_hrs.fact_health
 WHERE respondent_id IS NULL
     OR wave_id IS NULL
     OR wave_number IS NULL
@@ -188,7 +188,7 @@ SELECT 'B6_WAVE_NUMBER_IN_RANGE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Out-of-range rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health
+FROM dev_catalog.slv_cdm_hrs.fact_health
 WHERE TRY_CAST(wave_number AS INT) IS NULL
     OR TRY_CAST(wave_number AS INT) NOT BETWEEN 1 AND 16;
 -- B7. bmi Within Plausible Human Range (data sanity, not a hard constraint)
@@ -198,7 +198,7 @@ SELECT 'B7_BMI_PLAUSIBLE_RANGE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Implausible BMI rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health
+FROM dev_catalog.slv_cdm_hrs.fact_health
 WHERE bmi IS NOT NULL
     AND (
         bmi < 10
@@ -214,7 +214,7 @@ SELECT 'B8_CONDITION_FLAGS_BINARY' AS test_name,
         'Rows with out-of-domain flag values found: ',
         COUNT(*)
     ) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health
+FROM dev_catalog.slv_cdm_hrs.fact_health
 WHERE (
         hibpe IS NOT NULL
         AND hibpe NOT IN (0, 1)
@@ -260,7 +260,7 @@ SELECT 'B9_HHIDPN_CONSISTENT_PER_RESPONDENT' AS test_name,
     ) AS details
 FROM (
         SELECT respondent_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         GROUP BY respondent_id
         HAVING COUNT(DISTINCT hhidpn) > 1
     );
@@ -272,7 +272,7 @@ SELECT 'B10_ACTIVE_FLAG_TRUE_ON_LOAD' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with active = FALSE: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_health
+FROM dev_catalog.slv_cdm_hrs.fact_health
 WHERE active = FALSE;
 -- =====================================================================
 -- SECTION C: CONSOLIDATED TEST SUMMARY
@@ -289,7 +289,7 @@ FROM (
         FROM dev_catalog.information_schema.tables
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
+            AND table_name = 'fact_health'
         UNION ALL
         SELECT 'A2_CORRECT_SCHEMA',
             CASE
@@ -299,7 +299,7 @@ FROM (
         FROM dev_catalog.information_schema.tables
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
+            AND table_name = 'fact_health'
         UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
@@ -309,8 +309,8 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-            AND column_name = 'hrs_health_id'
+            AND table_name = 'fact_health'
+            AND column_name = 'fact_health_id'
         UNION ALL
         SELECT 'A6_RESPONDENT_FK_EXISTS',
             CASE
@@ -320,8 +320,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-            AND constraint_name = 'fk_hrs_health_respondent'
+            AND table_name = 'fact_health'
+            AND constraint_name = 'fk_fact_health_respondent'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A7_WAVE_FK_EXISTS',
@@ -332,8 +332,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-            AND constraint_name = 'fk_hrs_health_wave'
+            AND table_name = 'fact_health'
+            AND constraint_name = 'fk_fact_health_wave'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A8_AUDIT_COLUMNS_EXIST',
@@ -344,7 +344,7 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
+            AND table_name = 'fact_health'
             AND column_name IN ('create_date', 'update_date', 'active')
         UNION ALL
         SELECT 'A9_PRIMARY_KEY_EXISTS',
@@ -355,8 +355,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-            AND constraint_name = 'pk_hrs_health'
+            AND table_name = 'fact_health'
+            AND constraint_name = 'pk_fact_health'
             AND constraint_type = 'PRIMARY KEY'
         UNION ALL
         SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS',
@@ -367,8 +367,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_health'
-            AND constraint_name = 'uq_hrs_health_respondent_wave'
+            AND table_name = 'fact_health'
+            AND constraint_name = 'uq_fact_health_respondent_wave'
             AND constraint_type = 'UNIQUE'
         UNION ALL
         SELECT 'B1_ROWS_LOADED',
@@ -376,15 +376,15 @@ FROM (
                 WHEN COUNT(*) > 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         UNION ALL
         SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY',
             CASE
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+        FROM dev_catalog.slv_cdm_hrs.fact_health d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
         WHERE r.respondent_id IS NULL
         UNION ALL
         SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY',
@@ -392,8 +392,8 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+        FROM dev_catalog.slv_cdm_hrs.fact_health d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
         WHERE w.wave_id IS NULL
         UNION ALL
         SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE',
@@ -404,7 +404,7 @@ FROM (
         FROM (
                 SELECT respondent_id,
                     wave_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_health
+                FROM dev_catalog.slv_cdm_hrs.fact_health
                 GROUP BY respondent_id,
                     wave_id
                 HAVING COUNT(*) > 1
@@ -415,7 +415,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         WHERE respondent_id IS NULL
             OR wave_id IS NULL
             OR wave_number IS NULL
@@ -428,7 +428,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         WHERE TRY_CAST(wave_number AS INT) IS NULL
             OR TRY_CAST(wave_number AS INT) NOT BETWEEN 1 AND 16
         UNION ALL
@@ -437,7 +437,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         WHERE bmi IS NOT NULL
             AND (
                 bmi < 10
@@ -449,7 +449,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         WHERE (
                 hibpe IS NOT NULL
                 AND hibpe NOT IN (0, 1)
@@ -490,7 +490,7 @@ FROM (
             END
         FROM (
                 SELECT respondent_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_health
+                FROM dev_catalog.slv_cdm_hrs.fact_health
                 GROUP BY respondent_id
                 HAVING COUNT(DISTINCT hhidpn) > 1
             )
@@ -500,7 +500,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_health
+        FROM dev_catalog.slv_cdm_hrs.fact_health
         WHERE active = FALSE
     )
 ORDER BY test_name;

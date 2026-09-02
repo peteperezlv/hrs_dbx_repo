@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM DDL – Leave-Behind: Big 5 Personality Traits
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_leave_behind
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_leave_behind
 -- Generated per: HRS Silver CDM DDL/DML Functional Specification v2.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 -- =====================================================================
@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_leave_behind'
+        '.fact_leave_behind'
     )
 );
 CREATE TABLE IDENTIFIER(
@@ -17,7 +17,7 @@ CREATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_leave_behind'
+        '.fact_leave_behind'
     )
 ) (
     -- ---------------------------------------------------------------
@@ -54,8 +54,8 @@ CREATE TABLE IDENTIFIER(
     -- ---------------------------------------------------------------
     -- Constraints
     -- ---------------------------------------------------------------
-    CONSTRAINT pk_hrs_leave_behind PRIMARY KEY (hrs_leave_behind_id),
-    CONSTRAINT fk_hrs_leave_behind_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_respondent (respondent_id),
-    CONSTRAINT fk_hrs_leave_behind_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.hrs_wave (wave_id),
-    CONSTRAINT uq_hrs_leave_behind_respondent_wave UNIQUE (respondent_id, wave_id)
+    CONSTRAINT pk_fact_leave_behind PRIMARY KEY (hrs_leave_behind_id),
+    CONSTRAINT fk_fact_leave_behind_hub_respondent FOREIGN KEY (respondent_id) REFERENCES dev_catalog.slv_cdm_hrs.hub_respondent (respondent_id),
+    CONSTRAINT fk_fact_leave_behind_dim_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id),
+    CONSTRAINT uq_fact_leave_behind_respondent_dim_wave UNIQUE (respondent_id, wave_id)
 ) USING DELTA COMMENT 'Stores RAND HRS Leave-Behind Big 5 Personality Trait observations';

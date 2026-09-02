@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM Validation Script – Demographics Section
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_demographics
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_demographics
 -- Purpose: Unit test suite for DDL structure + post-load data quality
 -- Maps to: Section 15 (Validation Requirements) of the Functional Spec
 --
@@ -24,7 +24,7 @@ SELECT 'A1_TABLE_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics';
+    AND table_name = 'fact_demographics';
 -- A2. Correct Schema (catalog.schema.table resolves)
 SELECT 'A2_CORRECT_SCHEMA' AS test_name,
     CASE
@@ -35,8 +35,8 @@ SELECT 'A2_CORRECT_SCHEMA' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics';
--- A5. Identity Column Exists (hrs_demographics_id)
+    AND table_name = 'fact_demographics';
+-- A5. Identity Column Exists (fact_demographics_id)
 SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
     CASE
         WHEN COUNT(*) = 1 THEN 'PASS'
@@ -46,8 +46,8 @@ SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
-    AND column_name = 'hrs_demographics_id';
+    AND table_name = 'fact_demographics'
+    AND column_name = 'fact_demographics_id';
 -- A6. Respondent FK Exists (constraint level)
 SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
     CASE
@@ -58,8 +58,8 @@ SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
-    AND constraint_name = 'fk_hrs_demographics_respondent'
+    AND table_name = 'fact_demographics'
+    AND constraint_name = 'fk_fact_demographics_hub_respondent'
     AND constraint_type = 'FOREIGN KEY';
 -- A7. Wave FK Exists (constraint level)
 SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
@@ -71,8 +71,8 @@ SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
-    AND constraint_name = 'fk_hrs_demographics_wave'
+    AND table_name = 'fact_demographics'
+    AND constraint_name = 'fk_fact_demographics_dim_wave'
     AND constraint_type = 'FOREIGN KEY';
 -- A8. Audit Columns Exist (create_date, update_date, active)
 SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
@@ -84,7 +84,7 @@ SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
+    AND table_name = 'fact_demographics'
     AND column_name IN ('create_date', 'update_date', 'active');
 -- A9. Primary Key Constraint Exists
 SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
@@ -96,8 +96,8 @@ SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
-    AND constraint_name = 'pk_hrs_demographics'
+    AND table_name = 'fact_demographics'
+    AND constraint_name = 'pk_fact_demographics'
     AND constraint_type = 'PRIMARY KEY';
 -- A10. Business Key Unique Constraint Exists
 SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
@@ -109,8 +109,8 @@ SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_demographics'
-    AND constraint_name = 'uq_hrs_demographics_respondent_wave'
+    AND table_name = 'fact_demographics'
+    AND constraint_name = 'uq_fact_demographics_respondent_wave'
     AND constraint_type = 'UNIQUE';
 -- =====================================================================
 -- SECTION B: DATA QUALITY VALIDATIONS (run AFTER INSERT...SELECT load)
@@ -122,26 +122,26 @@ SELECT 'B1_ROWS_LOADED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Row count = ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics;
--- B2. respondent_id Exists in hrs_respondent (referential integrity)
+FROM dev_catalog.slv_cdm_hrs.fact_demographics;
+-- B2. respondent_id Exists in hub_respondent (referential integrity)
 SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+FROM dev_catalog.slv_cdm_hrs.fact_demographics d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
 WHERE r.respondent_id IS NULL;
--- B3. wave_id Exists in hrs_wave (referential integrity)
+-- B3. wave_id Exists in dim_wave (referential integrity)
 SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+FROM dev_catalog.slv_cdm_hrs.fact_demographics d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
 WHERE w.wave_id IS NULL;
 -- B4. No Duplicate respondent_id + wave_id
 SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
@@ -153,7 +153,7 @@ SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
 FROM (
         SELECT respondent_id,
             wave_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         GROUP BY respondent_id,
             wave_id
         HAVING COUNT(*) > 1
@@ -165,7 +165,7 @@ SELECT 'B5_NOT_NULL_COLUMNS_ENFORCED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with NULL required fields: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+FROM dev_catalog.slv_cdm_hrs.fact_demographics
 WHERE respondent_id IS NULL
     OR wave_id IS NULL
     OR wave_number IS NULL
@@ -179,7 +179,7 @@ SELECT 'B6_WAVE_NUMBER_IN_RANGE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Out-of-range rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+FROM dev_catalog.slv_cdm_hrs.fact_demographics
 WHERE wave_number NOT BETWEEN 1 AND 16;
 -- B7. agey_e Within Plausible Human Age Bounds (data sanity, not a hard constraint)
 SELECT 'B7_AGEY_E_PLAUSIBLE_RANGE' AS test_name,
@@ -188,7 +188,7 @@ SELECT 'B7_AGEY_E_PLAUSIBLE_RANGE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Implausible age rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+FROM dev_catalog.slv_cdm_hrs.fact_demographics
 WHERE agey_e IS NOT NULL
     AND (
         agey_e < 0
@@ -207,7 +207,7 @@ SELECT 'B8_HHIDPN_CONSISTENT_PER_RESPONDENT' AS test_name,
     ) AS details
 FROM (
         SELECT respondent_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         GROUP BY respondent_id
         HAVING COUNT(DISTINCT hhidpn) > 1
     );
@@ -219,7 +219,7 @@ SELECT 'B9_ACTIVE_FLAG_TRUE_ON_LOAD' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with active = FALSE: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+FROM dev_catalog.slv_cdm_hrs.fact_demographics
 WHERE active = FALSE;
 -- =====================================================================
 -- SECTION C: CONSOLIDATED TEST SUMMARY
@@ -236,7 +236,7 @@ FROM (
         FROM dev_catalog.information_schema.tables
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
+            AND table_name = 'fact_demographics'
         UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
@@ -246,8 +246,8 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
-            AND column_name = 'hrs_demographics_id'
+            AND table_name = 'fact_demographics'
+            AND column_name = 'fact_demographics_id'
         UNION ALL
         SELECT 'A6_RESPONDENT_FK_EXISTS',
             CASE
@@ -257,8 +257,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
-            AND constraint_name = 'fk_hrs_demographics_respondent'
+            AND table_name = 'fact_demographics'
+            AND constraint_name = 'fk_fact_demographics_hub_respondent'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A7_WAVE_FK_EXISTS',
@@ -269,8 +269,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
-            AND constraint_name = 'fk_hrs_demographics_wave'
+            AND table_name = 'fact_demographics'
+            AND constraint_name = 'fk_fact_demographics_dim_wave'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A8_AUDIT_COLUMNS_EXIST',
@@ -281,7 +281,7 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
+            AND table_name = 'fact_demographics'
             AND column_name IN ('create_date', 'update_date', 'active')
         UNION ALL
         SELECT 'A9_PRIMARY_KEY_EXISTS',
@@ -292,8 +292,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
-            AND constraint_name = 'pk_hrs_demographics'
+            AND table_name = 'fact_demographics'
+            AND constraint_name = 'pk_fact_demographics'
             AND constraint_type = 'PRIMARY KEY'
         UNION ALL
         SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS',
@@ -304,8 +304,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_demographics'
-            AND constraint_name = 'uq_hrs_demographics_respondent_wave'
+            AND table_name = 'fact_demographics'
+            AND constraint_name = 'uq_fact_demographics_respondent_wave'
             AND constraint_type = 'UNIQUE'
         UNION ALL
         SELECT 'B1_ROWS_LOADED',
@@ -313,15 +313,15 @@ FROM (
                 WHEN COUNT(*) > 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         UNION ALL
         SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY',
             CASE
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
         WHERE r.respondent_id IS NULL
         UNION ALL
         SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY',
@@ -329,8 +329,8 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
         WHERE w.wave_id IS NULL
         UNION ALL
         SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE',
@@ -341,7 +341,7 @@ FROM (
         FROM (
                 SELECT respondent_id,
                     wave_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+                FROM dev_catalog.slv_cdm_hrs.fact_demographics
                 GROUP BY respondent_id,
                     wave_id
                 HAVING COUNT(*) > 1
@@ -352,7 +352,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         WHERE respondent_id IS NULL
             OR wave_id IS NULL
             OR wave_number IS NULL
@@ -365,7 +365,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         WHERE wave_number NOT BETWEEN 1 AND 16
         UNION ALL
         SELECT 'B7_AGEY_E_PLAUSIBLE_RANGE',
@@ -373,7 +373,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         WHERE agey_e IS NOT NULL
             AND (
                 agey_e < 0
@@ -387,7 +387,7 @@ FROM (
             END
         FROM (
                 SELECT respondent_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+                FROM dev_catalog.slv_cdm_hrs.fact_demographics
                 GROUP BY respondent_id
                 HAVING COUNT(DISTINCT hhidpn) > 1
             )
@@ -397,7 +397,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_demographics
+        FROM dev_catalog.slv_cdm_hrs.fact_demographics
         WHERE active = FALSE
     )
 ORDER BY test_name;

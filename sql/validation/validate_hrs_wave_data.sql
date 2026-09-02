@@ -8,6 +8,6 @@ SELECT wave_id,
     create_date,
     update_date,
     active
-FROM dev_catalog.slv_cdm_hrs.hrs_wave
+FROM dev_catalog.slv_cdm_hrs.dim_wave
 ORDER BY wave_year,
     wave_number;

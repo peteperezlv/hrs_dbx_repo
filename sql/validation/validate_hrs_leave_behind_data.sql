@@ -1,6 +1,6 @@
 -- =====================================================================
 -- HRS Silver CDM Validation Script – Leave-Behind: Big 5 Personality Traits
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_leave_behind
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_leave_behind
 -- Purpose: Unit test suite for DDL structure + post-load data quality
 -- Maps to: Section 15 (Validation Requirements) of the Functional Spec
 --
@@ -21,7 +21,7 @@ SELECT 'A1_TABLE_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind';
+    AND table_name = 'fact_leave_behind';
 -- A2. Correct Schema (catalog.schema.table resolves)
 SELECT 'A2_CORRECT_SCHEMA' AS test_name,
     CASE
@@ -32,8 +32,8 @@ SELECT 'A2_CORRECT_SCHEMA' AS test_name,
 FROM dev_catalog.information_schema.tables
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind';
--- A5. Identity Column Exists (hrs_leave_behind_id)
+    AND table_name = 'fact_leave_behind';
+-- A5. Identity Column Exists (fact_leave_behind_id)
 SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
     CASE
         WHEN COUNT(*) = 1 THEN 'PASS'
@@ -43,8 +43,8 @@ SELECT 'A5_IDENTITY_COLUMN_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
-    AND column_name = 'hrs_leave_behind_id';
+    AND table_name = 'fact_leave_behind'
+    AND column_name = 'fact_leave_behind_id';
 -- A6. Respondent FK Exists (constraint level)
 SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
     CASE
@@ -55,8 +55,8 @@ SELECT 'A6_RESPONDENT_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
-    AND constraint_name = 'fk_hrs_leave_behind_respondent'
+    AND table_name = 'fact_leave_behind'
+    AND constraint_name = 'fk_fact_leave_behind_respondent'
     AND constraint_type = 'FOREIGN KEY';
 -- A7. Wave FK Exists (constraint level)
 SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
@@ -68,8 +68,8 @@ SELECT 'A7_WAVE_FK_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
-    AND constraint_name = 'fk_hrs_leave_behind_wave'
+    AND table_name = 'fact_leave_behind'
+    AND constraint_name = 'fk_fact_leave_behind_wave'
     AND constraint_type = 'FOREIGN KEY';
 -- A8. Audit Columns Exist (create_date, update_date, active)
 SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
@@ -81,7 +81,7 @@ SELECT 'A8_AUDIT_COLUMNS_EXIST' AS test_name,
 FROM dev_catalog.information_schema.columns
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
+    AND table_name = 'fact_leave_behind'
     AND column_name IN ('create_date', 'update_date', 'active');
 -- A9. Primary Key Constraint Exists
 SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
@@ -93,8 +93,8 @@ SELECT 'A9_PRIMARY_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
-    AND constraint_name = 'pk_hrs_leave_behind'
+    AND table_name = 'fact_leave_behind'
+    AND constraint_name = 'pk_fact_leave_behind'
     AND constraint_type = 'PRIMARY KEY';
 -- A10. Business Key Unique Constraint Exists
 SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
@@ -106,8 +106,8 @@ SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS' AS test_name,
 FROM dev_catalog.information_schema.table_constraints
 WHERE table_catalog = 'dev_catalog'
     AND table_schema = 'slv_cdm_hrs'
-    AND table_name = 'hrs_leave_behind'
-    AND constraint_name = 'uq_hrs_leave_behind_respondent_wave'
+    AND table_name = 'fact_leave_behind'
+    AND constraint_name = 'uq_fact_leave_behind_respondent_wave'
     AND constraint_type = 'UNIQUE';
 -- =====================================================================
 -- SECTION B: DATA QUALITY VALIDATIONS (run AFTER INSERT...SELECT load)
@@ -119,26 +119,26 @@ SELECT 'B1_ROWS_LOADED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Row count = ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind;
--- B2. respondent_id Exists in hrs_respondent (referential integrity)
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind;
+-- B2. respondent_id Exists in hub_respondent (referential integrity)
 SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
 WHERE r.respondent_id IS NULL;
--- B3. wave_id Exists in hrs_wave (referential integrity)
+-- B3. wave_id Exists dim_wave (referential integrity)
 SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY' AS test_name,
     CASE
         WHEN COUNT(*) = 0 THEN 'PASS'
         ELSE 'FAIL'
     END AS status,
     CONCAT('Orphaned rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind d
-    LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind d
+    LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
 WHERE w.wave_id IS NULL;
 -- B4. No Duplicate respondent_id + wave_id
 SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
@@ -150,7 +150,7 @@ SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE' AS test_name,
 FROM (
         SELECT respondent_id,
             wave_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         GROUP BY respondent_id,
             wave_id
         HAVING COUNT(*) > 1
@@ -162,7 +162,7 @@ SELECT 'B5_NOT_NULL_COLUMNS_ENFORCED' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with NULL required fields: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE respondent_id IS NULL
     OR wave_id IS NULL
     OR wave_number IS NULL
@@ -176,7 +176,7 @@ SELECT 'B6_WAVE_NUMBER_IN_RANGE' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Out-of-range rows found: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE TRY_CAST(wave_number AS INT) IS NULL
     OR TRY_CAST(wave_number AS INT) NOT BETWEEN 1 AND 16;
 -- B7. Big 5 Trait Scores Within Documented Domain (1.0-4.0) Where Non-NULL
@@ -189,7 +189,7 @@ SELECT 'B7_TRAIT_SCORES_IN_DOMAIN' AS test_name,
         'Out-of-domain trait score rows found: ',
         COUNT(*)
     ) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE (
         lbneur IS NOT NULL
         AND (
@@ -238,7 +238,7 @@ SELECT 'B8_HHIDPN_CONSISTENT_PER_RESPONDENT' AS test_name,
     ) AS details
 FROM (
         SELECT respondent_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         GROUP BY respondent_id
         HAVING COUNT(DISTINCT hhidpn) > 1
     );
@@ -250,7 +250,7 @@ SELECT 'B9_ACTIVE_FLAG_TRUE_ON_LOAD' AS test_name,
         ELSE 'FAIL'
     END AS status,
     CONCAT('Rows with active = FALSE: ', COUNT(*)) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE active = FALSE;
 -- B10. Waves 1-7 Scaffold Behaved As Designed
 --      (Big 5 was not fielded before Wave 8 -- source has no columns at
@@ -267,7 +267,7 @@ SELECT 'B10_WAVES_1_7_SCAFFOLD_ALL_NULL' AS test_name,
         'Wave 1-7 rows with unexpected non-NULL trait data: ',
         COUNT(*)
     ) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE TRY_CAST(wave_number AS INT) BETWEEN 1 AND 7
     AND (
         lbneur IS NOT NULL
@@ -289,7 +289,7 @@ SELECT 'B11_WAVES_8_16_HAVE_DATA' AS test_name,
         'Wave 8-16 rows with at least one non-NULL trait: ',
         COUNT(*)
     ) AS details
-FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
 WHERE TRY_CAST(wave_number AS INT) BETWEEN 8 AND 16
     AND (
         lbneur IS NOT NULL
@@ -311,7 +311,7 @@ SELECT 'B12_EVERY_RESPONDENT_HAS_16_WAVE_ROWS' AS test_name,
     ) AS details
 FROM (
         SELECT respondent_id
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         GROUP BY respondent_id
         HAVING COUNT(*) <> 16
     );
@@ -330,7 +330,7 @@ FROM (
         FROM dev_catalog.information_schema.tables
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
+            AND table_name = 'fact_leave_behind'
         UNION ALL
         SELECT 'A5_IDENTITY_COLUMN_EXISTS',
             CASE
@@ -340,8 +340,8 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
-            AND column_name = 'hrs_leave_behind_id'
+            AND table_name = 'fact_leave_behind'
+            AND column_name = 'fact_leave_behind_id'
         UNION ALL
         SELECT 'A6_RESPONDENT_FK_EXISTS',
             CASE
@@ -351,8 +351,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
-            AND constraint_name = 'fk_hrs_leave_behind_respondent'
+            AND table_name = 'fact_leave_behind'
+            AND constraint_name = 'fk_fact_leave_behind_respondent'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A7_WAVE_FK_EXISTS',
@@ -363,8 +363,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
-            AND constraint_name = 'fk_hrs_leave_behind_wave'
+            AND table_name = 'fact_leave_behind'
+            AND constraint_name = 'fk_fact_leave_behind_wave'
             AND constraint_type = 'FOREIGN KEY'
         UNION ALL
         SELECT 'A8_AUDIT_COLUMNS_EXIST',
@@ -375,7 +375,7 @@ FROM (
         FROM dev_catalog.information_schema.columns
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
+            AND table_name = 'fact_leave_behind'
             AND column_name IN ('create_date', 'update_date', 'active')
         UNION ALL
         SELECT 'A9_PRIMARY_KEY_EXISTS',
@@ -386,8 +386,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
-            AND constraint_name = 'pk_hrs_leave_behind'
+            AND table_name = 'fact_leave_behind'
+            AND constraint_name = 'pk_fact_leave_behind'
             AND constraint_type = 'PRIMARY KEY'
         UNION ALL
         SELECT 'A10_UNIQUE_BUSINESS_KEY_EXISTS',
@@ -398,8 +398,8 @@ FROM (
         FROM dev_catalog.information_schema.table_constraints
         WHERE table_catalog = 'dev_catalog'
             AND table_schema = 'slv_cdm_hrs'
-            AND table_name = 'hrs_leave_behind'
-            AND constraint_name = 'uq_hrs_leave_behind_respondent_wave'
+            AND table_name = 'fact_leave_behind'
+            AND constraint_name = 'uq_fact_leave_behind_respondent_wave'
             AND constraint_type = 'UNIQUE'
         UNION ALL
         SELECT 'B1_ROWS_LOADED',
@@ -407,15 +407,15 @@ FROM (
                 WHEN COUNT(*) > 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         UNION ALL
         SELECT 'B2_RESPONDENT_ID_REFERENTIAL_INTEGRITY',
             CASE
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON d.respondent_id = r.respondent_id
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON d.respondent_id = r.respondent_id
         WHERE r.respondent_id IS NULL
         UNION ALL
         SELECT 'B3_WAVE_ID_REFERENTIAL_INTEGRITY',
@@ -423,8 +423,8 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind d
-            LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON d.wave_id = w.wave_id
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind d
+            LEFT JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON d.wave_id = w.wave_id
         WHERE w.wave_id IS NULL
         UNION ALL
         SELECT 'B4_NO_DUPLICATE_RESPONDENT_WAVE',
@@ -435,7 +435,7 @@ FROM (
         FROM (
                 SELECT respondent_id,
                     wave_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+                FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
                 GROUP BY respondent_id,
                     wave_id
                 HAVING COUNT(*) > 1
@@ -446,7 +446,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE respondent_id IS NULL
             OR wave_id IS NULL
             OR wave_number IS NULL
@@ -459,7 +459,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE TRY_CAST(wave_number AS INT) IS NULL
             OR TRY_CAST(wave_number AS INT) NOT BETWEEN 1 AND 16
         UNION ALL
@@ -468,7 +468,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE (
                 lbneur IS NOT NULL
                 AND (
@@ -512,7 +512,7 @@ FROM (
             END
         FROM (
                 SELECT respondent_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+                FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
                 GROUP BY respondent_id
                 HAVING COUNT(DISTINCT hhidpn) > 1
             )
@@ -522,7 +522,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE active = FALSE
         UNION ALL
         SELECT 'B10_WAVES_1_7_SCAFFOLD_ALL_NULL',
@@ -530,7 +530,7 @@ FROM (
                 WHEN COUNT(*) = 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE TRY_CAST(wave_number AS INT) BETWEEN 1 AND 7
             AND (
                 lbneur IS NOT NULL
@@ -545,7 +545,7 @@ FROM (
                 WHEN COUNT(*) > 0 THEN 'PASS'
                 ELSE 'FAIL'
             END
-        FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+        FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
         WHERE TRY_CAST(wave_number AS INT) BETWEEN 8 AND 16
             AND (
                 lbneur IS NOT NULL
@@ -562,7 +562,7 @@ FROM (
             END
         FROM (
                 SELECT respondent_id
-                FROM dev_catalog.slv_cdm_hrs.hrs_leave_behind
+                FROM dev_catalog.slv_cdm_hrs.fact_leave_behind
                 GROUP BY respondent_id
                 HAVING COUNT(*) <> 16
             )

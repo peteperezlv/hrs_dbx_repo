@@ -1,14 +1,14 @@
 -- =====================================================================
 -- HRS Silver CDM INSERT...SELECT – Health Section
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_health
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_health
 -- Load Pattern: Insert Only (Section 4)
 -- Grain: One row per respondent per survey wave (Section 9)
 --
 -- SOURCE:  dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 --
 -- CONFIRMED:
---   - hrs_respondent join column: HHIDPN
---   - hrs_wave join column: wave_number (STRING)
+--   - hub_respondent join column: HHIDPN
+--   - dim_wave join column: wave_number (STRING)
 --   - Section 12 'Wave' column = wave_number inserted into target
 --
 -- METHOD: Multi-value UNPIVOT (Databricks Runtime 12.2 LTS+)
@@ -29,7 +29,7 @@
 --  R{n}HEARTE, R{n}STROKE, R{n}PSYCHE, R{n}ARTHRE for n = 1..16)
 -- There are no wave-invariant business columns in this section.
 --
--- wave_number is STRING on both hrs_health and hrs_wave, and the
+-- wave_number is STRING on both fact_health and dim_wave, and the
 -- multi-value UNPIVOT column aliases (`1`...`16`) naturally resolve
 -- to STRING, so no explicit cast is required on the join key.
 --
@@ -45,7 +45,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_health'
+        '.fact_health'
     )
 );
 --
@@ -54,7 +54,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_health'
+            '.fact_health'
         )
     ) (
         respondent_id,
@@ -492,5 +492,5 @@ SELECT r.respondent_id,
     CURRENT_DATE() AS update_date,
     TRUE AS active
 FROM wave_unpivoted wu
-    JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number
+    JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON wu.wave_number = w.wave_number

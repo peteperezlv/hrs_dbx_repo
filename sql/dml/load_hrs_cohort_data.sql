@@ -1,4 +1,4 @@
--- Load Cohort Reference Data from RAND Longitudinal Dataset
+-- Load Cohort Reference Data from RAND Longitudinal Datase
 -- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 -- Target: dev_catalog.slv_cdm_hrs.cohort
 -- cohort_id is auto-generated (IDENTITY column)
@@ -9,7 +9,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_cohort'
+        '.dim_cohort'
     )
 );
 INSERT INTO IDENTIFIER(
@@ -17,7 +17,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_cohort'
+            '.dim_cohort'
         )
     ) (
         hacohort_number,

@@ -42,7 +42,7 @@ TRUNCATE TABLE IDENTIFIER(
         :catalog_name,
         '.',
         :schema_prefix,
-        '.hrs_leave_behind'
+        '.fact_leave_behind'
     )
 );
 --
@@ -51,7 +51,7 @@ INSERT INTO IDENTIFIER(
             :catalog_name,
             '.',
             :schema_prefix,
-            '.hrs_leave_behind'
+            '.fact_leave_behind'
         )
     ) (
         respondent_id,
@@ -259,5 +259,5 @@ SELECT r.respondent_id,
     CURRENT_DATE() AS update_date,
     TRUE AS active
 FROM wave_unpivoted wu
-    JOIN dev_catalog.slv_cdm_hrs.hrs_respondent r ON wu.HHIDPN = r.HHIDPN
-    JOIN dev_catalog.slv_cdm_hrs.hrs_wave w ON wu.wave_number = w.wave_number;
+    JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON wu.HHIDPN = r.HHIDPN
+    JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON wu.wave_number = w.wave_number;

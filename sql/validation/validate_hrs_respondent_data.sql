@@ -3,7 +3,7 @@
 --
 -- Source Table: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
 --
--- Target Table: hrs_respondent
+-- Target Table: hub_respondent
 -- ============================================================================
 -- Expected: Zero missing respondents (all hhidpn values exist)
 WITH source_respondents AS (
@@ -13,7 +13,7 @@ WITH source_respondents AS (
 missing_respondents AS (
     SELECT sr.hhidpn
     FROM source_respondents sr
-        LEFT JOIN dev_catalog.slv_cdm_hrs.hrs_respondent resp ON sr.hhidpn = resp.hhidpn
+        LEFT JOIN dev_catalog.slv_cdm_hrs.hub_respondent resp ON sr.hhidpn = resp.hhidpn
     WHERE resp.hhidpn IS NULL
 )
 SELECT 'Test 4: Missing Respondents' AS test_name,
@@ -34,7 +34,7 @@ WITH source_count AS (
 ),
 target_count AS (
     SELECT COUNT(DISTINCT hhidpn) AS cnt
-    FROM dev_catalog.slv_cdm_hrs.hrs_respondent sr
+    FROM dev_catalog.slv_cdm_hrs.hub_respondent sr
     WHERE hhidpn IS NOT NULL
 )
 SELECT 'Test 2: Target vs Source Count' AS test_name,
@@ -49,7 +49,7 @@ FROM source_count sc
 -- ============================================================================
 -- Test 3: Sample Respondents Data
 -- ============================================================================
--- Displays 20 records in the hrs_respondent reference table
+-- Displays 20 records in the hub_respondent reference table
 SELECT respondent_id,
     hhid,
     pn,
@@ -58,6 +58,6 @@ SELECT respondent_id,
     create_date,
     update_date,
     active
-FROM dev_catalog.slv_cdm_hrs.hrs_respondent
+FROM dev_catalog.slv_cdm_hrs.hub_respondent
 ORDER BY hhid DESC
 LIMIT 20
