@@ -1,0 +1,41 @@
+resources:
+  jobs:
+
+    # Databricks Workflow name
+    hrs_etl_job_testing:
+      name: Test Setup HRS Silver Tables - ${bundle.target}
+
+      description: >
+        Creates and loads the foundational HRS Silver layer tables from GitHub Main branch.
+
+      timeout_seconds: 3600
+
+      # Serverless environment definition
+      environments:
+        - environment_key: serverless_env
+          spec:
+            environment_version: "2"  #  Correct, modern replacement to the client: "1"
+
+      tasks:
+        # --------------------------------------------------
+        # Task 0:
+        # Create database objects
+        #
+        # Executes DDL scripts to create:
+        #   - schemas
+        #   - tables
+        #   - constraints
+        #
+        # Source:
+        #   notebooks/setup/00_create_database_objects.ipynb
+        #
+        # --------------------------------------------------
+        - task_key: create_objects
+
+          environment_key: serverless_env
+
+          notebook_task:
+            notebook_path: ../notebooks/orchestration/00_create_database_objects.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog_name}
+              schema_prefix: ${var.schema_prefix}
