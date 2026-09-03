@@ -12,18 +12,18 @@
 -- =====================================================================
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
-        -- :catalog_name,
-        'dev_catalog.' --'.',
-        --:schema_prefix,
-        'slv_cdm_hrs' '.fact_demographics'
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.fact_demographics'
     )
 );
 CREATE TABLE IDENTIFIER(
     CONCAT(
-        -- :catalog_name,
-        'dev_catalog.' --'.',
-        --:schema_prefix,
-        'slv_cdm_hrs' '.fact_demographics'
+        :catalog_name,
+        '.',
+        :schema_prefix,
+        '.fact_demographics'
     )
 ) (
     -- ---------------------------------------------------------------
