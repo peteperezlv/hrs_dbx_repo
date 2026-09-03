@@ -13,6 +13,7 @@
 DROP TABLE IF EXISTS IDENTIFIER(
     CONCAT(
         :catalog_name,
+        '.',
         :schema_prefix,
         '.fact_demographics'
     )
@@ -20,6 +21,7 @@ DROP TABLE IF EXISTS IDENTIFIER(
 CREATE TABLE IDENTIFIER(
     CONCAT(
         :catalog_name,
+        '.',
         :schema_prefix,
         '.fact_demographics'
     )
