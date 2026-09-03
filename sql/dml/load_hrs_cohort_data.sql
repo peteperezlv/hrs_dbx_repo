@@ -1,5 +1,5 @@
 -- Load Cohort Reference Data from RAND Longitudinal Datase
--- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1
+-- Source: dev_catalog.brz_raw_hrs.randhrs1992_2022v1 
 -- Target: dev_catalog.slv_cdm_hrs.cohort
 -- cohort_id is auto-generated (IDENTITY column)
 -- NOTE: Run test_load_hrs_cohort notebook first to set up catalog_name and schema_prefix variables

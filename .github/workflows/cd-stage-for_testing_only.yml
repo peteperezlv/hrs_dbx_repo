@@ -45,4 +45,4 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: 
-          databricks bundle run hrs_etl_job_testing --target staging
+          databricks bundle run hrs_etl_job_for_testing_only --target staging

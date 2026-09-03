@@ -1,7 +1,7 @@
 -- =====================================================================
 -- HRS Silver CDM DDL – Demographics Section
 --
--- Target Table: dev_catalog.slv_cdm_hrs.hrs_demographics
+-- Target Table: dev_catalog.slv_cdm_hrs.fact_demographics
 --
 -- AI Assistant: Claude
 --
