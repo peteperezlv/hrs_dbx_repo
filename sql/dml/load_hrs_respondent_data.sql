@@ -1,4 +1,4 @@
--- Load Survey Respondent Reference Data 
+-- Load Survey Respondent Reference Data  
 -- Target: dev_catalog.slv_cdm_hrs.hub_respondent
 -- hub_survey_respondent_id is auto-generated (IDENTITY column)
 TRUNCATE TABLE IDENTIFIER(

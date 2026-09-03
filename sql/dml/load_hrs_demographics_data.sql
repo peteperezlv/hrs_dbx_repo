@@ -31,7 +31,7 @@
 --   wave_id      : join fact_wave on wave_number
 --
 -- Business Key:
---   UNIQUE (respondent_id, wave_id)
+--   UNIQUE (respondent_id, wave_id) 
 -- =====================================================================
 TRUNCATE TABLE IDENTIFIER(
     CONCAT(
