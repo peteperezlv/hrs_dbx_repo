@@ -4,22 +4,24 @@
 -- cohort_id is auto-generated (IDENTITY column)
 -- NOTE: Run test_load_hrs_cohort notebook first to set up catalog_name and schema_prefix variables
 -- This simulates how DAB variables work in deployed bundles
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.dim_cohort'
-    )
-);
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.dim_cohort'
-        )
-    ) (
+--TRUNCATE TABLE IDENTIFIER(
+--   CONCAT(
+--       :catalog_name,
+--       '.',
+--       :schema_prefix,
+--       '.dim_cohort'
+--   )
+--)
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.dim_cohort;
+--INSERT INTO IDENTIFIER(
+--        CONCAT(
+--            :catalog_name,
+--            '.',
+--            :schema_prefix,
+--            '.dim_cohort'
+--        )
+--    ) 
+INSERT INTO dev_catalog.slv_cdm_hrs.dim_cohort(
         hacohort_number,
         hacohort_label,
         hacohort_description,

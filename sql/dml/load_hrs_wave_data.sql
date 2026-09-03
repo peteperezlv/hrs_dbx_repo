@@ -1,14 +1,15 @@
 -- Load Wave Reference Data
 -- Target: dev_catalog.slv_cdm_hrs.hrs_wave
 -- hrs_wave_id is auto-generated (IDENTITY column)
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.dim_wave'
-    )
-);
+--TRUNCATE TABLE IDENTIFIER(
+--    CONCAT(
+--        :catalog_name,
+--        '.',
+--        :schema_prefix,
+--        '.dim_wave'
+--    )
+--)
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.dim_wave;
 -- Temp table
 CREATE or REPLACE TEMPORARY TABLE temp_table AS with cte_data as (
         SELECT *
@@ -167,14 +168,16 @@ CREATE or REPLACE TEMPORARY TABLE temp_table AS with cte_data as (
     )
 SELECT *
 FROM cte_data;
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.dim_wave'
-        )
-    ) (
+-- ISERT
+--INSERT INTO IDENTIFIER(
+--        CONCAT(
+--            :catalog_name,
+--            '.',
+--            :schema_prefix,
+--            '.dim_wave'
+--        )
+--    )
+INSERT INTO dev_catalog.slv_cdm_hrs.dim_wave (
         wave_number,
         wave_year,
         wave_description,
