@@ -16,7 +16,7 @@
 #
 # ==========================================================
 
-name: CD - Deployment to Staging
+name: CD - Deployment to Staging Testing Only
 
 on:
   workflow_dispatch:
