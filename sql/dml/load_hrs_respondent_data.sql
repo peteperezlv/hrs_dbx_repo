@@ -3,7 +3,6 @@
 -- hub_survey_respondent_id is auto-generated (IDENTITY column)
 TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hub_respondent;
 --
-INSERT INTO
 INSERT INTO dev_catalog.slv_cdm_hrs.hub_respondent (
         cohort_id,
         hhid,
