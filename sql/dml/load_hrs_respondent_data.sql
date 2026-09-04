@@ -1,23 +1,10 @@
 -- Load Survey Respondent Reference Data  
 -- Target: dev_catalog.slv_cdm_hrs.hub_respondent
 -- hub_survey_respondent_id is auto-generated (IDENTITY column)
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.hub_respondent'
-    )
-);
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.hub_respondent;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.hub_respondent'
-        )
-    ) (
+INSERT INTO
+INSERT INTO dev_catalog.slv_cdm_hrs.hub_respondent (
         cohort_id,
         hhid,
         pn,
