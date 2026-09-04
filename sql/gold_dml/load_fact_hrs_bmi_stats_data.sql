@@ -7,23 +7,9 @@
 --          JOIN slv_cdm_hrs.hrs_respondent to gld_star_hrs.dim_hrs_cohort (this table is identify to slv)
 --          JOIN slv_cdm_hrs.hrs_health to gld_star_hrs.dim_hrs_wave (this table is identify to slv)
 -- ==========================================================================================================
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_hrs_bmi_stats'
-    )
-);
+TRUNCATE TABLE fact_hrs_bmi_stats;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_hrs_bmi_stats'
-        )
-    ) (
+INSERT INTO fact_hrs_bmi_stats (
         cohort_id,
         wave_id,
         hacohort,

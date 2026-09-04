@@ -1,21 +1,5 @@
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.dim_hrs_cohort'
-    )
-);
---
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.dim_hrs_cohort'
-        )
-    ) (
-        cohort_id,
+TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_cohort;
+INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_cohort (
         hacohort_number,
         hacohort_label,
         hacohort_description,
@@ -29,5 +13,5 @@ SELECT hacohort_number,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     active
-FROM staging_catalog.slv_cdm_hrs.dim_cohort
+FROM dev_catalog.slv_cdm_hrs.dim_cohort
 WHERE active = TRUE;

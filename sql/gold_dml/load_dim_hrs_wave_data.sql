@@ -1,23 +1,7 @@
 -- Truncate and reload from source
 -- Load the data
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.dim_hrs_wave'
-    )
-);
---
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.dim_hrs_wave'
-        )
-    ) (
-        wave_id,
+TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_cohort;
+INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_cohort (
         wave_number,
         wave_year,
         wave_description,
@@ -31,5 +15,5 @@ SELECT wave_number,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     active
-FROM staging_catalog.slv_cdm_hrs.dim_wave
+FROM dev_catalog.slv_cdm_hrs.dim_wave
 WHERE active = TRUE;

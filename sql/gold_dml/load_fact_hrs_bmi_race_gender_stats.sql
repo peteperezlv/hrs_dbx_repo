@@ -1,22 +1,8 @@
 -- Load BMI Statistics Fact Table by Race and Gender
 -- Calculate descriptive statistics grouped by wave, cohort, and race
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_hrs_bmi_race_gender_stats'
-    )
-);
+TRUNCATE TABLE fact_hrs_bmi_race_gender_stats;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_hrs_bmi_race_gender_stats'
-        )
-    ) (
+INSERT INTO fact_hrs_bmi_race_gender_stats (
         cohort_id,
         wave_id,
         raracem,
