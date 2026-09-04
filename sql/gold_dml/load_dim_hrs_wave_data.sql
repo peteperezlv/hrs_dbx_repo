@@ -1,7 +1,7 @@
 -- Truncate and reload from source
 -- Load the data
-TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_cohort;
-INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_cohort (
+TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_wave;
+INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_wave (
         wave_number,
         wave_year,
         wave_description,
