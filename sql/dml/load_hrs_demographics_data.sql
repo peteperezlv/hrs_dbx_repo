@@ -35,7 +35,6 @@
 -- =====================================================================
 TRUNCATE TABLE dev_catalog.slv_cdm_hrs.fact_demographics;
 --
-INSERT INTO
 INSERT INTO dev_catalog.slv_cdm_hrs.fact_demographics (
         respondent_id,
         wave_id,

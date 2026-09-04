@@ -39,7 +39,6 @@
 -- =====================================================================
 TRUNCATE TABLE dev_catalog.slv_cdm_hrs.fact_leave_behind;
 --
-INSERT INTO
 INSERT INTO dev_catalog.slv_cdm_hrs.fact_leave_behind (
         respondent_id,
         wave_id,
