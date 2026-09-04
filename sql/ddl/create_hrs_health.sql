@@ -4,22 +4,9 @@
 -- Generated per: HRS Silver CDM DDL Functional Specification v1.0
 -- Databricks Runtime: 15.x | SQL Dialect: Spark SQL | Storage: Delta Lake
 -- =====================================================================
-DROP TABLE IF EXISTS IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_health'
-    )
-);
-CREATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_health'
-    )
-) (
+DROP TABLE IF EXISTS dev_catalog.slv_cdm_hrs.fact_health;
+--
+CREATE TABLE dev_catalog.slv_cdm_hrs.fact_health (
     -- ---------------------------------------------------------------
     -- Identity Column
     -- ---------------------------------------------------------------

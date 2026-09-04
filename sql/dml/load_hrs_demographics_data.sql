@@ -31,25 +31,11 @@
 --   wave_id      : join fact_wave on wave_number
 --
 -- Business Key:
---   UNIQUE (respondent_id, wave_id) 
+--   UNIQUE (respondent_id, wave_id)
 -- =====================================================================
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_demographics'
-    )
-);
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.fact_demographics;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_demographics'
-        )
-    ) (
+INSERT INTO dev_catalog.slv_cdm_hrs.fact_demographics (
         respondent_id,
         wave_id,
         hhidpn,

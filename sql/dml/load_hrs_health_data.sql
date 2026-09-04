@@ -40,23 +40,9 @@
 -- This is not a spec requirement -- rows are excluded only when they
 -- fail the required respondent_id / wave_id FK resolution below.
 -- =====================================================================
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_health'
-    )
-);
+TRUNCATE TABLE dev_catalog.slv_cdm_hrs.fact_health;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_health'
-        )
-    ) (
+INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
         respondent_id,
         wave_id,
         hhidpn,
