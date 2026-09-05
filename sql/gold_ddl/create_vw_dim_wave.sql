@@ -1,0 +1,5 @@
+DROP VIEW IF EXISTS dev_catalog.gld_star_hrs.vw_dim_wave;
+--
+CREATE VIEW dev_catalog.gld_star_hrs.vw_dim_wave AS
+SELECT *
+FROM dev_catalog.slv_cdm_hrs.dim_cohort;
