@@ -1,4 +1,5 @@
 TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_cohort;
+--
 INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_cohort (
         hacohort_number,
         hacohort_label,

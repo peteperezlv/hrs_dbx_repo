@@ -35,8 +35,8 @@ FROM dev_catalog.slv_cdm_hrs.fact_health h
     INNER JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON h.respondent_id = r.respondent_id
     INNER JOIN dev_catalog.slv_cdm_hrs.fact_demographics d ON h.respondent_id = d.respondent_id
     AND h.wave_id = d.wave_id
-    INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_wave dw ON h.wave_id = dw.wave_id
-    INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_cohort dc ON r.cohort_id = dc.cohort_id
+    INNER JOIN dev_catalog.slv_cdm_hrs.dim_wave dw ON h.wave_id = dw.wave_id
+    INNER JOIN dev_catalog.slv_cdm_hrs.dim_cohort dc ON r.cohort_id = dc.cohort_id
 WHERE h.bmi IS NOT NULL
     AND d.raracem IS NOT NULL
     AND d.ragender IS NOT NULL
