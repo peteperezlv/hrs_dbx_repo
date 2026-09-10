@@ -26,17 +26,16 @@ the HRS data warehouse development environment.
             Databricks Asset Bundle Deploy
                          │
                          ▼
-            Databricks Workflow (hrs_etl_job)
+              Databricks Workflow (hrs_etl_job)
                          │
-           ┌─────────────┴─────────────┐
-           ▼                           ▼
-
-Create HRS Tables Load Reference Data
-│ │
-└─────────────┬─────────────┘
-▼
-Unity Catalog
-dev_catalog.slv_cdm_hrs
+           ┌─────────────┴───────────────┐
+           ▼                             ▼
+        Create HRS Tables     Load Reference Data
+          │                              │
+          └─────────────┬────────────────┘
+                        ▼
+                  Unity Catalog
+             (dev_catalog.slv_cdm_hrs)
 
 ## Local Deployment
 
