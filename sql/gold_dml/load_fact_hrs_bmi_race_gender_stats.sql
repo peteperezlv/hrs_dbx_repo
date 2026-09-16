@@ -1,8 +1,9 @@
 -- Load BMI Statistics Fact Table by Race and Gender
 -- Calculate descriptive statistics grouped by wave, cohort, and race
 TRUNCATE TABLE dev_catalog.gld_star_hrs.fact_hrs_bmi_race_gender_stats;
+TRUNCATE TABLE dev_catalog.gld_star_hrs.analytic_hrs_bmi_race_gender_stats;
 --
-INSERT INTO dev_catalog.gld_star_hrs.fact_hrs_bmi_race_gender_stats (
+INSERT INTO dev_catalog.gld_star_hrs.analytic_hrs_bmi_race_gender_stats (
         cohort_id,
         wave_id,
         raracem,
