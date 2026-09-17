@@ -62,6 +62,6 @@ CREATE TABLE dev_catalog.gld_star_hrs.analytic_hrs_bmi_race_gender_stats (
     -- Constraints
     -- ---------------------------------------------------------------
     CONSTRAINT pk_analytic_hrs_bmi_race_gender_stats_id PRIMARY KEY (analytic_hrs_bmi_race_gender_stats_id),
-    CONSTRAINT fk_analytic_hrs_bmi_race_gender_stats_dim_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_cohort (cohort_id),
-    CONSTRAINT fk_analytic_hrs_bmi_race_gender_stats_dim_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.gld_star_hrs.dim_hrs_wave (wave_id)
+    CONSTRAINT fk_analytic_hrs_bmi_race_gender_stats_dim_hrs_cohort FOREIGN KEY (cohort_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_cohort (cohort_id),
+    CONSTRAINT fk_analytic_hrs_bmi_race_gender_stats_dim_hrs_wave FOREIGN KEY (wave_id) REFERENCES dev_catalog.slv_cdm_hrs.dim_wave (wave_id)
 ) USING DELTA COMMENT 'BMI descriptive statistics table grouped by HRS cohort, wave, race, and gender.';
