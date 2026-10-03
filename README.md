@@ -1,3 +1,3 @@
 To get started, review this document first.
 
-`/docs/HRS Project Overview.ipynb`
+`\hrs_dbx_repo\docs\Templates and Workflows\01 HRS Silver CDM Project Overview.ipynb`
