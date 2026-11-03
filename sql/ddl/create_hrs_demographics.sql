@@ -33,7 +33,7 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.fact_demographics (
     -- ---------------------------------------------------------------
     -- Business Columns
     -- ---------------------------------------------------------------
-    agey_e DECIMAL(10, 2) COMMENT 'Respondent Age (RAND CONT variable, e.g. R#AGEY_E), Nullable = yes',
+    agey_e DOUBLE COMMENT 'Respondent Age (RAND CONT variable, e.g. R#AGEY_E), Nullable = yes',
     raracem TINYINT COMMENT 'RARACEM: R Race-masked (RAND CATEG variable), Nullable = yes',
     ragender TINYINT COMMENT 'RAGENDER: R Gender-masked (RAND CATEG variable), Nullable = yes',
     rahispan TINYINT COMMENT 'RAHISPAN: R Hispanic (RAND CATEG variable), Nullable = yes',
