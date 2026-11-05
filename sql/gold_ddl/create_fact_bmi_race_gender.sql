@@ -13,23 +13,9 @@
 -- BMI value.  We just want to group by wave/cohort/race/gender combinations.
 --
 -- =========================================================================================================
-DROP TABLE IF EXISTS IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_hrs_bmi_race_gender_stats'
-    )
-);
 --
-CREATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_hrs_bmi_race_gender_stats'
-    )
-) (
+DROP TABLE IF EXISTS dev_catalog.gld_star_hrs.fact_hrs_bmi_race_gender_stats;
+CREATE TABLE dev_catalog.gld_star_hrs.fact_hrs_bmi_race_gender_stats (
     -- ---------------------------------------------------------------
     -- Identity Column
     -- ---------------------------------------------------------------

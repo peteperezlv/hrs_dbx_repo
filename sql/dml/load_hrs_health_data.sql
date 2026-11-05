@@ -12,21 +12,23 @@
 --   - Section 12 'Wave' column = wave_number inserted into target
 --
 -- METHOD: Multi-value UNPIVOT (Databricks Runtime 12.2 LTS+)
---   All 10 wave-varying business columns are unpivoted in a single
+--   All 12 wave-varying business columns are unpivoted in a single
 --   UNPIVOT operation against source_base, producing wave_number and
---   all 10 metrics together in one pass. This is the most efficient
+--   all 12 metrics together in one pass. This is the most efficient
 --   pattern available for this shape of source data:
 --     - ONE scan of source_base (vs. 16 for a UNION ALL-per-wave
---       approach, or 10 for a single-value-UNPIVOT-per-column
+--       approach, or 12 for a single-value-UNPIVOT-per-column
 --       approach that then has to be re-joined back together)
 --     - ZERO joins required to reassemble the wide row per wave
 --       (a single-value-UNPIVOT-per-column approach would otherwise
---       need a 9-way LEFT JOIN chain across the 10 unpivoted CTEs)
+--       need an 11-way LEFT JOIN chain across the 12 unpivoted CTEs)
 --
--- All 10 business columns in this section are wave-varying:
---   shlt, bmi, hibpe, diabe, cancre, lunge, hearte, stroke, psyche, arthre
+-- All 12 business columns in this section are wave-varying:
+--   shlt, bmi, hibpe, diabe, cancre, lunge, hearte, stroke, psyche,
+--   arthre, height, weight
 -- (R{n}SHLT, R{n}BMI, R{n}HIBPE, R{n}DIABE, R{n}CANCRE, R{n}LUNGE,
---  R{n}HEARTE, R{n}STROKE, R{n}PSYCHE, R{n}ARTHRE for n = 1..16)
+--  R{n}HEARTE, R{n}STROKE, R{n}PSYCHE, R{n}ARTHRE, R{n}HEIGHT,
+--  R{n}WEIGHT for n = 1..16)
 -- There are no wave-invariant business columns in this section.
 --
 -- wave_number is STRING on both fact_health and dim_wave, and the
@@ -57,6 +59,8 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
         stroke,
         psyche,
         arthre,
+        height,
+        weight,
         create_date,
         update_date,
         active
@@ -221,7 +225,39 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
             R13ARTHRE,
             R14ARTHRE,
             R15ARTHRE,
-            R16ARTHRE
+            R16ARTHRE,
+            R1HEIGHT,
+            R2HEIGHT,
+            R3HEIGHT,
+            R4HEIGHT,
+            R5HEIGHT,
+            R6HEIGHT,
+            R7HEIGHT,
+            R8HEIGHT,
+            R9HEIGHT,
+            R10HEIGHT,
+            R11HEIGHT,
+            R12HEIGHT,
+            R13HEIGHT,
+            R14HEIGHT,
+            R15HEIGHT,
+            R16HEIGHT,
+            R1WEIGHT,
+            R2WEIGHT,
+            R3WEIGHT,
+            R4WEIGHT,
+            R5WEIGHT,
+            R6WEIGHT,
+            R7WEIGHT,
+            R8WEIGHT,
+            R9WEIGHT,
+            R10WEIGHT,
+            R11WEIGHT,
+            R12WEIGHT,
+            R13WEIGHT,
+            R14WEIGHT,
+            R15WEIGHT,
+            R16WEIGHT
         FROM dev_catalog.brz_raw_hrs.randhrs1992_2022v1
     ),
     wave_unpivoted_raw AS (
@@ -236,7 +272,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
             hearte,
             stroke,
             psyche,
-            arthre
+            arthre,
+            height,
+            weight
         FROM source_base UNPIVOT INCLUDE NULLS (
                 (
                     shlt,
@@ -248,7 +286,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                     hearte,
                     stroke,
                     psyche,
-                    arthre
+                    arthre,
+                    height,
+                    weight
                 ) FOR wave_number IN (
                     (
                         R1SHLT,
@@ -260,7 +300,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R1HEARTE,
                         R1STROKE,
                         R1PSYCHE,
-                        R1ARTHRE
+                        R1ARTHRE,
+                        R1HEIGHT,
+                        R1WEIGHT
                     ) AS `1`,
                     (
                         R2SHLT,
@@ -272,7 +314,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R2HEARTE,
                         R2STROKE,
                         R2PSYCHE,
-                        R2ARTHRE
+                        R2ARTHRE,
+                        R2HEIGHT,
+                        R2WEIGHT
                     ) AS `2`,
                     (
                         R3SHLT,
@@ -284,7 +328,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R3HEARTE,
                         R3STROKE,
                         R3PSYCHE,
-                        R3ARTHRE
+                        R3ARTHRE,
+                        R3HEIGHT,
+                        R3WEIGHT
                     ) AS `3`,
                     (
                         R4SHLT,
@@ -296,7 +342,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R4HEARTE,
                         R4STROKE,
                         R4PSYCHE,
-                        R4ARTHRE
+                        R4ARTHRE,
+                        R4HEIGHT,
+                        R4WEIGHT
                     ) AS `4`,
                     (
                         R5SHLT,
@@ -308,7 +356,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R5HEARTE,
                         R5STROKE,
                         R5PSYCHE,
-                        R5ARTHRE
+                        R5ARTHRE,
+                        R5HEIGHT,
+                        R5WEIGHT
                     ) AS `5`,
                     (
                         R6SHLT,
@@ -320,7 +370,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R6HEARTE,
                         R6STROKE,
                         R6PSYCHE,
-                        R6ARTHRE
+                        R6ARTHRE,
+                        R6HEIGHT,
+                        R6WEIGHT
                     ) AS `6`,
                     (
                         R7SHLT,
@@ -332,7 +384,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R7HEARTE,
                         R7STROKE,
                         R7PSYCHE,
-                        R7ARTHRE
+                        R7ARTHRE,
+                        R7HEIGHT,
+                        R7WEIGHT
                     ) AS `7`,
                     (
                         R8SHLT,
@@ -344,7 +398,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R8HEARTE,
                         R8STROKE,
                         R8PSYCHE,
-                        R8ARTHRE
+                        R8ARTHRE,
+                        R8HEIGHT,
+                        R8WEIGHT
                     ) AS `8`,
                     (
                         R9SHLT,
@@ -356,7 +412,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R9HEARTE,
                         R9STROKE,
                         R9PSYCHE,
-                        R9ARTHRE
+                        R9ARTHRE,
+                        R9HEIGHT,
+                        R9WEIGHT
                     ) AS `9`,
                     (
                         R10SHLT,
@@ -368,7 +426,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R10HEARTE,
                         R10STROKE,
                         R10PSYCHE,
-                        R10ARTHRE
+                        R10ARTHRE,
+                        R10HEIGHT,
+                        R10WEIGHT
                     ) AS `10`,
                     (
                         R11SHLT,
@@ -380,7 +440,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R11HEARTE,
                         R11STROKE,
                         R11PSYCHE,
-                        R11ARTHRE
+                        R11ARTHRE,
+                        R11HEIGHT,
+                        R11WEIGHT
                     ) AS `11`,
                     (
                         R12SHLT,
@@ -392,7 +454,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R12HEARTE,
                         R12STROKE,
                         R12PSYCHE,
-                        R12ARTHRE
+                        R12ARTHRE,
+                        R12HEIGHT,
+                        R12WEIGHT
                     ) AS `12`,
                     (
                         R13SHLT,
@@ -404,7 +468,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R13HEARTE,
                         R13STROKE,
                         R13PSYCHE,
-                        R13ARTHRE
+                        R13ARTHRE,
+                        R13HEIGHT,
+                        R13WEIGHT
                     ) AS `13`,
                     (
                         R14SHLT,
@@ -416,7 +482,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R14HEARTE,
                         R14STROKE,
                         R14PSYCHE,
-                        R14ARTHRE
+                        R14ARTHRE,
+                        R14HEIGHT,
+                        R14WEIGHT
                     ) AS `14`,
                     (
                         R15SHLT,
@@ -428,7 +496,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R15HEARTE,
                         R15STROKE,
                         R15PSYCHE,
-                        R15ARTHRE
+                        R15ARTHRE,
+                        R15HEIGHT,
+                        R15WEIGHT
                     ) AS `15`,
                     (
                         R16SHLT,
@@ -440,7 +510,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
                         R16HEARTE,
                         R16STROKE,
                         R16PSYCHE,
-                        R16ARTHRE
+                        R16ARTHRE,
+                        R16HEIGHT,
+                        R16WEIGHT
                     ) AS `16`
                 )
             )
@@ -449,7 +521,7 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
         SELECT HHIDPN,
             wave_number,
             TRY_CAST(shlt AS TINYINT) AS shlt,
-            TRY_CAST(bmi AS DECIMAL(10, 2)) AS bmi,
+            TRY_CAST(bmi AS DOUBLE) AS bmi,
             TRY_CAST(hibpe AS TINYINT) AS hibpe,
             TRY_CAST(diabe AS TINYINT) AS diabe,
             TRY_CAST(cancre AS TINYINT) AS cancre,
@@ -457,7 +529,9 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_health (
             TRY_CAST(hearte AS TINYINT) AS hearte,
             TRY_CAST(stroke AS TINYINT) AS stroke,
             TRY_CAST(psyche AS TINYINT) AS psyche,
-            TRY_CAST(arthre AS TINYINT) AS arthre
+            TRY_CAST(arthre AS TINYINT) AS arthre,
+            TRY_CAST(height AS DOUBLE) AS height,
+            TRY_CAST(weight AS DOUBLE) AS weight
         FROM wave_unpivoted_raw
     )
 SELECT r.respondent_id,
@@ -474,6 +548,8 @@ SELECT r.respondent_id,
     wu.stroke,
     wu.psyche,
     wu.arthre,
+    wu.height,
+    wu.weight,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     TRUE AS active

@@ -26,7 +26,7 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.fact_health (
     -- All columns below are wave-varying (RwXXXXX)
     -- ---------------------------------------------------------------
     shlt TINYINT COMMENT 'R#SHLT: Self-Rated Health (RAND CATEG variable), Nullable = yes',
-    bmi DECIMAL(10, 2) COMMENT 'R#BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
+    bmi DOUBLE COMMENT 'R#BMI: Body Mass Index (RAND CONT variable), Nullable = yes',
     hibpe TINYINT COMMENT 'R#HIBPE: Ever Diagnosed High Blood Pressure (RAND CATEG variable), Nullable = yes',
     diabe TINYINT COMMENT 'R#DIABE: Ever Diagnosed Diabetes (RAND CATEG variable), Nullable = yes',
     cancre TINYINT COMMENT 'R#CANCRE: Ever Diagnosed Cancer (RAND CATEG variable), Nullable = yes',
@@ -35,6 +35,8 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.fact_health (
     stroke TINYINT COMMENT 'R#STROKE: Ever Diagnosed Stroke (RAND CATEG variable), Nullable = yes',
     psyche TINYINT COMMENT 'R#PSYCHE: Ever Diagnosed Psychiatric Problems (RAND CATEG variable), Nullable = yes',
     arthre TINYINT COMMENT 'R#ARTHRE: Ever Diagnosed Arthritis (RAND CATEG variable), Nullable = yes',
+    height DOUBLE COMMENT 'R#HEIGHT: Height in Meters (RAND CONT variable), Nullable = yes',
+    weight DOUBLE COMMENT 'R#WEIGHT: Weight in Kilograms (RAND CONT variable), Nullable = yes',
     -- ---------------------------------------------------------------
     -- Audit Columns
     -- ---------------------------------------------------------------

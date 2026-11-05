@@ -7,23 +7,9 @@
 --          JOIN slv_cdm_hrs.hrs_respondent to gld_star_hrs.dim_hrs_cohort (this table is identify to slv)
 --          JOIN slv_cdm_hrs.hrs_health to gld_star_hrs.dim_hrs_wave (this table is identify to slv)
 -- ==========================================================================================================
-TRUNCATE TABLE IDENTIFIER(
-    CONCAT(
-        :catalog_name,
-        '.',
-        :schema_prefix,
-        '.fact_hrs_bmi_stats'
-    )
-);
+TRUNCATE TABLE dev_catalog.gld_star_hrs.fact_hrs_bmi_stats;
 --
-INSERT INTO IDENTIFIER(
-        CONCAT(
-            :catalog_name,
-            '.',
-            :schema_prefix,
-            '.fact_hrs_bmi_stats'
-        )
-    ) (
+INSERT INTO dev_catalog.gld_star_hrs.fact_hrs_bmi_stats (
         cohort_id,
         wave_id,
         hacohort,
@@ -50,8 +36,8 @@ SELECT dc.cohort_id,
     TRUE AS active
 FROM dev_catalog.slv_cdm_hrs.fact_health h
     INNER JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON h.respondent_id = r.respondent_id
-    INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_wave dw ON h.wave_id = dw.wave_id
-    INNER JOIN dev_catalog.gld_star_hrs.dim_hrs_cohort dc ON r.cohort_id = dc.cohort_id
+    INNER JOIN dev_catalog.gld_star_hrs.vw_dim_wave dw ON h.wave_id = dw.wave_id
+    INNER JOIN dev_catalog.gld_star_hrs.vw_dim_cohort dc ON r.cohort_id = dc.cohort_id
 WHERE h.bmi IS NOT NULL
     AND h.active = TRUE
     AND r.active = TRUE

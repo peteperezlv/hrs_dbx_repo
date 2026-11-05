@@ -184,11 +184,11 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_leave_behind (
     wave_8_16 AS (
         SELECT HHIDPN,
             wave_number,
-            TRY_CAST(lbneur AS DECIMAL(10, 2)) AS lbneur,
-            TRY_CAST(lbext AS DECIMAL(10, 2)) AS lbext,
-            TRY_CAST(lbopen AS DECIMAL(10, 2)) AS lbopen,
-            TRY_CAST(lbagr AS DECIMAL(10, 2)) AS lbagr,
-            TRY_CAST(lbcon5 AS DECIMAL(10, 2)) AS lbcon5
+            TRY_CAST(lbneur AS DOUBLE) AS lbneur,
+            TRY_CAST(lbext AS DOUBLE) AS lbext,
+            TRY_CAST(lbopen AS DOUBLE) AS lbopen,
+            TRY_CAST(lbagr AS DOUBLE) AS lbagr,
+            TRY_CAST(lbcon5 AS DOUBLE) AS lbcon5
         FROM wave_unpivoted_raw
     ),
     -- =====================================================================
@@ -214,11 +214,11 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_leave_behind (
     wave_1_7 AS (
         SELECT dr.HHIDPN,
             s.wave_number,
-            CAST(NULL AS DECIMAL(10, 2)) AS lbneur,
-            CAST(NULL AS DECIMAL(10, 2)) AS lbext,
-            CAST(NULL AS DECIMAL(10, 2)) AS lbopen,
-            CAST(NULL AS DECIMAL(10, 2)) AS lbagr,
-            CAST(NULL AS DECIMAL(10, 2)) AS lbcon5
+            CAST(NULL AS DOUBLE) AS lbneur,
+            CAST(NULL AS DOUBLE) AS lbext,
+            CAST(NULL AS DOUBLE) AS lbopen,
+            CAST(NULL AS DOUBLE) AS lbagr,
+            CAST(NULL AS DOUBLE) AS lbcon5
         FROM distinct_respondents dr
             CROSS JOIN wave_1_7_scaffold s
     ),
