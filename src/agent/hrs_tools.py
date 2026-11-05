@@ -219,7 +219,7 @@ def _validate_whole_number_columns(variable_names):
 def _fetch_approved_rows(use_case_name=None, codebook_version=None):
     """Fetch approved-variable rows from the metadata table."""
 
-    use_case = use_case_name or config.DEFAULT_USE_CASE_NAME
+    use_case = use_case_name or config.ACTIVE_USE_CASE_NAME
     version = codebook_version or config.DEFAULT_CODEBOOK_VERSION
 
     query = f"""
@@ -523,7 +523,7 @@ def get_cohort_coverage(
         variable_names, config.MAX_RESULT_ROWS, "variable_names"
     )
 
-    use_case = use_case_name or config.DEFAULT_USE_CASE_NAME
+    use_case = use_case_name or config.ACTIVE_USE_CASE_NAME
     version = codebook_version or config.DEFAULT_CODEBOOK_VERSION
 
     filters = [
@@ -728,7 +728,7 @@ def generate_warehouse_artifacts(
     if target_layer not in ("silver", "gold"):
         raise ValueError("target_layer must be 'silver' or 'gold'.")
 
-    use_case = use_case_name or config.DEFAULT_USE_CASE_NAME
+    use_case = use_case_name or config.ACTIVE_USE_CASE_NAME
     target_catalog = catalog or config.METADATA_CATALOG
 
     profile = get_variable_longitudinal_profile(use_case_name=use_case)
@@ -1403,7 +1403,7 @@ def generate_codebook_label_dimension(
     storage.
     """
 
-    use_case = use_case_name or config.DEFAULT_USE_CASE_NAME
+    use_case = use_case_name or config.ACTIVE_USE_CASE_NAME
     version = codebook_version or config.DEFAULT_CODEBOOK_VERSION
     target_catalog = catalog or config.METADATA_CATALOG
 

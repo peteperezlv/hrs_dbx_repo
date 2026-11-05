@@ -124,6 +124,13 @@ DEFAULT_USE_CASE_NAME = (
     "bmi_statistics_by_wave_race_gender_age_cohort"
 )
 DEFAULT_CODEBOOK_VERSION = "1992-2022v1"
+
+# Use case this agent run targets. Override with the HRS_AGENT_USE_CASE
+# environment variable when a new use case is approved — no code changes.
+# Per-call tool arguments always take precedence over this value.
+ACTIVE_USE_CASE_NAME = os.environ.get(
+    "HRS_AGENT_USE_CASE", DEFAULT_USE_CASE_NAME
+)
 CODEBOOK_DOCUMENT_ID = "rand_hrs_longitudinal_codebook"
 
 # Longitudinal grain columns
