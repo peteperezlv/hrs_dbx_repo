@@ -833,14 +833,29 @@ def generate_warehouse_artifacts(
     ]
 
     if target_layer == "silver":
-        artifacts.update(
-            _generate_silver_gap_artifacts(
-                use_case=use_case,
-                catalog=target_catalog,
-                families=gap_families,
-                invariants=gap_invariants,
+        if gap_families:
+            artifacts.update(
+                _generate_silver_gap_artifacts(
+                    use_case=use_case,
+                    catalog=target_catalog,
+                    families=gap_families,
+                    invariants=gap_invariants,
+                )
             )
-        )
+        else:
+            # Invariant-only gaps are structural modeling decisions the
+            # agent does not auto-draft. Flag them for hub / dimension
+            # review instead of raising, so the coverage report for the
+            # homed variables still returns.
+            artifacts["status"] = "INVARIANT_GAP_REVIEW_REQUIRED"
+            for item in gap_invariants:
+                item["note"] = (
+                    "invariant gap — belongs in hub / dimension modeling "
+                    "review (e.g., add the column to hub_respondent / "
+                    "fact_demographics scripts and deploy); not "
+                    "auto-drafted. Once deployed, routing picks it up "
+                    "from the live schema."
+                )
     else:
         artifacts.update(
             _generate_gold_gap_artifacts(

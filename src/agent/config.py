@@ -94,12 +94,9 @@ CDM_LOAD_SCRIPTS = {
 
 # Approved variables covered by an equivalent CDM column rather than their
 # own name — reported in the coverage report, never drafted as new columns.
-EQUIVALENT_COLUMN_NOTES = {
-    "RABYEAR": (
-        "covered by fact_health.agey_e (end-of-life age); RABYEAR itself "
-        "is not stored as a separate CDM column"
-    ),
-}
+# (Remove an entry here to have routing treat that variable as a gap the
+# agent will draft a home for.)
+EQUIVALENT_COLUMN_NOTES = {}
 
 # Curated HACOHORT labels from sql/dml/load_hrs_cohort_data.sql — the
 # fallback when dim_cohort cannot be queried for the label cross-check.

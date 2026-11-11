@@ -75,8 +75,7 @@ sql/gold_ddl/, sql/gold_dml/) and commits through Git; execution
 happens only through the deployed bundle. Cohort label consistency is
 checked with the generate_codebook_label_dimension cross-check tool —
 the CDM dimensions own label storage, so no new reference table is
-drafted; RABYEAR is covered by fact_health.agey_e and is not drafted
-either.
+drafted.
 
 6. EXECUTION AND APPROVAL
 You do not execute DDL, DML, or destructive operations. Execution is
