@@ -34,14 +34,10 @@ CREATE TABLE dev_catalog.slv_cdm_hrs.fact_demographics (
     -- Business Columns
     -- ---------------------------------------------------------------
     agey_e DOUBLE COMMENT 'Respondent Age (RAND CONT variable, e.g. R#AGEY_E), Nullable = yes',
-    raracem TINYINT COMMENT 'RARACEM: R Race-masked (RAND CATEG variable), Nullable = yes',
-    ragender TINYINT COMMENT 'RAGENDER: R Gender-masked (RAND CATEG variable), Nullable = yes',
-    rahispan TINYINT COMMENT 'RAHISPAN: R Hispanic (RAND CATEG variable), Nullable = yes',
+    -- Wave-invariant demographics (raracem, ragender, rabyear, rahispan,
+    -- raedyrs, rarelig, ravetrn) live in hub_respondent.
     cenreg TINYINT COMMENT 'R#CENREG: Census Region by wave (RAND CATEG variable), Nullable = yes',
-    raedyrs TINYINT COMMENT 'RAEDYRS: R Years of Education (RAND CATEG variable), Nullable = yes',
     mstat TINYINT COMMENT 'R#MSTAT: R Marital Status by wave (RAND CATEG variable), Nullable = yes',
-    rarelig TINYINT COMMENT 'RARELIG: R Religion (RAND CATEG variable), Nullable = yes',
-    ravetrn TINYINT COMMENT 'RAVETRN: R Veteran Status (RAND CATEG variable), Nullable = yes',
     --
     -- ---------------------------------------------------------------
     -- Audit Columns

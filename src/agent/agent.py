@@ -263,6 +263,51 @@ TOOL_DEFINITIONS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "apply_repo_edit",
+            "description": (
+                "Apply an exact-match text patch to a repo SQL script "
+                "(sql/ddl/, sql/dml/, sql/gold_ddl/, sql/gold_dml/ only). "
+                "Use after the user accepts a DDL/DML draft to stage the "
+                "edit directly in the bundle. The edit is UNCOMMITTED: "
+                "always display the returned diff and remind the user to "
+                "review the git diff, commit, and execute. Cannot create "
+                "or delete files; cannot edit outside the sql/ folders; "
+                "never executes SQL."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "repo_file": {
+                        "type": "string",
+                        "description": (
+                            "Repo-relative path, e.g. "
+                            "sql/dml/load_hrs_health_data.sql"
+                        ),
+                    },
+                    "old_text": {
+                        "type": "string",
+                        "description": (
+                            "Exact existing text to replace — must occur "
+                            "exactly once in the file"
+                        ),
+                    },
+                    "new_text": {
+                        "type": "string",
+                        "description": "Replacement text",
+                    },
+                },
+                "required": [
+                    "repo_file",
+                    "old_text",
+                    "new_text",
+                ],
+                "additionalProperties": False,
+            },
+        },
+    },
 ]
 
 
@@ -281,6 +326,7 @@ TOOL_HANDLERS = {
     ),
     "display_draft_artifacts": hrs_tools.display_draft_artifacts,
     "recommend_visualizations": hrs_tools.recommend_visualizations,
+    "apply_repo_edit": hrs_tools.apply_repo_edit,
 }
 
 

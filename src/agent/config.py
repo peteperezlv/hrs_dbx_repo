@@ -72,12 +72,17 @@ CATALOG_COLUMNS_VIEW = f"{METADATA_CATALOG}.information_schema.columns"
 CDM_TABLE_ROLES = {
     "dim_cohort": "cohort reference (HACOHORT codes + curated labels)",
     "hub_respondent": (
-        "respondent hub (invariant person identity and demographics keys)"
+        "respondent hub (invariant person identity, demographics keys, "
+        "and demographic invariants: raracem, ragender, rabyear, rahispan, "
+        "raedyrs, rarelig, ravetrn)"
     ),
     "dim_wave": (
         "wave reference (curated wave_year; includes 'A'/'E' rows)"
     ),
-    "fact_demographics": "person-wave demographic measures",
+    "fact_demographics": (
+        "person-wave demographic measures (wave-varying only: agey_e, "
+        "cenreg, mstat; invariants live in hub_respondent)"
+    ),
     "fact_health": "person-wave health measures (BMI, weight, height, ...)",
     "fact_leave_behind": "end-of-life extension (waves 8-16)",
 }

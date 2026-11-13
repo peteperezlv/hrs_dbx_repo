@@ -16,15 +16,15 @@
 -- ASSUMPTION (carried forward):
 --   Source is a wide table, one row per respondent (HHIDPN).
 --   Wave-varying: R{n}AGEY_E, R{n}CENREG, R{n}MSTAT (n = 1..16)
---   Wave-invariant (replicated across all 16 wave rows):
---     RARACEM, RAGENDER, RAHISPN, RAEDYRS, RARELIG, RAVETRN
+--   Wave-invariant demographics (RARACEM, RAGENDER, RABYEAR, RAHISPAN,
+--   RAEDYRS, RARELIG, RAVETRN) live in hub_respondent (one row per
+--   respondent) — normalized out of this table.
 --
 -- Wave Expansion Rule:
 --   For each multi-wave target column (agey_e, cenreg, mstat), generate
 --   16 SELECT branches (waves 1–16) and UNION ALL them into an "expanded"
 --   dataset with columns:
---     HHIDPN, wave_number, agey_e, cenreg, mstat, raracem, ragender, rahispan,
---     raedyrs, rarelig, ravetrn
+--     HHIDPN, wave_number, agey_e, cenreg, mstat
 --
 -- FK Rules:
 --   respondent_id: join fact_respondent on hhidpn
@@ -41,25 +41,13 @@ INSERT INTO dev_catalog.slv_cdm_hrs.fact_demographics (
         hhidpn,
         wave_number,
         agey_e,
-        raracem,
-        ragender,
-        rahispan,
         cenreg,
-        raedyrs,
         mstat,
-        rarelig,
-        ravetrn,
         create_date,
         update_date,
         active
     ) WITH source_base AS (
         SELECT HHIDPN,
-            TRY_CAST(RARACEM AS TINYINT) AS raracem,
-            TRY_CAST(RAGENDER AS TINYINT) AS ragender,
-            TRY_CAST(RAHISPAN AS TINYINT) AS rahispan,
-            TRY_CAST(RAEDYRS AS TINYINT) AS raedyrs,
-            TRY_CAST(RARELIG AS TINYINT) AS rarelig,
-            TRY_CAST(RAVETRN AS TINYINT) AS ravetrn,
             R1AGEY_E,
             R2AGEY_E,
             R3AGEY_E,
@@ -244,18 +232,11 @@ SELECT r.respondent_id,
     wu.HHIDPN AS hhidpn,
     wu.wave_number,
     wu.agey_e,
-    sb.raracem,
-    sb.ragender,
-    sb.rahispan,
     wu.cenreg,
-    sb.raedyrs,
     wu.mstat,
-    sb.rarelig,
-    sb.ravetrn,
     CURRENT_DATE() AS create_date,
     CURRENT_DATE() AS update_date,
     TRUE AS active
 FROM wave_unpivoted wu
-    JOIN source_base sb ON wu.HHIDPN = sb.HHIDPN
     JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON wu.HHIDPN = r.HHIDPN
     JOIN dev_catalog.slv_cdm_hrs.dim_wave w ON wu.wave_number = w.wave_number

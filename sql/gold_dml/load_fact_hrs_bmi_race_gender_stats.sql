@@ -20,8 +20,8 @@ INSERT INTO dev_catalog.gld_star_hrs.analytic_hrs_bmi_race_gender_stats (
     )
 SELECT dc.cohort_id,
     dw.wave_id,
-    d.raracem,
-    d.ragender,
+    r.raracem,
+    r.ragender,
     r.hacohort,
     -- Not storing individual BMI values, only aggregates
     CAST(COUNT(*) AS INT) AS bmi_count,
@@ -34,22 +34,19 @@ SELECT dc.cohort_id,
     TRUE AS active
 FROM dev_catalog.slv_cdm_hrs.fact_health h
     INNER JOIN dev_catalog.slv_cdm_hrs.hub_respondent r ON h.respondent_id = r.respondent_id
-    INNER JOIN dev_catalog.slv_cdm_hrs.fact_demographics d ON h.respondent_id = d.respondent_id
-    AND h.wave_id = d.wave_id
     INNER JOIN dev_catalog.gld_star_hrs.vw_dim_wave dw ON h.wave_id = dw.wave_id
     INNER JOIN dev_catalog.gld_star_hrs.vw_dim_cohort dc ON r.cohort_id = dc.cohort_id
 WHERE h.bmi IS NOT NULL
-    AND d.raracem IS NOT NULL
-    AND d.ragender IS NOT NULL
+    AND r.raracem IS NOT NULL
+    AND r.ragender IS NOT NULL
     AND h.active = TRUE
     AND r.active = TRUE
-    AND d.active = TRUE
 GROUP BY dw.wave_id,
     dc.cohort_id,
-    d.raracem,
-    d.ragender,
+    r.raracem,
+    r.ragender,
     r.hacohort
 ORDER BY dw.wave_id,
     dc.cohort_id,
-    d.raracem,
-    d.ragender;
+    r.raracem,
+    r.ragender;

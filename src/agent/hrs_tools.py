@@ -4,6 +4,8 @@
 Every tool in this module builds its own SQL from validated Python
 arguments — the LLM never supplies raw SQL. All queries are SELECT-only.
 Generated DDL/DML is text output marked DRAFT; nothing is executed here.
+One exception: apply_repo_edit stages UNCOMMITTED text patches to the
+repo's sql/ DDL/DML folders — it never touches tables and never executes.
 
 Query execution uses the active SparkSession when one exists (notebook,
 IDE, testing) and falls back to the Databricks SDK Statement Execution API
@@ -1960,4 +1962,121 @@ def recommend_visualizations(
         "use_case_name": profile.get("use_case_name"),
         "recommendations": recommendations,
         "dashboard_guidance": dashboard,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Repo edit (staged, uncommitted) — allowlisted to the bundle's sql/ folders
+# ---------------------------------------------------------------------------
+
+_REPO_EDIT_ALLOWED_PREFIXES = (
+    "sql/ddl/",
+    "sql/dml/",
+    "sql/gold_ddl/",
+    "sql/gold_dml/",
+)
+
+
+def _repo_root():
+    """Absolute workspace path of the repo this module lives in."""
+
+    import os
+    from pathlib import Path
+
+    override = os.environ.get("HRS_REPO_ROOT")
+    if override:
+        return Path(override).resolve()
+
+    # src/agent/hrs_tools.py -> repo root is three levels up
+    return Path(__file__).resolve().parents[2]
+
+
+def apply_repo_edit(repo_file, old_text, new_text):
+    """Apply an exact-match patch to a repo SQL script (staged, uncommitted).
+
+    The ONLY write-capable tool: it edits bundle SQL files, never tables.
+    Allowlisted to sql/ddl/, sql/dml/, sql/gold_ddl/, sql/gold_dml/ with a
+    .sql extension; cannot create or delete files. Fails loudly when
+    old_text is missing, ambiguous (not exactly one occurrence), or the
+    path escapes the allowlist. Returns the unified diff for human review —
+    the user reviews the git diff, commits, and executes.
+    """
+
+    import difflib
+
+    if not isinstance(repo_file, str) or not repo_file.strip():
+        raise ValueError("repo_file must be a nonempty string.")
+
+    if not isinstance(old_text, str) or not old_text:
+        raise ValueError("old_text must be a nonempty string.")
+
+    if not isinstance(new_text, str) or not new_text:
+        raise ValueError("new_text must be a nonempty string.")
+
+    if old_text == new_text:
+        raise ValueError("new_text is identical to old_text — nothing to do.")
+
+    normalized = repo_file.strip().replace("\\", "/").lstrip("/")
+
+    if (
+        ".." in normalized.split("/")
+        or not normalized.endswith(".sql")
+        or not any(
+            normalized.startswith(prefix)
+            for prefix in _REPO_EDIT_ALLOWED_PREFIXES
+        )
+    ):
+        raise ValueError(
+            "repo_file must be a repo-relative .sql path under one of: "
+            + ", ".join(_REPO_EDIT_ALLOWED_PREFIXES)
+        )
+
+    root = _repo_root()
+    target = (root / normalized).resolve()
+
+    if not str(target).startswith(str(root)):
+        raise ValueError("Resolved path escapes the repo root.")
+
+    if not target.is_file():
+        raise FileNotFoundError(
+            f"File not found in repo: {normalized} (does it exist?)"
+        )
+
+    content = target.read_text(encoding="utf-8")
+    occurrences = content.count(old_text)
+
+    if occurrences == 0:
+        raise ValueError(
+            "old_text not found in the file — refusing to edit. Re-read "
+            "the current file content and retry with the exact text."
+        )
+
+    if occurrences > 1:
+        raise ValueError(
+            f"old_text occurs {occurrences} times — patch must be "
+            "unambiguous. Include more surrounding context in old_text."
+        )
+
+    updated = content.replace(old_text, new_text, 1)
+    target.write_text(updated, encoding="utf-8")
+
+    diff = "".join(
+        difflib.unified_diff(
+            content.splitlines(keepends=True),
+            updated.splitlines(keepends=True),
+            fromfile=f"a/{normalized}",
+            tofile=f"b/{normalized}",
+        )
+    )
+
+    return {
+        "ok": True,
+        "status": "APPLIED_UNCOMMITTED",
+        "file": normalized,
+        "occurrences_replaced": 1,
+        "diff": diff,
+        "note": (
+            "Edit staged only — review the git diff, then commit and "
+            "execute manually. Nothing was executed against any table."
+        ),
     }
