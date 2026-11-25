@@ -1,4 +1,4 @@
-TRUNCATE TABLE dev_catalog.gld_star_hrs.dim_hrs_cohort;
+TRUNCATE TABLE dev_catalog.gld_star_hrs.vw_dim_hrs_cohort;
 --
 INSERT INTO dev_catalog.gld_star_hrs.dim_hrs_cohort (
         hacohort_number,

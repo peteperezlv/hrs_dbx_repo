@@ -146,28 +146,41 @@ def _sql_string_list(values):
 # ---------------------------------------------------------------------------
 
 
-_WAVE_PREFIX_PATTERN = re.compile(r"^R(\d{1,2})([A-Z]\w*)$")
+_WAVE_PREFIX_PATTERN = re.compile(r"^([RHS])(\d{1,2})([A-Z]\w*)$")
 
 
 def _classify_variable(name):
     """Classify an approved variable as WAVE_SPECIFIC or INVARIANT.
 
     Wave-specific variables follow the RAND HRS naming convention
-    R{wave}{STEM} (e.g. R1BMI ... R16BMI). Everything else — including
-    the all-waves respondent prefix RA (e.g. RARACEM, RAGENDER, RABYEAR)
-    and household variables (e.g. HACOHORT) — is invariant.
+    {prefix}{wave}{STEM} where prefix is R (respondent, e.g.
+    R1BMI ... R16BMI), H (household, e.g. H1ICAP ... H16ICAP) or
+    S (spouse of respondent, e.g. S1IEARN ... S16IEARN). Everything
+    else — including the all-waves respondent prefix RA (e.g.
+    RARACEM, RAGENDER, RABYEAR) and the all-waves household
+    prefix HA (e.g. HACOHORT) — is invariant.
+
+    Grain caveats: H{wave} values repeat on every household member,
+    and S{wave} values are the spouse's measure carried on the
+    respondent's row — a couple appears twice (each partner's row
+    carries the other's S{wave} value). The drafted person-wave
+    fact therefore replicates H{wave} per household and can pair
+    R{wave}/S{wave} stems for the same person only via separate
+    columns (same stem under different prefixes is a collision —
+    see STEM_COLLISION_REVIEW_REQUIRED).
     """
 
     match = _WAVE_PREFIX_PATTERN.match(name or "")
 
-    if match and 1 <= int(match.group(1)) <= config.MAX_WAVE_NUMBER:
+    if match and 1 <= int(match.group(2)) <= config.MAX_WAVE_NUMBER:
         return {
             "scope": "WAVE_SPECIFIC",
-            "wave": int(match.group(1)),
-            "stem": match.group(2),
+            "prefix": match.group(1),
+            "wave": int(match.group(2)),
+            "stem": match.group(3),
         }
 
-    return {"scope": "INVARIANT", "wave": None, "stem": None}
+    return {"scope": "INVARIANT", "prefix": None, "wave": None, "stem": None}
 
 
 def _get_bronze_column_types(variable_names):
@@ -307,12 +320,14 @@ def get_variable_longitudinal_profile(
 
         if classification["scope"] == "WAVE_SPECIFIC":
             stem = classification["stem"]
+            prefix = classification["prefix"]
             family = families.setdefault(
-                stem,
+                f"{prefix}{stem}",
                 {
                     "measure_stem": stem,
+                    "prefix": prefix,
                     "scope": "WAVE_SPECIFIC",
-                    "naming_pattern": f"R{{wave}}{stem}",
+                    "naming_pattern": f"{prefix}{{wave}}{stem}",
                     "waves": [],
                     "variables": [],
                     "variable_label": row.get("variable_label"),
@@ -752,12 +767,14 @@ def generate_warehouse_artifacts(
 
     for family in families:
         stem = family["measure_stem"]
+        prefix = family.get("prefix", "R")
         table = column_map.get(stem.lower())
 
         entry = {
             "kind": "WAVE_SPECIFIC_FAMILY",
-            "variable_pattern": f"R{{wave}}{stem}",
+            "variable_pattern": f"{prefix}{{wave}}{stem}",
             "measure_stem": stem.lower(),
+            "source_prefix": prefix,
             "waves": family["waves"],
             "cdm_table": table,
         }
@@ -834,16 +851,45 @@ def generate_warehouse_artifacts(
         item for item in gaps if item["kind"] == "INVARIANT"
     ]
 
+    # Routing entries carry the source prefix as source_prefix; the
+    # drafter reads family["prefix"] — propagate so R{wave} and H{wave}
+    # gap families draft with the correct bronze source columns.
+    for item in gap_families:
+        item["prefix"] = item.get("source_prefix") or "R"
+
     if target_layer == "silver":
         if gap_families:
-            artifacts.update(
-                _generate_silver_gap_artifacts(
-                    use_case=use_case,
-                    catalog=target_catalog,
-                    families=gap_families,
-                    invariants=gap_invariants,
+            gap_stems = [
+                family["measure_stem"] for family in gap_families
+            ]
+            duplicate_stems = sorted({
+                stem
+                for stem in gap_stems
+                if gap_stems.count(stem) > 1
+            })
+            if duplicate_stems:
+                # Same stem under both R{wave} and H{wave} prefixes
+                # cannot share one silver column name — flag for
+                # dictionary curation instead of crashing routing.
+                artifacts["status"] = "STEM_COLLISION_REVIEW_REQUIRED"
+                artifacts["notes"] = [
+                    "Wave families share duplicate stem(s): "
+                    + ", ".join(duplicate_stems)
+                    + ". Variables with the same stem but different "
+                    "prefixes (R{wave} respondent / H{wave} household / "
+                    "S{wave} spouse) cannot share one silver column name "
+                    "— approve only one prefix per stem or split the use "
+                    "case. No draft was generated."
+                ]
+            else:
+                artifacts.update(
+                    _generate_silver_gap_artifacts(
+                        use_case=use_case,
+                        catalog=target_catalog,
+                        families=gap_families,
+                        invariants=gap_invariants,
+                    )
                 )
-            )
         else:
             # Invariant-only gaps are structural modeling decisions the
             # agent does not auto-draft. Flag them for hub / dimension
@@ -893,6 +939,20 @@ def _generate_silver_gap_artifacts(
             "review."
         )
 
+    stems = [family["measure_stem"] for family in families]
+    duplicate_stems = sorted({
+        stem for stem in stems if stems.count(stem) > 1
+    })
+    if duplicate_stems:
+        raise ValueError(
+            "Wave families share duplicate stem(s): "
+            + ", ".join(duplicate_stems)
+            + ". Variables with the same stem but different prefixes "
+            "(R{wave} respondent / H{wave} household / S{wave} spouse) "
+            "cannot share one silver column name — approve only one "
+            "prefix per stem or split the use case."
+        )
+
     table_stem = re.sub(r"[^a-z0-9]+", "_", use_case.lower()).strip("_")
     table_name = (
         f"{catalog}.{config.SILVER_CDM_SCHEMA}.fact_{table_stem}"
@@ -903,7 +963,8 @@ def _generate_silver_gap_artifacts(
     # DECIMAL(10, 2) (continuous measures) per family, mirroring the
     # repo's TRY_CAST type discipline.
     probe_names = [
-        f"R{family['waves'][0]}{family['measure_stem']}"
+        f"{family.get('prefix', 'R')}{family['waves'][0]}"
+        f"{family['measure_stem'].upper()}"
         for family in families
     ]
 
@@ -914,17 +975,18 @@ def _generate_silver_gap_artifacts(
 
     for family in families:
         probe = (
-            f"R{family['waves'][0]}{family['measure_stem']}"
+            f"{family.get('prefix', 'R')}{family['waves'][0]}"
+            f"{family['measure_stem']}"
         ).upper()
 
         if fractional_counts.get(probe, 1) == 0:
-            family_types[family["measure_stem"]] = "TINYINT"
+            family_types[family["measure_stem"].upper()] = "TINYINT"
             type_notes.append(
                 f"{family['measure_stem']}: whole-number scan clean — "
                 "TINYINT (categorical-code treatment)."
             )
         else:
-            family_types[family["measure_stem"]] = "DECIMAL(10, 2)"
+            family_types[family["measure_stem"].upper()] = "DECIMAL(10, 2)"
             type_notes.append(
                 f"{family['measure_stem']}: fractional values present — "
                 "DECIMAL(10, 2) (continuous-measure treatment)."
@@ -932,8 +994,9 @@ def _generate_silver_gap_artifacts(
 
     measure_lines = [
         f"    {family['measure_stem'].lower()} "
-        f"{family_types[family['measure_stem']]} COMMENT 'R#"
-        f"{family['measure_stem']}: "
+        f"{family_types[family['measure_stem'].upper()]} COMMENT '"
+        f"{family.get('prefix', 'R')}#"
+        f"{family['measure_stem'].upper()}: "
         f"{family.get('variable_label') or family['measure_stem']}'"
         for family in families
     ]
@@ -955,7 +1018,8 @@ def _generate_silver_gap_artifacts(
             source_select.append(
                 "            "
                 + ", ".join(
-                    f"R{wave}{family['measure_stem']}"
+                    f"{family.get('prefix', 'R')}{wave}"
+                    f"{family['measure_stem'].upper()}"
                     for family in group
                 )
             )
@@ -981,7 +1045,8 @@ def _generate_silver_gap_artifacts(
         value_tuples = ",\n".join(
             "                    ("
             + ", ".join(
-                f"R{wave}{family['measure_stem']}"
+                f"{family.get('prefix', 'R')}{wave}"
+                f"{family['measure_stem'].upper()}"
                 for family in group
             )
             + ") AS `" + str(wave) + "`"
